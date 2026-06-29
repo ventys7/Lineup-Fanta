@@ -19,6 +19,7 @@ function showToast(message, type = "error") {
 
 /* INIT */
 if (window.LINEUP_FANTA?.route === "league") {
+  window.LineupPersistence?.setup();
   setupSwitchListeners();
   setupModalClickOutside();
   loadCSV();

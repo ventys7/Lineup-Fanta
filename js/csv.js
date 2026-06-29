@@ -24,6 +24,7 @@ function splitCSVLine(line){
 
 async function loadCSV(){
   try{
+    db = {};
     const url = CSV_BASE_URL + "&t=" + Date.now();
     const res = await fetch(url);
     const txt = await res.text();
@@ -89,12 +90,17 @@ async function loadCSV(){
     });
 
     populateManagers();
-    renderFormation();
-    if(window.innerWidth < 768 && typeof renderMobileSlots === 'function'){
-      renderMobileSlots();
-    }
-    if(typeof updateSwitchUI === 'function'){
-      setTimeout(() => updateSwitchUI(), 100);
+
+    const restoredDraft = window.LineupPersistence?.restoreAfterCsv?.();
+
+    if(!restoredDraft){
+      renderFormation();
+      if(window.innerWidth < 768 && typeof renderMobileSlots === 'function'){
+        renderMobileSlots();
+      }
+      if(typeof updateSwitchUI === 'function'){
+        setTimeout(() => updateSwitchUI(), 100);
+      }
     }
   }catch(err){
     console.error("CSV load error", err);

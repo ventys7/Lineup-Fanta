@@ -130,6 +130,7 @@ function fallbackCopy(text) {
   textarea.select();
   try {
     const success = document.execCommand('copy');
+    if(success) window.LineupPersistence?.markCopied(text);
     showToast(success ? "Formazione copiata!" : "Copia fallita", success ? "success" : "error");
   } catch (err) {
     showToast("Errore durante la copia", "error");
