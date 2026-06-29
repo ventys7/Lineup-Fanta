@@ -117,6 +117,11 @@
   }
 
   function rebuildDisabledBlocks(team) {
+    if (window.GkBlocks?.syncDisabledBlocks) {
+      window.GkBlocks.syncDisabledBlocks();
+      return;
+    }
+
     disabledBlocks.clear();
 
     const selectedGoalkeeper = selectedPlayers

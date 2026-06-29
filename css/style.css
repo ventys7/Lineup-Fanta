@@ -556,3 +556,96 @@ button[onclick^="close"] {
     font-size: 0.74rem;
   }
 }
+/* ── GK BLOCKS + MATCHED OUTPUT ACTIONS ── */
+.player-card__status {
+  min-width: 20px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-align: right;
+}
+
+.gk-choice-btn,
+.gk-block-btn {
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1.5px solid var(--primary-border);
+  border-radius: 10px;
+  background: #fff;
+  color: #374151;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.gk-choice-btn:hover,
+.gk-block-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+  border-color: var(--primary);
+  background: var(--primary-bg);
+}
+
+.gk-block-btn.selected {
+  border-color: var(--primary);
+  background: var(--primary-bg);
+  color: var(--primary);
+}
+
+.gk-block-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.gk-current-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--primary);
+  border-radius: 10px;
+  background: var(--primary-bg);
+  color: #374151;
+  font-weight: 700;
+}
+
+.gk-current-selection__remove {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  color: #dc2626;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.output-copy-btn {
+  min-height: 46px;
+  border: 0;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 850;
+  letter-spacing: .01em;
+  box-shadow: 0 7px 16px rgba(15, 23, 42, .16);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+
+.output-copy-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, .2);
+}
+
+.output-copy-btn--whatsapp {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.output-copy-btn--docs {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+}
