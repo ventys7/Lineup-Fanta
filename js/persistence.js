@@ -212,13 +212,14 @@
     }
   }
 
-  function markCopied(text) {
+  function markCopied(text, format = "whatsapp") {
     const snapshot = getSnapshot();
     if (!snapshot) return;
 
     safeWrite("last-copied", {
       ...snapshot,
       outputText: text,
+      outputFormat: format,
       copiedAt: new Date().toISOString()
     });
   }

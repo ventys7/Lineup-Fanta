@@ -147,16 +147,26 @@
   </div>
 </main>
 
-<!-- Modal -->
+<!-- Output Modal -->
 <div id="outputModal" class="modal" aria-hidden="true">
-  <div class="box">
-    <h3>Formazione pronta</h3>
-    <p style="color:var(--muted)">Copia il testo o incollalo su WhatsApp/Docs.</p>
-    <textarea id="outputText" readonly style="width:100%;height:220px;border-radius:10px;border:1px solid #eee;padding:10px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,'Courier New',monospace"></textarea>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap">
-      <button id="selectAllBtn" style="display:none">Seleziona tutto</button>
-      <button id="copyModalBtn">Copia</button>
-      <button id="closeModalBtn">Chiudi</button>
+  <div class="box output-modal-box">
+    <div class="output-modal__heading">
+      <div>
+        <h3>Formazione pronta</h3>
+        <p id="outputFormatLabel">Anteprima WhatsApp</p>
+      </div>
+      <button id="closeModalBtn" class="output-close-btn" type="button" aria-label="Chiudi output">✕</button>
+    </div>
+
+    <textarea id="outputText" readonly aria-label="Anteprima formazione"></textarea>
+
+    <div class="output-copy-actions" aria-label="Scegli il formato da copiare">
+      <button id="copyWhatsAppBtn" class="output-copy-btn output-copy-btn--whatsapp" type="button">
+        Copia WhatsApp
+      </button>
+      <button id="copyDocsBtn" class="output-copy-btn output-copy-btn--docs" type="button">
+        Copia per Docs
+      </button>
     </div>
   </div>
 </div>
