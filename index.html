@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <!-- LINEUP FANTA: resolve the route before legacy FP markup can paint -->
+  <script id="lineup-prepaint-router">
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var previewLeague = params.get("league");
+      var path = window.location.pathname.replace(/\/+$/, "") || "/";
+      var pathLeague = path === "/fp" ? "fp" : (path === "/pd" ? "pd" : null);
+      var leagueId = (previewLeague === "fp" || previewLeague === "pd")
+        ? previewLeague
+        : pathLeague;
+
+      document.documentElement.dataset.route = leagueId ? "league" : "home";
+
+      if (!leagueId) {
+        document.title = "Lineup Fanta";
+      }
+    })();
+  </script>
+
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>PianginaCUP</title>

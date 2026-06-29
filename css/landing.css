@@ -119,3 +119,13 @@ body[data-route="home"] {
     margin-top: 32px;
   }
 }
+
+
+/* LINEUP FANTA: hide legacy FP markup on the home route before router.js mounts the landing */
+html[data-route="home"] body > * {
+  display: none !important;
+}
+
+html[data-route="home"] body > .league-landing {
+  display: block !important;
+}
