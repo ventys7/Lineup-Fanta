@@ -1,146 +1,161 @@
-/* SWITCH LOGIC - Pure functions for getting starters/bench */
+/* SWITCH LOGIC - Formation adapters and legacy helpers */
 
-function clearSwitch(){
+function clearSwitch() {
+  if (window.LineupSwitch) {
+    window.LineupSwitch.clear("all", { resetMode: true });
+    return;
+  }
+
   switchStarterIndex = null;
   switchBenchIndex = null;
-  if(typeof updateSwitchUI === 'function') updateSwitchUI();
+  switchPlus = false;
+  if (typeof updateSwitchUI === "function") updateSwitchUI();
 }
 
-function getStarters(){
+function getStarters() {
   const module = document.getElementById("moduleSelect").value;
-  const defReq = parseInt(module[0],10);
-  const cenReq = parseInt(module[1],10);
-  const attReq = parseInt(module[2],10);
-  
+  const defReq = parseInt(module[0], 10);
+  const cenReq = parseInt(module[1], 10);
+  const attReq = parseInt(module[2], 10);
+
   const team = db[currentManager]?.players || [];
   const assignedPlayers = {};
   const assignedIndices = new Set();
-  
-  for(const slotKey in slotAssignments){
+
+  for (const slotKey in slotAssignments) {
     const playerIdx = slotAssignments[slotKey];
-    if(selectedPlayers.includes(playerIdx) && slotKey.startsWith('starter-')){
+    if (selectedPlayers.includes(playerIdx) && slotKey.startsWith("starter-")) {
       assignedPlayers[slotKey] = team[playerIdx];
       assignedIndices.add(playerIdx);
     }
   }
-  
-  const unassignedPlayers = selectedPlayers.filter(i => !assignedIndices.has(i) && i >= 0 && i < team.length).map(i => team[i]);
-  
-  let counts = {P:0,D:0,C:0,A:0};
-  let starters = [];
 
-  const gks = unassignedPlayers.filter(p=>p.r==="P");
-  gks.forEach(p=>{ if(counts.P < 1){ starters.push(p); counts.P++; } });
+  const unassignedPlayers = selectedPlayers
+    .filter((index) => !assignedIndices.has(index) && index >= 0 && index < team.length)
+    .map((index) => team[index]);
 
-  const defs = unassignedPlayers.filter(p=>p.r==="D");
-  defs.forEach(p=>{ if(counts.D < defReq){ starters.push(p); counts.D++; } });
+  const counts = { P: 0, D: 0, C: 0, A: 0 };
+  const starters = [];
 
-  const cents = unassignedPlayers.filter(p=>p.r==="C");
-  cents.forEach(p=>{ if(counts.C < cenReq){ starters.push(p); counts.C++; } });
+  unassignedPlayers.filter((player) => player.r === "P").forEach((player) => {
+    if (counts.P < 1) {
+      starters.push(player);
+      counts.P += 1;
+    }
+  });
 
-  const atts = unassignedPlayers.filter(p=>p.r==="A");
-  atts.forEach(p=>{ if(counts.A < attReq){ starters.push(p); counts.A++; } });
+  unassignedPlayers.filter((player) => player.r === "D").forEach((player) => {
+    if (counts.D < defReq) {
+      starters.push(player);
+      counts.D += 1;
+    }
+  });
 
-  Object.values(assignedPlayers).forEach(p => {
-    if(!starters.includes(p)) starters.push(p);
+  unassignedPlayers.filter((player) => player.r === "C").forEach((player) => {
+    if (counts.C < cenReq) {
+      starters.push(player);
+      counts.C += 1;
+    }
+  });
+
+  unassignedPlayers.filter((player) => player.r === "A").forEach((player) => {
+    if (counts.A < attReq) {
+      starters.push(player);
+      counts.A += 1;
+    }
+  });
+
+  Object.values(assignedPlayers).forEach((player) => {
+    if (!starters.includes(player)) starters.push(player);
   });
 
   return starters;
 }
 
-function getBench(){
-  const module = document.getElementById("moduleSelect").value;
-  const defReq = parseInt(module[0],10);
-  const cenReq = parseInt(module[1],10);
-  const attReq = parseInt(module[2],10);
-  
+function getBench() {
   const team = db[currentManager]?.players || [];
   const assignedBenchPlayers = {};
   const assignedIndices = new Set();
-  
-  for(const slotKey in slotAssignments){
+
+  for (const slotKey in slotAssignments) {
     const playerIdx = slotAssignments[slotKey];
-    if(selectedPlayers.includes(playerIdx) && slotKey.startsWith('bench-')){
+    if (selectedPlayers.includes(playerIdx) && slotKey.startsWith("bench-")) {
       assignedBenchPlayers[slotKey] = team[playerIdx];
       assignedIndices.add(playerIdx);
     }
   }
-  
-  const unassignedPlayers = selectedPlayers.filter(i => !assignedIndices.has(i) && i >= 0 && i < team.length).map(i => team[i]);
-  
-  let counts = {P:0,D:0,C:0,A:0};
-  let bench = [];
 
-  const gks = unassignedPlayers.filter(p=>p.r==="P");
-  gks.forEach(p=>{ bench.push(p); });
+  const unassignedPlayers = selectedPlayers
+    .filter((index) => !assignedIndices.has(index) && index >= 0 && index < team.length)
+    .map((index) => team[index]);
 
-  const defs = unassignedPlayers.filter(p=>p.r==="D");
-  defs.forEach(p=>{ if(counts.D < 3){ bench.push(p); counts.D++; } });
+  const counts = { P: 0, D: 0, C: 0, A: 0 };
+  const bench = [];
 
-  const cents = unassignedPlayers.filter(p=>p.r==="C");
-  cents.forEach(p=>{ if(counts.C < 3){ bench.push(p); counts.C++; } });
+  unassignedPlayers.filter((player) => player.r === "P").forEach((player) => bench.push(player));
+  unassignedPlayers.filter((player) => player.r === "D").forEach((player) => {
+    if (counts.D < 3) {
+      bench.push(player);
+      counts.D += 1;
+    }
+  });
+  unassignedPlayers.filter((player) => player.r === "C").forEach((player) => {
+    if (counts.C < 3) {
+      bench.push(player);
+      counts.C += 1;
+    }
+  });
+  unassignedPlayers.filter((player) => player.r === "A").forEach((player) => {
+    if (counts.A < 3) {
+      bench.push(player);
+      counts.A += 1;
+    }
+  });
 
-  const atts = unassignedPlayers.filter(p=>p.r==="A");
-  atts.forEach(p=>{ if(counts.A < 3){ bench.push(p); counts.A++; } });
-
-  Object.values(assignedBenchPlayers).forEach(p => {
-    if(!bench.includes(p)) bench.push(p);
+  Object.values(assignedBenchPlayers).forEach((player) => {
+    if (!bench.includes(player)) bench.push(player);
   });
 
   return bench;
 }
 
-function getSwitchStarters(){
-  if(!currentManager || !db[currentManager]) return [];
-  const team = db[currentManager].players;
-  
-  const starterIndices = new Set();
-  for(const slotKey in slotAssignments){
-    if(slotKey.startsWith('starter-')){
-      starterIndices.add(slotAssignments[slotKey]);
+function getSwitchLineup() {
+  const team = db[currentManager]?.players || [];
+
+  if (typeof buildLineupModel === "function") {
+    const model = buildLineupModel();
+    if (model) {
+      return {
+        team: model.team,
+        starters: model.starters,
+        bench: model.bench
+      };
     }
   }
-  
-  if(starterIndices.size === 0){
-    return getStarters();
-  }
-  
-  return Array.from(starterIndices).map(i => team[i]).filter(p => p);
+
+  return {
+    team,
+    starters: getStarters()
+      .map((player) => ({ index: team.indexOf(player), player }))
+      .filter((entry) => entry.index >= 0),
+    bench: getBench()
+      .map((player) => ({ index: team.indexOf(player), player }))
+      .filter((entry) => entry.index >= 0)
+  };
 }
 
-function getSwitchBench(){
-  if(!currentManager || !db[currentManager]) return [];
-  const team = db[currentManager].players;
-  
-  const benchIndices = new Set();
-  for(const slotKey in slotAssignments){
-    if(slotKey.startsWith('bench-')){
-      benchIndices.add(slotAssignments[slotKey]);
-    }
-  }
-  
-  const starterIndices = new Set();
-  for(const slotKey in slotAssignments){
-    if(slotKey.startsWith('starter-')){
-      starterIndices.add(slotAssignments[slotKey]);
-    }
-  }
-  
-  const unassigned = selectedPlayers.filter(i => !starterIndices.has(i) && !benchIndices.has(i)).map(i => team[i]);
-  
-  if(benchIndices.size === 0 && unassigned.length === 0){
-    return getBench();
-  }
-  
-  const result = Array.from(benchIndices).map(i => team[i]).filter(p => p);
-  unassigned.forEach(p => { if(!result.includes(p)) result.push(p); });
-  return result;
+function getSwitchStarters() {
+  return (window.LineupSwitch?.getCandidates().starters || []).map((entry) => entry.player);
 }
 
-function getStarterIndexFromSwitch(){
-  return switchStarterIndex;
+function getSwitchBench() {
+  return (window.LineupSwitch?.getCandidates().bench || []).map((entry) => entry.player);
 }
 
-function getBenchIndexFromSwitch(){
-  return switchBenchIndex;
+function getStarterIndexFromSwitch() {
+  return window.LineupSwitch?.getState().starterIndex ?? switchStarterIndex;
+}
+
+function getBenchIndexFromSwitch() {
+  return window.LineupSwitch?.getState().benchIndex ?? switchBenchIndex;
 }

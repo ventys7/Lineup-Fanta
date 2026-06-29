@@ -188,6 +188,8 @@ function renderMobileSlots(){
 
   }
 
+
+  window.LineupSwitch?.reconcile();
 }
 
 

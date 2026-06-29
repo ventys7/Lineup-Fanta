@@ -1,137 +1,139 @@
-/* SWITCH MODALS - Modal open/close functions */
+/* SWITCH MODALS - Candidate selection for the one optional Switch */
 
-function openSwitchStarterModal(){
-  if(!currentManager || !db[currentManager]) return;
-  
-  const team = db[currentManager].players;
-  const starters = getSwitchStarters();
-  
-  let filteredStarters = starters;
-  
-  if(!switchPlus && switchBenchIndex !== null){
-    const benchPlayer = team[switchBenchIndex];
-    if(benchPlayer){
-      filteredStarters = filteredStarters.filter(p => p.r === benchPlayer.r);
+function getSwitchPickerTitle(kind) {
+  const isPlus = window.LineupSwitch?.getState().plus;
+  const side = kind === "starter" ? "titolare" : "panchina";
+  return `Seleziona ${side} per Switch${isPlus ? " Plus" : " Base"}`;
+}
+
+function renderSwitchPicker(listEl, entries, selectedIndex, onSelect) {
+  listEl.replaceChildren();
+
+  if (entries.length === 0) {
+    const empty = document.createElement("div");
+    empty.style.cssText = "padding:20px;text-align:center;color:var(--muted)";
+    empty.textContent = "Nessun calciatore disponibile";
+    listEl.appendChild(empty);
+    return;
+  }
+
+  entries.forEach(({ index, player }) => {
+    const row = document.createElement("div");
+    row.className = "picker-player" + (selectedIndex === index ? " selected" : "");
+
+    const badge = document.createElement("div");
+    badge.className = "badge";
+    badge.style.background = roleColors[player.r] || "#dc3545";
+    badge.textContent = player.r;
+
+    const info = document.createElement("div");
+    info.className = "player-info";
+
+    const name = document.createElement("span");
+    name.className = "name";
+    name.textContent = player.n;
+
+    const team = document.createElement("span");
+    team.className = "team";
+    team.textContent = player.t || "";
+
+    info.append(name, team);
+    row.append(badge, info);
+
+    if (selectedIndex === index) {
+      const check = document.createElement("span");
+      check.style.color = "var(--accent)";
+      check.textContent = "✓";
+      row.appendChild(check);
     }
-  }
-  
-  if(switchPlus){
-    filteredStarters = filteredStarters.filter(p => p.r !== 'P');
-  }
-  
-  const listEl = document.getElementById('switchStarterList');
-  listEl.innerHTML = '';
-  
-  if(filteredStarters.length === 0){
-    listEl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted)">Nessun titolare disponibile</div>';
-  }
-  
-  filteredStarters.forEach(p => {
-    const idx = team.indexOf(p);
-    if(switchBenchIndex !== null && idx === switchBenchIndex) return;
-    
-    const div = document.createElement('div');
-    div.className = 'picker-player' + (switchStarterIndex === idx ? ' selected' : '');
-    div.innerHTML = `
-      <div class="badge" style="background:${roleColors[p.r]}">${p.r}</div>
-      <div class="player-info">
-        <span class="name">${p.n}</span>
-        <span class="team">${p.t || ''}</span>
-      </div>
-      ${switchStarterIndex === idx ? '<span style="color:var(--accent)">✓</span>' : ''}
-    `;
-    div.onclick = () => {
-      if(!switchPlus && switchBenchIndex !== null){
-        const benchPlayer = team[switchBenchIndex];
-        if(benchPlayer && p.r !== benchPlayer.r){
-          showToast("In modalità base i ruoli devono coincidere", "error");
-          return;
-        }
-      }
-      switchStarterIndex = idx;
-      closeSwitchStarterModal();
-      updateSwitchUI();
-    };
-    listEl.appendChild(div);
+
+    row.onclick = () => onSelect(index);
+    listEl.appendChild(row);
   });
-  
-  const modal = document.getElementById('switchStarterModal');
-  modal.classList.add('show');
-  modal.setAttribute('aria-hidden', 'false');
+}
+
+function openSwitchStarterModal() {
+  if (!currentManager || !db[currentManager]) return;
+
+  const state = window.LineupSwitch?.getState();
+  const candidates = window.LineupSwitch?.getCandidates().starters || [];
+  const team = db[currentManager].players;
+
+  const filtered = candidates.filter(({ index, player }) => {
+    if (index === state?.benchIndex) return false;
+    if (!state?.plus && Number.isInteger(state?.benchIndex)) {
+      return player.r === team[state.benchIndex]?.r;
+    }
+    if (state?.plus) {
+      if (player.r === "P") return false;
+      if (Number.isInteger(state.benchIndex)) return player.r !== team[state.benchIndex]?.r;
+    }
+    return true;
+  });
+
+  const modal = document.getElementById("switchStarterModal");
+  modal.querySelector("h3").textContent = getSwitchPickerTitle("starter");
+
+  renderSwitchPicker(
+    document.getElementById("switchStarterList"),
+    filtered,
+    state?.starterIndex ?? null,
+    (index) => {
+      if (window.LineupSwitch?.setStarter(index)) closeSwitchStarterModal();
+    }
+  );
+
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
   setModalOpen(true);
 }
 
-function closeSwitchStarterModal(){
-  const modal = document.getElementById('switchStarterModal');
-  modal.classList.remove('show');
-  modal.setAttribute('aria-hidden', 'true');
+function closeSwitchStarterModal() {
+  const modal = document.getElementById("switchStarterModal");
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
   setModalOpen(false);
 }
 
-function openSwitchBenchModal(){
-  if(!currentManager || !db[currentManager]) return;
-  
+function openSwitchBenchModal() {
+  if (!currentManager || !db[currentManager]) return;
+
+  const state = window.LineupSwitch?.getState();
+  const candidates = window.LineupSwitch?.getCandidates().bench || [];
   const team = db[currentManager].players;
-  const bench = getSwitchBench();
-  
-  let filteredBench = bench;
-  
-  if(!switchPlus && switchStarterIndex !== null){
-    const starterPlayer = team[switchStarterIndex];
-    if(starterPlayer){
-      filteredBench = filteredBench.filter(p => p.r === starterPlayer.r);
+
+  const filtered = candidates.filter(({ index, player }) => {
+    if (index === state?.starterIndex) return false;
+    if (!state?.plus && Number.isInteger(state?.starterIndex)) {
+      return player.r === team[state.starterIndex]?.r;
     }
-  }
-  
-  if(switchPlus){
-    filteredBench = filteredBench.filter(p => p.r !== 'P');
-  }
-  
-  const listEl = document.getElementById('switchBenchList');
-  listEl.innerHTML = '';
-  
-  if(filteredBench.length === 0){
-    listEl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted)">Nessun panchinario disponibile</div>';
-  }
-  
-  filteredBench.forEach(p => {
-    const idx = team.indexOf(p);
-    if(switchStarterIndex !== null && idx === switchStarterIndex) return;
-    
-    const div = document.createElement('div');
-    div.className = 'picker-player' + (switchBenchIndex === idx ? ' selected' : '');
-    div.innerHTML = `
-      <div class="badge" style="background:${roleColors[p.r]}">${p.r}</div>
-      <div class="player-info">
-        <span class="name">${p.n}</span>
-        <span class="team">${p.t || ''}</span>
-      </div>
-      ${switchBenchIndex === idx ? '<span style="color:var(--accent)">✓</span>' : ''}
-    `;
-    div.onclick = () => {
-      if(!switchPlus && switchStarterIndex !== null){
-        const starterPlayer = team[switchStarterIndex];
-        if(starterPlayer && p.r !== starterPlayer.r){
-          showToast("In modalità base i ruoli devono coincidere", "error");
-          return;
-        }
-      }
-      switchBenchIndex = idx;
-      closeSwitchBenchModal();
-      updateSwitchUI();
-    };
-    listEl.appendChild(div);
+    if (state?.plus) {
+      if (player.r === "P") return false;
+      if (Number.isInteger(state.starterIndex)) return player.r !== team[state.starterIndex]?.r;
+    }
+    return true;
   });
-  
-  const modal = document.getElementById('switchBenchModal');
-  modal.classList.add('show');
-  modal.setAttribute('aria-hidden', 'false');
+
+  const modal = document.getElementById("switchBenchModal");
+  modal.querySelector("h3").textContent = getSwitchPickerTitle("bench");
+
+  renderSwitchPicker(
+    document.getElementById("switchBenchList"),
+    filtered,
+    state?.benchIndex ?? null,
+    (index) => {
+      if (window.LineupSwitch?.setBench(index)) closeSwitchBenchModal();
+    }
+  );
+
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
   setModalOpen(true);
 }
 
-function closeSwitchBenchModal(){
-  const modal = document.getElementById('switchBenchModal');
-  modal.classList.remove('show');
-  modal.setAttribute('aria-hidden', 'true');
+function closeSwitchBenchModal() {
+  const modal = document.getElementById("switchBenchModal");
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
   setModalOpen(false);
 }

@@ -239,4 +239,6 @@ function renderFormation(){
   const totalBench = bench.length + Object.keys(assignedBenchPlayers).length + (benchRoleCounts.P || 0);
   document.getElementById("starterCount").textContent = `(${totalStarters}/11)`;
   document.getElementById("benchCount").textContent = `(${totalBench}/11)`;
+
+  window.LineupSwitch?.reconcile();
 }

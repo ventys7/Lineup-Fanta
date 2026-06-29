@@ -81,22 +81,11 @@ function buildLineupModel() {
     return roleDifference || left.player.n.localeCompare(right.player.n, "it");
   });
 
-  const switchIsComplete =
-    Number.isInteger(switchStarterIndex) &&
-    Number.isInteger(switchBenchIndex) &&
-    switchStarterIndex !== switchBenchIndex &&
-    team[switchStarterIndex] &&
-    team[switchBenchIndex];
-
-  const switchPair = switchIsComplete
-    ? {
-        starterIndex: switchStarterIndex,
-        benchIndex: switchBenchIndex,
-        starter: team[switchStarterIndex],
-        bench: team[switchBenchIndex],
-        type: switchPlus ? "plus" : "base"
-      }
-    : null;
+  const switchPair = window.LineupSwitch?.getPairForModel?.({
+    team,
+    starters,
+    bench
+  }) || null;
 
   return {
     manager: currentManager,
