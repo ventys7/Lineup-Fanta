@@ -40,10 +40,11 @@ window.LineupSwitch = (function () {
 
   function getCandidates() {
     const lineup = getLineup();
+    const withoutGoalkeepers = (entries) => uniqueEntries(entries).filter(({ player }) => player?.r !== "P");
 
     return {
-      starters: uniqueEntries(lineup.starters),
-      bench: uniqueEntries(lineup.bench)
+      starters: withoutGoalkeepers(lineup.starters),
+      bench: withoutGoalkeepers(lineup.bench)
     };
   }
 
@@ -57,8 +58,8 @@ window.LineupSwitch = (function () {
 
   function messageForInvalidPair(plus) {
     return plus
-      ? "Nello Switch Plus i ruoli devono essere diversi e non puoi usare portieri."
-      : "Nello Switch Base i ruoli devono coincidere.";
+      ? "Nello Switch Plus devi usare due ruoli diversi. I portieri non sono ammessi."
+      : "Nello Switch Base devi usare due giocatori dello stesso ruolo. I portieri non sono ammessi.";
   }
 
   function isPairValid(starterIndex, benchIndex, plus = switchPlus, lineup = getLineup()) {
@@ -70,6 +71,7 @@ window.LineupSwitch = (function () {
     const bench = getPlayer(benchIndex, team);
 
     if (!starter || !bench) return false;
+    if (starter.r === "P" || bench.r === "P") return false;
 
     const starters = uniqueEntries(lineup.starters);
     const benchEntries = uniqueEntries(lineup.bench);
@@ -78,10 +80,7 @@ window.LineupSwitch = (function () {
       return false;
     }
 
-    if (plus) {
-      return starter.r !== "P" && bench.r !== "P" && starter.r !== bench.r;
-    }
-
+    if (plus) return starter.r !== bench.r;
     return starter.r === bench.r;
   }
 
@@ -96,17 +95,17 @@ window.LineupSwitch = (function () {
     const starter = getPlayer(index, team);
 
     if (!starter || !hasCandidate(candidates.starters, index)) {
-      showToast("Scegli un calciatore che risulta tra i titolari.", "error");
+      showToast("Scegli un calciatore di movimento che risulta tra i titolari.", "error");
+      return false;
+    }
+
+    if (starter.r === "P") {
+      showToast("Lo Switch non può includere portieri.", "error");
       return false;
     }
 
     if (switchBenchIndex !== null && !isPairValid(index, switchBenchIndex, switchPlus)) {
       showToast(messageForInvalidPair(switchPlus), "error");
-      return false;
-    }
-
-    if (switchPlus && starter.r === "P") {
-      showToast("Nello Switch Plus non puoi usare portieri.", "error");
       return false;
     }
 
@@ -121,17 +120,17 @@ window.LineupSwitch = (function () {
     const bench = getPlayer(index, team);
 
     if (!bench || !hasCandidate(candidates.bench, index)) {
-      showToast("Scegli un calciatore che risulta in panchina.", "error");
+      showToast("Scegli un calciatore di movimento che risulta in panchina.", "error");
+      return false;
+    }
+
+    if (bench.r === "P") {
+      showToast("Lo Switch non può includere portieri.", "error");
       return false;
     }
 
     if (switchStarterIndex !== null && !isPairValid(switchStarterIndex, index, switchPlus)) {
       showToast(messageForInvalidPair(switchPlus), "error");
-      return false;
-    }
-
-    if (switchPlus && bench.r === "P") {
-      showToast("Nello Switch Plus non puoi usare portieri.", "error");
       return false;
     }
 
@@ -208,16 +207,14 @@ window.LineupSwitch = (function () {
       changed = true;
     }
 
-    if (switchPlus) {
-      if (getPlayer(switchStarterIndex, team)?.r === "P") {
-        switchStarterIndex = null;
-        changed = true;
-      }
+    if (getPlayer(switchStarterIndex, team)?.r === "P") {
+      switchStarterIndex = null;
+      changed = true;
+    }
 
-      if (getPlayer(switchBenchIndex, team)?.r === "P") {
-        switchBenchIndex = null;
-        changed = true;
-      }
+    if (getPlayer(switchBenchIndex, team)?.r === "P") {
+      switchBenchIndex = null;
+      changed = true;
     }
 
     if (

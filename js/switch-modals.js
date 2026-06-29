@@ -2,7 +2,7 @@
 
 function getSwitchPickerTitle(kind) {
   const isPlus = window.LineupSwitch?.getState().plus;
-  const side = kind === "starter" ? "titolare" : "panchina";
+  const side = kind === "starter" ? "titolare" : "panchinaro";
   return `Seleziona ${side} per Switch${isPlus ? " Plus" : " Base"}`;
 }
 
@@ -60,6 +60,7 @@ function openSwitchStarterModal() {
   const team = db[currentManager].players;
 
   const filtered = candidates.filter(({ index, player }) => {
+    if (player.r === "P") return false;
     if (index === state?.benchIndex) return false;
     if (!state?.plus && Number.isInteger(state?.benchIndex)) {
       return player.r === team[state.benchIndex]?.r;
@@ -103,6 +104,7 @@ function openSwitchBenchModal() {
   const team = db[currentManager].players;
 
   const filtered = candidates.filter(({ index, player }) => {
+    if (player.r === "P") return false;
     if (index === state?.starterIndex) return false;
     if (!state?.plus && Number.isInteger(state?.starterIndex)) {
       return player.r === team[state.starterIndex]?.r;

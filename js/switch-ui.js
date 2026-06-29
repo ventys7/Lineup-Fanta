@@ -1,4 +1,4 @@
-/* SWITCH UI - Shared desktop/mobile rendering */
+/* SWITCH UI - Shared desktop/mobile rendering, rebuilt as a compact visual pair */
 
 function updateSwitchUI() {
   const switchSection = document.getElementById("switchSection");
@@ -7,20 +7,7 @@ function updateSwitchUI() {
 
   if (switchSection) switchSection.style.display = isVisible ? "block" : "none";
   if (switchSectionMobile) switchSectionMobile.style.display = isVisible ? "block" : "none";
-  if (!isVisible) return;
-
-  const starterSlot = document.getElementById("switchStarterSlot");
-  const benchSlot = document.getElementById("switchBenchSlot");
-  const starterSlotMobile = document.getElementById("switchStarterSlotMobile");
-  const benchSlotMobile = document.getElementById("switchBenchSlotMobile");
-  const clearStarterBtn = document.getElementById("clearStarterSwitch");
-  const clearBenchBtn = document.getElementById("clearBenchSwitch");
-  const clearStarterBtnMobile = document.getElementById("clearStarterSwitchMobile");
-  const clearBenchBtnMobile = document.getElementById("clearBenchSwitchMobile");
-  const plusBtn = document.getElementById("switchPlusBtn");
-  const plusBtnMobile = document.getElementById("switchPlusBtnMobile");
-
-  if (!db || !currentManager || !db[currentManager]) return;
+  if (!isVisible || !db || !currentManager || !db[currentManager]) return;
 
   const team = db[currentManager].players || [];
   const state = window.LineupSwitch?.getState() || {
@@ -34,50 +21,62 @@ function updateSwitchUI() {
 
     const player = Number.isInteger(playerIndex) ? team[playerIndex] : null;
     slotEl.replaceChildren();
+    slotEl.classList.toggle("has-player", Boolean(player));
+    slotEl.dataset.role = player?.r || "";
 
-    const content = document.createElement("div");
+    const content = document.createElement("span");
     content.className = "switch-slot-content";
 
     if (!player) {
       const placeholder = document.createElement("span");
       placeholder.className = "switch-slot-placeholder";
-      placeholder.textContent = "+";
+      placeholder.textContent = "＋";
       content.appendChild(placeholder);
-      slotEl.classList.remove("has-player");
     } else {
-      const badge = document.createElement("div");
-      badge.className = "badge";
-      badge.style.background = roleColors[player.r] || "#dc3545";
-      badge.textContent = player.r;
+      const role = document.createElement("span");
+      role.className = "switch-slot__role";
+      role.dataset.role = player.r;
+      role.textContent = player.r;
+
+      const identity = document.createElement("span");
+      identity.className = "switch-slot__identity";
 
       const name = document.createElement("span");
-      name.className = "player-name";
-      name.textContent = player.n;
+      name.className = "switch-slot__name";
+      name.textContent = player.n || "Giocatore";
 
-      content.append(badge, name);
-      slotEl.classList.add("has-player");
+      const club = document.createElement("span");
+      club.className = "switch-slot__team";
+      club.textContent = player.t || "";
+
+      identity.append(name, club);
+      content.append(role, identity);
     }
 
     slotEl.appendChild(content);
   }
 
-  renderSwitchSlot(starterSlot, state.starterIndex);
-  renderSwitchSlot(benchSlot, state.benchIndex);
-  renderSwitchSlot(starterSlotMobile, state.starterIndex);
-  renderSwitchSlot(benchSlotMobile, state.benchIndex);
+  renderSwitchSlot(document.getElementById("switchStarterSlot"), state.starterIndex);
+  renderSwitchSlot(document.getElementById("switchBenchSlot"), state.benchIndex);
+  renderSwitchSlot(document.getElementById("switchStarterSlotMobile"), state.starterIndex);
+  renderSwitchSlot(document.getElementById("switchBenchSlotMobile"), state.benchIndex);
 
   function setClearVisibility(button, value) {
-    if (button) button.style.display = value !== null ? "inline-block" : "none";
+    if (button) button.style.display = Number.isInteger(value) ? "inline-flex" : "none";
   }
 
-  setClearVisibility(clearStarterBtn, state.starterIndex);
-  setClearVisibility(clearBenchBtn, state.benchIndex);
-  setClearVisibility(clearStarterBtnMobile, state.starterIndex);
-  setClearVisibility(clearBenchBtnMobile, state.benchIndex);
+  setClearVisibility(document.getElementById("clearStarterSwitch"), state.starterIndex);
+  setClearVisibility(document.getElementById("clearBenchSwitch"), state.benchIndex);
+  setClearVisibility(document.getElementById("clearStarterSwitchMobile"), state.starterIndex);
+  setClearVisibility(document.getElementById("clearBenchSwitchMobile"), state.benchIndex);
 
-  [plusBtn, plusBtnMobile].forEach((button) => {
+  [
+    document.getElementById("switchPlusBtn"),
+    document.getElementById("switchPlusBtnMobile")
+  ].forEach((button) => {
     if (!button) return;
     button.classList.toggle("active", state.plus);
+    button.dataset.mode = state.plus ? "plus" : "base";
     button.setAttribute("aria-pressed", String(state.plus));
     button.title = state.plus ? "Switch Plus attivo" : "Passa allo Switch Plus";
   });

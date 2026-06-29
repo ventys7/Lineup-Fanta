@@ -1,121 +1,22 @@
-/* OUTPUT - WhatsApp and Docs formats */
+/* OUTPUT - preview first; desktop copies explicitly, iOS selects text safely */
 
-const roleOrder = { P: 0, D: 1, C: 2, A: 3 };
+const OUTPUT_PROMPT = "Seleziona un’anteprima per copiare";
 
 function buildLineupModel() {
-  if (!currentManager || !db[currentManager]) return null;
+  const model = window.FormationModel?.build();
+  if (!model) return null;
 
-  const module = document.getElementById("moduleSelect")?.value || "433";
-  const team = db[currentManager].players || [];
-  const selectedSet = new Set(selectedPlayers);
-  const assignedStarters = {};
-  const assignedBench = {};
-
-  Object.entries(slotAssignments).forEach(([slotKey, playerIndex]) => {
-    if (!selectedSet.has(playerIndex) || !team[playerIndex]) return;
-
-    const entry = { index: playerIndex, player: team[playerIndex] };
-    if (slotKey.startsWith("starter-")) assignedStarters[slotKey] = entry;
-    if (slotKey.startsWith("bench-")) assignedBench[slotKey] = entry;
-  });
-
-  const assignedIndices = new Set(Object.values(slotAssignments));
-  const unassigned = selectedPlayers
-    .filter((index) => !assignedIndices.has(index) && Number.isInteger(index) && team[index])
-    .map((index) => ({ index, player: team[index] }));
-
-  const starters = [];
-  const starterIndices = new Set();
-
-  const rolesConfig = [
-    { key: "GK", role: "P", req: 1 },
-    { key: "D", role: "D", req: Number.parseInt(module[0], 10) },
-    { key: "C", role: "C", req: Number.parseInt(module[1], 10) },
-    { key: "A", role: "A", req: Number.parseInt(module[2], 10) }
-  ];
-
-  rolesConfig.forEach(({ key, role, req }) => {
-    for (let position = 1; position <= req; position += 1) {
-      const slotId = `starter-${key}${key === "GK" ? "1" : position}`;
-      const entry = assignedStarters[slotId];
-
-      if (entry && !starterIndices.has(entry.index)) {
-        starters.push(entry);
-        starterIndices.add(entry.index);
-      }
-    }
-
-    const available = unassigned.filter(
-      (entry) => entry.player.r === role && !starterIndices.has(entry.index)
-    );
-
-    let currentRoleCount = starters.filter((entry) => entry.player.r === role).length;
-
-    for (const entry of available) {
-      if (currentRoleCount >= req) break;
-      starters.push(entry);
-      starterIndices.add(entry.index);
-      currentRoleCount += 1;
-    }
-  });
-
-  const bench = [];
-  const benchIndices = new Set();
-
-  Object.values(assignedBench).forEach((entry) => {
-    if (!starterIndices.has(entry.index) && !benchIndices.has(entry.index)) {
-      bench.push(entry);
-      benchIndices.add(entry.index);
-    }
-  });
-
-  unassigned.forEach((entry) => {
-    if (!starterIndices.has(entry.index) && !benchIndices.has(entry.index)) {
-      bench.push(entry);
-      benchIndices.add(entry.index);
-    }
-  });
-
-  bench.sort((left, right) => {
-    const roleDifference = roleOrder[left.player.r] - roleOrder[right.player.r];
-    return roleDifference || left.player.n.localeCompare(right.player.n, "it");
-  });
-
-  const switchPair = window.LineupSwitch?.getPairForModel?.({
-    team,
-    starters,
-    bench
+  model.switchPair = window.LineupSwitch?.getPairForModel?.({
+    team: model.team,
+    starters: model.starters,
+    bench: model.bench
   }) || null;
 
-  return {
-    manager: currentManager,
-    module: [...module].join("-"),
-    team,
-    starters,
-    bench,
-    switchPair
-  };
+  return model;
 }
 
 function getGoalkeeperBenchLabels(model) {
-  const starterGoalkeeper = model.starters.find((entry) => entry.player.r === "P");
-  if (!starterGoalkeeper) return [];
-
-  const labels = [starterGoalkeeper.player.t || "Portiere"];
-
-  if (starterGoalkeeper.player.gkBlock) {
-    const otherBlock = model.team.find(
-      (player, index) =>
-        player.r === "P" &&
-        player.isGkBlock &&
-        player.gkBlock !== starterGoalkeeper.player.gkBlock &&
-        !selectedPlayers.includes(index)
-    );
-
-    if (otherBlock) labels.push(otherBlock.t || "Portiere");
-  }
-
-  return labels;
+  return Array.isArray(model?.goalkeeperBenchLabels) ? model.goalkeeperBenchLabels : [];
 }
 
 function buildWhatsAppOutput(model) {
@@ -155,12 +56,7 @@ function getDocsSwitchSuffix(model, playerIndex) {
 }
 
 function buildDocsOutput(model) {
-  const lines = [
-    model.manager,
-    `Modulo: ${model.module}`,
-    "",
-    "TITOLARI"
-  ];
+  const lines = [model.manager, `Modulo: ${model.module}`, "", "TITOLARI"];
 
   model.starters.forEach((entry) => {
     lines.push(`- ${entry.player.n}${getDocsSwitchSuffix(model, entry.index)}`);
@@ -181,30 +77,60 @@ function buildOutputText(format = "whatsapp") {
   try {
     const model = buildLineupModel();
     if (!model) return "";
-
-    return format === "docs"
-      ? buildDocsOutput(model)
-      : buildWhatsAppOutput(model);
+    return format === "docs" ? buildDocsOutput(model) : buildWhatsAppOutput(model);
   } catch (error) {
     console.error("buildOutputText error:", error);
     return "Errore nella generazione del testo";
   }
 }
 
-let currentOutputFormat = "whatsapp";
+let currentOutputFormat = null;
+let outputPreviewChosen = false;
+
+function isMobileOutput() {
+  return window.matchMedia?.("(max-width: 767px)").matches ?? false;
+}
 
 function getFormatLabel(format) {
   return format === "docs" ? "Docs" : "WhatsApp";
 }
 
-function updateOutputPreview(format = currentOutputFormat) {
+function updateOutputActionState() {
+  const selectButton = document.getElementById("selectAllOutputBtn");
+  const copyButton = document.getElementById("copyPreviewBtn");
+  const modal = document.getElementById("outputModal");
+
+  [["copyWhatsAppBtn", "whatsapp"], ["copyDocsBtn", "docs"]].forEach(([id, format]) => {
+    const button = document.getElementById(id);
+    if (!button) return;
+    const selected = currentOutputFormat === format && outputPreviewChosen;
+    button.classList.toggle("is-preview-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+
+  if (selectButton) selectButton.disabled = !outputPreviewChosen;
+  if (copyButton) copyButton.disabled = !outputPreviewChosen;
+  if (modal) modal.dataset.previewReady = outputPreviewChosen ? "true" : "false";
+}
+
+function showOutputPrompt() {
+  const textarea = document.getElementById("outputText");
+  if (textarea) {
+    textarea.value = OUTPUT_PROMPT;
+    textarea.classList.add("output-text--prompt");
+  }
+}
+
+function updateOutputPreview(format) {
   currentOutputFormat = format;
+  outputPreviewChosen = true;
 
   const textarea = document.getElementById("outputText");
-  const formatLabel = document.getElementById("outputFormatLabel");
-
-  if (textarea) textarea.value = buildOutputText(format);
-  if (formatLabel) formatLabel.textContent = `Anteprima ${getFormatLabel(format)}`;
+  if (textarea) {
+    textarea.value = buildOutputText(format);
+    textarea.classList.remove("output-text--prompt");
+  }
+  updateOutputActionState();
 }
 
 function toggleModal(show) {
@@ -226,7 +152,10 @@ function openModal() {
     return;
   }
 
-  updateOutputPreview("whatsapp");
+  currentOutputFormat = null;
+  outputPreviewChosen = false;
+  showOutputPrompt();
+  updateOutputActionState();
   toggleModal(true);
 }
 
@@ -236,18 +165,15 @@ async function copyText(text, format) {
   try {
     if (navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(text);
-    } else {
-      const copied = fallbackCopy(text);
-      if (!copied) return;
+    } else if (!fallbackCopy(text)) {
+      return;
     }
 
     window.LineupPersistence?.markCopied(text, format);
     showToast(`Formato ${getFormatLabel(format)} copiato!`, "success");
   } catch (error) {
     const copied = fallbackCopy(text);
-    if (copied) {
-      window.LineupPersistence?.markCopied(text, format);
-    }
+    if (copied) window.LineupPersistence?.markCopied(text, format);
   }
 }
 
@@ -264,13 +190,9 @@ function fallbackCopy(text) {
   textarea.select();
 
   let copied = false;
-
   try {
     copied = document.execCommand("copy");
-    showToast(
-      copied ? "Formazione copiata!" : "Copia fallita",
-      copied ? "success" : "error"
-    );
+    showToast(copied ? "Formazione copiata!" : "Copia fallita", copied ? "success" : "error");
   } catch (error) {
     showToast("Errore durante la copia", "error");
   }
@@ -279,18 +201,58 @@ function fallbackCopy(text) {
   return copied;
 }
 
+function blurAction(button) {
+  window.setTimeout(() => button?.blur(), 0);
+}
+
+function handleOutputAction(format, button) {
+  // Preview never copies. Only the dedicated Copy / Seleziona tutto controls do that.
+  updateOutputPreview(format);
+  blurAction(button);
+  return false;
+}
+
+function copyOutputPreview() {
+  if (!outputPreviewChosen || !currentOutputFormat) {
+    showToast(OUTPUT_PROMPT, "error");
+    return;
+  }
+  copyText(buildOutputText(currentOutputFormat), currentOutputFormat);
+}
+
+function selectAllOutput() {
+  if (!outputPreviewChosen || !currentOutputFormat) {
+    showToast(OUTPUT_PROMPT, "error");
+    return;
+  }
+
+  const textarea = document.getElementById("outputText");
+  if (!textarea || !textarea.value) return;
+
+  textarea.focus({ preventScroll: true });
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+  showToast("Testo selezionato", "success");
+}
+
+function replaceAndBindOutputButton(id, handler) {
+  const original = document.getElementById(id);
+  if (!original) return null;
+
+  const button = original.cloneNode(true);
+  original.replaceWith(button);
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    handler(event, button);
+  });
+  return button;
+}
+
 document.getElementById("openModalBtn")?.addEventListener("click", openModal);
 document.getElementById("fabCopy")?.addEventListener("click", openModal);
 document.getElementById("closeModalBtn")?.addEventListener("click", closeModal);
-
-document.getElementById("copyWhatsAppBtn")?.addEventListener("click", () => {
-  const text = buildOutputText("whatsapp");
-  updateOutputPreview("whatsapp");
-  copyText(text, "whatsapp");
-});
-
-document.getElementById("copyDocsBtn")?.addEventListener("click", () => {
-  const text = buildOutputText("docs");
-  updateOutputPreview("docs");
-  copyText(text, "docs");
-});
+replaceAndBindOutputButton("copyWhatsAppBtn", (event, button) => handleOutputAction("whatsapp", button));
+replaceAndBindOutputButton("copyDocsBtn", (event, button) => handleOutputAction("docs", button));
+replaceAndBindOutputButton("copyPreviewBtn", () => copyOutputPreview());
+replaceAndBindOutputButton("selectAllOutputBtn", () => selectAllOutput());

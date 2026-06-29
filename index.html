@@ -25,8 +25,9 @@
 <title>PianginaCUP</title>
 <link rel="icon" type="image/png" href="fantacalcio logo.png">
 <link rel="stylesheet" href="css/style.css">
-  <base href="/">
-  <link rel="stylesheet" href="css/landing.css">
+<base href="/">
+<link rel="stylesheet" href="css/landing.css">
+<link rel="stylesheet" href="css/formation-clean.css">
 </head>
 <body>
 <header>
@@ -52,45 +53,54 @@
     </div>
 
     <div class="grid">
-    <section class="column">
-      <div class="section-title-row">
-        <span class="mt-8 font-600">Titolari <span id="starterCount" style="color:var(--muted)">(0/11)</span></span>
-        <button id="resetBtn" class="reset-btn-small">Reset</button>
-      </div>
-      <div class="slot-grid" id="startersSlots" style="display:none" aria-live="polite"></div>
+      <section class="column">
+        <div class="desktop-formation-layout">
+          <div class="desktop-formation-main">
+            <div class="section-title-row">
+              <span class="mt-8 font-600">Titolari <span id="starterCount" style="color:var(--muted)">(0/11)</span></span>
+              <button id="resetBtn" class="reset-btn-small">Reset</button>
+            </div>
+            <div class="slot-grid" id="startersSlots" style="display:none" aria-live="polite"></div>
 
-      <div class="mt-12 font-600">Panchina <span id="benchCount" style="color:var(--muted)">(0/11)</span></div>
-      <div class="slot-grid" id="benchSlots" style="display:none"></div>
-
-      <!-- Switch Section -->
-      <div class="switch-section" id="switchSection" style="display:none">
-        <div class="switch-header">
-          <span class="font-600">Switch</span>
-          <button id="switchPlusBtn" class="switch-plus-btn">Plus</button>
-        </div>
-        <div class="switch-container">
-          <div class="switch-picker-wrapper">
-            <label>Titolare</label>
-            <div class="switch-slot" id="switchStarterSlot">
-              <div class="switch-slot-content">
-                <span class="switch-slot-placeholder">+</span>
+          <aside class="switch-section switch-section--desktop" id="switchSection" style="display:none" aria-label="Switch facoltativo">
+            <div class="switch-panel">
+              <div class="switch-panel__header">
+                <div class="switch-panel__title">
+                  <h3>Switch</h3>
+                  <p class="switch-panel__eyebrow">Opzionale</p>
+                </div>
+              </div>
+              <button id="switchPlusBtn" class="switch-mode-toggle" type="button" aria-pressed="false" title="Passa allo Switch Plus">
+                <span>Base</span><span>Plus</span>
+              </button>
+              <div class="switch-pair">
+                <div class="switch-picker-wrapper">
+                  <span class="switch-picker-label">Titolare</span>
+                  <button type="button" class="switch-slot" id="switchStarterSlot" aria-label="Scegli titolare per Switch">
+                    <span class="switch-slot-content"><span class="switch-slot-placeholder">＋</span></span>
+                  </button>
+                  <button id="clearStarterSwitch" class="switch-clear-btn" type="button" aria-label="Rimuovi titolare dallo Switch" style="display:none">×</button>
+                </div>
+                <div class="switch-connector" aria-hidden="true"><span>↔</span></div>
+                <div class="switch-picker-wrapper">
+                  <span class="switch-picker-label">Panchinaro</span>
+                  <button type="button" class="switch-slot" id="switchBenchSlot" aria-label="Scegli panchinaro per Switch">
+                    <span class="switch-slot-content"><span class="switch-slot-placeholder">＋</span></span>
+                  </button>
+                  <button id="clearBenchSwitch" class="switch-clear-btn" type="button" aria-label="Rimuovi panchinaro dallo Switch" style="display:none">×</button>
+                </div>
               </div>
             </div>
-            <button id="clearStarterSwitch" class="switch-clear-btn" style="display:none">✕</button>
+          </aside>
+
+            <div class="mt-12 font-600">Panchina <span id="benchCount" style="color:var(--muted)">(0/11)</span></div>
+            <div class="slot-grid" id="benchSlots" style="display:none"></div>
           </div>
-          <div class="switch-picker-wrapper">
-            <label>Panchina</label>
-            <div class="switch-slot" id="switchBenchSlot">
-              <div class="switch-slot-content">
-                <span class="switch-slot-placeholder">+</span>
-              </div>
-            </div>
-            <button id="clearBenchSwitch" class="switch-clear-btn" style="display:none">✕</button>
-          </div>
+
+
         </div>
-      </div>
-    </section>
-  </div>
+      </section>
+    </div>
   </div>
 
   <!-- Roster Drawer -->
@@ -113,36 +123,40 @@
       </div>
       <div class="slot-grid" id="mobileStartersSlots"></div>
     </div>
+    <!-- Mobile Switch Section -->
+    <section class="switch-section mobile-switch" id="mobileSwitchSection" style="display:none" aria-label="Switch facoltativo">
+      <div class="switch-panel">
+        <div class="switch-panel__header">
+          <div class="switch-panel__title">
+            <h3>Switch</h3>
+            <p class="switch-panel__eyebrow">Opzionale</p>
+          </div>
+        </div>
+        <div class="switch-pair">
+          <div class="switch-picker-wrapper">
+            <span class="switch-picker-label">Titolare</span>
+            <button type="button" class="switch-slot" id="switchStarterSlotMobile" aria-label="Scegli titolare per Switch">
+              <span class="switch-slot-content"><span class="switch-slot-placeholder">＋</span></span>
+            </button>
+            <button id="clearStarterSwitchMobile" class="switch-clear-btn" type="button" aria-label="Rimuovi titolare dallo Switch" style="display:none">×</button>
+          </div>
+          <div class="switch-connector" aria-hidden="true"><span>↔</span></div>
+          <div class="switch-picker-wrapper">
+            <span class="switch-picker-label">Panchinaro</span>
+            <button type="button" class="switch-slot" id="switchBenchSlotMobile" aria-label="Scegli panchinaro per Switch">
+              <span class="switch-slot-content"><span class="switch-slot-placeholder">＋</span></span>
+            </button>
+            <button id="clearBenchSwitchMobile" class="switch-clear-btn" type="button" aria-label="Rimuovi panchinaro dallo Switch" style="display:none">×</button>
+          </div>
+        </div>
+        <button id="switchPlusBtnMobile" class="switch-mode-toggle" type="button" aria-pressed="false" title="Passa allo Switch Plus">
+          <span>Base</span><span>Plus</span>
+        </button>
+      </div>
+    </section>
     <div class="mobile-section">
       <h2 class="mobile-title">Panchina <span id="mobileBenchCount" style="color:var(--muted)">(0/11)</span></h2>
       <div class="slot-grid" id="mobileBenchSlots"></div>
-    </div>
-    <!-- Mobile Switch Section -->
-    <div class="switch-section mobile-switch" id="mobileSwitchSection" style="display:none">
-      <div class="switch-header">
-        <span class="font-600">Switch</span>
-        <button id="switchPlusBtnMobile" class="switch-plus-btn">Plus</button>
-      </div>
-      <div class="switch-container">
-        <div class="switch-picker-wrapper">
-          <label>Titolare</label>
-          <div class="switch-slot" id="switchStarterSlotMobile">
-            <div class="switch-slot-content">
-              <span class="switch-slot-placeholder">+</span>
-            </div>
-          </div>
-          <button id="clearStarterSwitchMobile" class="switch-clear-btn" style="display:none">✕</button>
-        </div>
-        <div class="switch-picker-wrapper">
-          <label>Panchina</label>
-          <div class="switch-slot" id="switchBenchSlotMobile">
-            <div class="switch-slot-content">
-              <span class="switch-slot-placeholder">+</span>
-            </div>
-          </div>
-          <button id="clearBenchSwitchMobile" class="switch-clear-btn" style="display:none">✕</button>
-        </div>
-      </div>
     </div>
   </div>
 </main>
@@ -151,22 +165,21 @@
 <div id="outputModal" class="modal" aria-hidden="true">
   <div class="box output-modal-box">
     <div class="output-modal__heading">
-      <div>
+      <div class="output-modal__title-wrap">
         <h3>Formazione pronta</h3>
-        <p id="outputFormatLabel">Anteprima WhatsApp</p>
       </div>
       <button id="closeModalBtn" class="output-close-btn" type="button" aria-label="Chiudi output">✕</button>
     </div>
 
-    <textarea id="outputText" readonly aria-label="Anteprima formazione"></textarea>
+    <div class="output-modal__content">
+      <div class="output-copy-actions" aria-label="Scegli il formato dell'anteprima">
+        <button id="copyWhatsAppBtn" class="output-copy-btn output-copy-btn--whatsapp" type="button" aria-pressed="false">Anteprima per WhatsApp</button>
+        <button id="copyDocsBtn" class="output-copy-btn output-copy-btn--docs" type="button" aria-pressed="false">Anteprima per Docs</button>
+      </div>
+      <textarea id="outputText" readonly aria-label="Anteprima formazione">Seleziona un’anteprima per copiare</textarea>
 
-    <div class="output-copy-actions" aria-label="Scegli il formato da copiare">
-      <button id="copyWhatsAppBtn" class="output-copy-btn output-copy-btn--whatsapp" type="button">
-        Copia WhatsApp
-      </button>
-      <button id="copyDocsBtn" class="output-copy-btn output-copy-btn--docs" type="button">
-        Copia per Docs
-      </button>
+      <button id="copyPreviewBtn" class="output-copy-preview-btn" type="button" disabled>Copia</button>
+      <button id="selectAllOutputBtn" class="output-select-all-btn" type="button" disabled>Seleziona tutto</button>
     </div>
   </div>
 </div>
@@ -219,6 +232,7 @@
 <script src="js/csv.js"></script>
 <script src="js/state.js"></script>
 <script src="js/gk-blocks.js"></script>
+<script src="js/formation-model.js"></script>
 <script src="js/slots-constants.js"></script>
 <script src="js/switch-state.js"></script>
 <script src="js/switch-logic.js"></script>
