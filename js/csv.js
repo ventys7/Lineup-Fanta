@@ -1,5 +1,5 @@
 /* CONFIG */
-const CSV_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR1qCSKkMUZ6W_-_OG8qjTYEQTwF4aPqgtg3XjOGqphRHRDlnFynozJsC0t6WeFjY8XCXjr-R1ZVaww/pub?gid=556989324&single=true&output=csv";
+const CSV_BASE_URL = window.LINEUP_FANTA?.league?.csvUrl || "";
 const ALLOWED_MODULES = ["343","352","433","442","451","532","541"];
 const MAX_SELECTED = 22;
 
