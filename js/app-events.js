@@ -22,6 +22,28 @@ document.getElementById("resetBtnMobile")?.addEventListener("click", () => {
   renderRoster(); renderFormation(); renderMobileSlots();
 });
 
+function syncAppChromeHeight() {
+  const chrome = document.querySelector(".app-chrome");
+  if (!chrome) return;
+
+  const update = () => {
+    const height = Math.ceil(chrome.getBoundingClientRect().height);
+    document.documentElement.style.setProperty("--app-chrome-height", `${height}px`);
+  };
+
+  update();
+
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(update).observe(chrome);
+  } else {
+    window.addEventListener("resize", update);
+  }
+
+  window.addEventListener("orientationchange", update);
+}
+
+syncAppChromeHeight();
+
 function setRosterOpen(open) {
   const drawer = document.getElementById("rosterDrawer");
   if (!drawer) return;
