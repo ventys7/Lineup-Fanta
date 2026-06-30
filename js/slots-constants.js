@@ -6,7 +6,3 @@ function getRoleName(role){
   const names = {P:'Portieri', D:'Difensori', C:'Centrocampisti', A:'Attaccanti'};
   return names[role] || role;
 }
-
-function getRoleFromSlotId(id){
-  return id.startsWith('GK') ? 'P' : id[0];
-}

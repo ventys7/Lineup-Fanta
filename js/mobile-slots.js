@@ -1,11 +1,5 @@
 /* MOBILE SLOTS - Same formation model, touch-first interaction */
 
-function getMobileSlotContainer(slotId, isStarter) {
-  return isStarter
-    ? document.getElementById("mobileStartersSlots")
-    : document.getElementById("mobileBenchSlots");
-}
-
 function createMobileSlot(definition, entry, isStarter) {
   const slot = document.createElement("button");
   slot.type = "button";

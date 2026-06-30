@@ -1,15 +1,5 @@
 /* SLOTS LOGIC - Business logic for slots */
 
-function clearStarterGoalkeeper() {
-  if (!currentManager || !db[currentManager]) return;
-
-  window.GkBlocks?.remove();
-  renderFormation();
-  renderRoster();
-  if (isMobile) renderMobileSlots();
-  updateSwitchUI();
-}
-
 function openSlotPicker(slotType, slotId) {
   if (!currentManager) return;
 

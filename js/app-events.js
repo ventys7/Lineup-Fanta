@@ -10,14 +10,14 @@ document.getElementById("moduleSelect").addEventListener("change", () => {
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
-  selectedPlayers = []; lastStarters = []; lastBench = []; disabledBlocks.clear(); slotAssignments = {};
+  selectedPlayers = []; disabledBlocks.clear(); slotAssignments = {};
   clearSwitch();
   renderRoster(); renderFormation();
   if (isMobile) renderMobileSlots();
 });
 
 document.getElementById("resetBtnMobile")?.addEventListener("click", () => {
-  selectedPlayers = []; lastStarters = []; lastBench = []; disabledBlocks.clear(); slotAssignments = {};
+  selectedPlayers = []; disabledBlocks.clear(); slotAssignments = {};
   clearSwitch();
   renderRoster(); renderFormation(); renderMobileSlots();
 });
@@ -43,6 +43,26 @@ function syncAppChromeHeight() {
 }
 
 syncAppChromeHeight();
+
+const mobileViewportQuery = window.matchMedia("(max-width: 767px)");
+
+function syncViewportMode(event) {
+  const nextIsMobile = Boolean(event.matches);
+  if (nextIsMobile === isMobile) return;
+
+  isMobile = nextIsMobile;
+  if (!currentManager) return;
+
+  renderFormation();
+  if (isMobile && typeof renderMobileSlots === "function") renderMobileSlots();
+  if (typeof updateSwitchUI === "function") updateSwitchUI();
+}
+
+if (typeof mobileViewportQuery.addEventListener === "function") {
+  mobileViewportQuery.addEventListener("change", syncViewportMode);
+} else {
+  mobileViewportQuery.addListener(syncViewportMode);
+}
 
 function setRosterOpen(open) {
   const drawer = document.getElementById("rosterDrawer");
