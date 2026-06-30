@@ -15,6 +15,7 @@ done
 
 python3 - <<'PYCHECK'
 from pathlib import Path
+import json
 import re
 
 html = Path("index.html").read_text(encoding="utf-8")
@@ -24,7 +25,29 @@ for path in re.findall(r'(?:src|href)="((?:js|css)/[^"?#]+)"', html):
         missing.append(path)
 if missing:
     raise SystemExit("Riferimenti locali mancanti: " + ", ".join(missing))
+
+json.loads(Path("vercel.json").read_text(encoding="utf-8"))
 PYCHECK
+
+node scripts/generate-route-pages.mjs --check
+
+for asset in \
+  assets/identity/fp-logo.png \
+  assets/identity/pd-logo.png \
+  fp/favicon.svg \
+  fp/apple-touch-icon.png \
+  pd/favicon.svg \
+  pd/apple-touch-icon.png; do
+  if [[ ! -f "$asset" ]]; then
+    echo "Errore: asset identita mancante: $asset" >&2
+    exit 1
+  fi
+done
+
+if grep -q '<link rel="apple-touch-icon"' index.html; then
+  echo "Errore: la home non deve dichiarare un'icona Apple di lega." >&2
+  exit 1
+fi
 
 if find . -maxdepth 1 -type d -name '.lineup-backup-*' -print -quit | grep -q .; then
   echo "Errore: è presente una cartella backup della patch nella root." >&2

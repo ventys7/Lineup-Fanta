@@ -24,6 +24,19 @@ In locale, se il server statico non gestisce le rewrite Vercel, sono disponibili
 | Calendario | `js/fixtures.js`, `css/fixtures-card.css` | Card Kick-off ottenuta solo da endpoint cache-only. |
 | Interfaccia | `css/style.css`, `css/formation-clean.css`, `css/sticky-story-mobile.css`, `css/landing.css` | Base, campo, sticky header/story e landing. |
 
+## Identità visiva per rotta
+
+`/fp` usa il logo PianginaCUP e `/pd` quello LaLigaCUP nell'header, nel favicon e nell'icona Apple Home Screen. Le due route sono documenti statici generati (`fp/index.html` e `pd/index.html`), così Safari riceve il rispettivo tag `apple-touch-icon` prima del JavaScript.
+
+Le icone sono file fisici specifici della route:
+
+- `fp/favicon.svg` e `fp/apple-touch-icon.png`
+- `pd/favicon.svg` e `pd/apple-touch-icon.png`
+
+Il favicon SVG segue lo stesso modello statico di Kick-off ed è quello usato da Chrome per i bookmark; l'icona Apple PNG resta dedicata ai Web Clip Safari. Restano intenzionalmente fuori dalla regola `no-store` di Vercel. Gli URL del favicon hanno una versione (`?v=8`) per forzare un nuovo download quando viene cambiato. La home `/` non dichiara favicon o icona Apple di lega e resta volutamente neutra.
+
+Dopo ogni modifica a `index.html` o alla configurazione delle icone, esegui `node scripts/generate-route-pages.mjs` e includi i file generati nel commit. Il controllo statico verifica che non siano fuori sync.
+
 ## Dati e persistenza
 
 Ogni lega usa il proprio CSV in `js/config.js`. Le chiavi browser sono isolate con prefissi `lineup-fp:` e `lineup-pd:`; la bozza contiene manager, modulo, selezioni, posizioni manuali e switch.
