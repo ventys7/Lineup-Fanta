@@ -34,12 +34,10 @@ node scripts/generate-route-pages.mjs --check
 for asset in \
   assets/identity/fp-logo.png \
   assets/identity/pd-logo.png \
-  fp/favicon.png \
+  fp/favicon.svg \
   fp/apple-touch-icon.png \
-  pd/favicon.png \
-  pd/apple-touch-icon.png \
-  manifests/fp.webmanifest \
-  manifests/pd.webmanifest; do
+  pd/favicon.svg \
+  pd/apple-touch-icon.png; do
   if [[ ! -f "$asset" ]]; then
     echo "Errore: asset identita mancante: $asset" >&2
     exit 1

@@ -31,15 +31,14 @@
       if (!identity) return;
 
       [
-        { rel: "icon", href: identity.favicon, sizes: "any" },
-        { rel: "apple-touch-icon", href: identity.appleTouchIcon, sizes: "180x180" },
-        { rel: "manifest", href: identity.manifest }
-      ].forEach(({ rel, href, sizes }) => {
+        { rel: "icon", href: identity.favicon, type: identity.faviconType || "image/png" },
+        { rel: "apple-touch-icon", href: identity.appleTouchIcon, sizes: "180x180", type: "image/png" }
+      ].forEach(({ rel, href, sizes, type }) => {
         const link = document.createElement("link");
         link.rel = rel;
         link.href = href;
         if (sizes) link.sizes = sizes;
-        if (rel !== "manifest") link.type = "image/png";
+        if (type) link.type = type;
         link.dataset.lineupIdentity = rel;
         document.head.append(link);
       });

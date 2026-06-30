@@ -8,11 +8,10 @@
   <meta name="theme-color" content="#7c3aed" data-lineup-static-identity>
   <meta name="mobile-web-app-capable" content="yes" data-lineup-static-identity>
   <meta name="apple-mobile-web-app-capable" content="yes" data-lineup-static-identity>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" data-lineup-static-identity>
   <meta name="apple-mobile-web-app-title" content="PianginaCUP" data-lineup-static-identity>
-  <link rel="icon" type="image/png" sizes="512x512" href="/fp/favicon.png?v=5" data-lineup-static-identity>
-  <link rel="shortcut icon" type="image/png" href="/fp/favicon.png?v=5" data-lineup-static-identity>
+  <link rel="icon" type="image/svg+xml" href="/fp/favicon.svg?v=8" data-lineup-static-identity>
   <link rel="apple-touch-icon" sizes="180x180" href="/fp/apple-touch-icon.png?v=5" data-lineup-static-identity>
-  <link rel="manifest" href="/manifests/fp.webmanifest?v=5" data-lineup-static-identity>
 <script src="js/config.js"></script>
 <script id="lineup-prepaint-router">
   (function () {
@@ -39,15 +38,14 @@
       if (!identity) return;
 
       [
-        { rel: "icon", href: identity.favicon, sizes: "any" },
-        { rel: "apple-touch-icon", href: identity.appleTouchIcon, sizes: "180x180" },
-        { rel: "manifest", href: identity.manifest }
-      ].forEach(({ rel, href, sizes }) => {
+        { rel: "icon", href: identity.favicon, type: identity.faviconType || "image/png" },
+        { rel: "apple-touch-icon", href: identity.appleTouchIcon, sizes: "180x180", type: "image/png" }
+      ].forEach(({ rel, href, sizes, type }) => {
         const link = document.createElement("link");
         link.rel = rel;
         link.href = href;
         if (sizes) link.sizes = sizes;
-        if (rel !== "manifest") link.type = "image/png";
+        if (type) link.type = type;
         link.dataset.lineupIdentity = rel;
         document.head.append(link);
       });
