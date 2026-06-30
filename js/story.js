@@ -420,7 +420,7 @@ window.LineupStory = (function () {
   }
 
   function updateStoryActions(ready) {
-    ["shareStoryBtn", "copyStoryBtn", "saveStoryBtn"].forEach((id) => {
+    ["shareStoryBtn", "copyStoryBtn"].forEach((id) => {
       const button = document.getElementById(id);
       if (button) button.disabled = !ready;
     });
@@ -487,60 +487,6 @@ window.LineupStory = (function () {
     }
   }
 
-  function updateMobileActionLabels() {
-    const saveButton = document.getElementById("saveStoryBtn");
-    if (!saveButton) return;
-    saveButton.textContent = isMobileStoryContext() ? "Salva in Foto" : "Salva";
-  }
-
-  function ensurePhotoSaveSheet() {
-    let sheet = document.getElementById("photoSaveSheet");
-    if (sheet) return sheet;
-
-    sheet = document.createElement("section");
-    sheet.id = "photoSaveSheet";
-    sheet.className = "photo-save-sheet";
-    sheet.setAttribute("role", "dialog");
-    sheet.setAttribute("aria-modal", "true");
-    sheet.setAttribute("aria-label", "Salva grafica in Foto");
-    sheet.innerHTML = `
-      <div class="photo-save-sheet__dialog">
-        <div class="photo-save-sheet__copy">
-          <strong>Salva in Foto</strong>
-          Tieni premuta l’immagine e scegli “Salva in Foto”.
-        </div>
-        <img class="photo-save-sheet__image" alt="Grafica della formazione pronta da salvare">
-        <button class="photo-save-sheet__close" type="button">Chiudi</button>
-      </div>
-    `;
-
-    sheet.querySelector(".photo-save-sheet__close")?.addEventListener("click", () => {
-      sheet.classList.remove("is-open");
-      sheet.setAttribute("aria-hidden", "true");
-    });
-
-    sheet.addEventListener("click", (event) => {
-      if (event.target === sheet) {
-        sheet.classList.remove("is-open");
-        sheet.setAttribute("aria-hidden", "true");
-      }
-    });
-
-    document.body.appendChild(sheet);
-    return sheet;
-  }
-
-  function openPhotoSaveSheet() {
-    if (!currentUrl) return false;
-    const sheet = ensurePhotoSaveSheet();
-    const image = sheet.querySelector(".photo-save-sheet__image");
-    if (!image) return false;
-    image.src = currentUrl;
-    sheet.classList.add("is-open");
-    sheet.setAttribute("aria-hidden", "false");
-    return true;
-  }
-
   function downloadDesktop() {
     if (!currentBlob) return;
     const link = document.createElement("a");
@@ -552,7 +498,7 @@ window.LineupStory = (function () {
     showToast("Immagine pronta per il salvataggio", "success");
   }
 
-  async function invokeNativeShare(intent = "share") {
+  async function invokeNativeShare() {
     const file = storyFile();
     if (!file || !canShareFile(file)) return false;
 
@@ -561,10 +507,6 @@ window.LineupStory = (function () {
         title: "Formazione Lineup Fanta",
         files: [file]
       });
-
-      if (intent === "save") {
-        showToast("Nel pannello scegli “Salva immagine”", "success");
-      }
       return true;
     } catch (error) {
       // An intentional close is handled and must not trigger a fallback download.
@@ -575,7 +517,7 @@ window.LineupStory = (function () {
   }
 
   async function share() {
-    const shared = await invokeNativeShare("share");
+    const shared = await invokeNativeShare();
     if (shared) return;
 
     if (isMobileStoryContext()) {
@@ -584,19 +526,6 @@ window.LineupStory = (function () {
     }
 
     downloadDesktop();
-  }
-
-  async function save() {
-    if (!isMobileStoryContext()) {
-      downloadDesktop();
-      return;
-    }
-
-    // Browser web apps cannot add a file to the iOS Photos library directly.
-    // Open a clean image view so Safari offers its native long-press “Save to Photos” action.
-    if (!openPhotoSaveSheet()) {
-      showToast("Non sono riuscito ad aprire l’immagine", "error");
-    }
   }
 
   async function copyImage() {
@@ -627,13 +556,11 @@ window.LineupStory = (function () {
 
   function bind() {
     document.getElementById("openStoryBtn")?.addEventListener("click", () => {
-      updateMobileActionLabels();
       open();
     });
     document.getElementById("closeStoryBtn")?.addEventListener("click", close);
     document.getElementById("shareStoryBtn")?.addEventListener("click", share);
     document.getElementById("copyStoryBtn")?.addEventListener("click", copyImage);
-    document.getElementById("saveStoryBtn")?.addEventListener("click", save);
 
     document.getElementById("storyModal")?.addEventListener("click", (event) => {
       if (event.target === event.currentTarget) close();
