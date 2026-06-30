@@ -1,5 +1,4 @@
-/* LINEUP FANTA — app chrome sticky + mobile action polish
-   Header and controls are one physical sticky component. */
+/* LINEUP FANTA — unified sticky app chrome + mobile photo-save sheet */
 
 html[data-route="league"] .sticky-app-chrome {
   position: sticky;
@@ -11,9 +10,9 @@ html[data-route="league"] .sticky-app-chrome {
 }
 
 html[data-route="league"] .sticky-app-chrome header {
-  position: relative;
-  top: auto;
-  z-index: auto;
+  position: relative !important;
+  top: auto !important;
+  z-index: auto !important;
   margin: 0;
 }
 
@@ -24,9 +23,9 @@ html[data-route="league"] .sticky-app-chrome__controls {
 }
 
 html[data-route="league"] .sticky-app-chrome .controls {
-  position: relative;
-  top: auto;
-  z-index: auto;
+  position: relative !important;
+  top: auto !important;
+  z-index: auto !important;
   width: min(1200px, 100%);
   margin: 0 auto;
   border-radius: 14px;
@@ -38,14 +37,60 @@ html[data-route="league"] .container {
   padding-top: 0;
 }
 
-html[data-route="league"] .content-wrapper {
-  min-width: 0;
+html[data-route="league"] .content-wrapper { min-width: 0; }
+
+.photo-save-sheet {
+  position: fixed;
+  z-index: 1600;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(5, 15, 12, .88);
+}
+
+.photo-save-sheet.is-open { display: flex; }
+
+.photo-save-sheet__dialog {
+  width: min(100%, 440px);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #fff;
+  text-align: center;
+}
+
+.photo-save-sheet__copy {
+  font-size: .9rem;
+  line-height: 1.35;
+}
+
+.photo-save-sheet__copy strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+
+.photo-save-sheet__image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: min(72vh, 760px);
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 18px 56px rgba(0,0,0,.38);
+  -webkit-touch-callout: default;
+  user-select: auto;
+}
+
+.photo-save-sheet__close {
+  align-self: center;
+  min-width: 118px;
+  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.12);
+  color: #fff;
 }
 
 @media (max-width: 767px) {
-  html[data-route="league"] .sticky-app-chrome__controls {
-    padding: 6px 10px 8px;
-  }
+  html[data-route="league"] .sticky-app-chrome__controls { padding: 6px 10px 8px; }
 
   html[data-route="league"] .sticky-app-chrome .controls {
     gap: 6px;
@@ -53,7 +98,6 @@ html[data-route="league"] .content-wrapper {
     border-radius: 12px;
   }
 
-  /* Keep the complete label readable: two balanced lines beat truncation. */
   html[data-route="league"] .output-copy-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;

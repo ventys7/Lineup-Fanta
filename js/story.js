@@ -493,6 +493,54 @@ window.LineupStory = (function () {
     saveButton.textContent = isMobileStoryContext() ? "Salva in Foto" : "Salva";
   }
 
+  function ensurePhotoSaveSheet() {
+    let sheet = document.getElementById("photoSaveSheet");
+    if (sheet) return sheet;
+
+    sheet = document.createElement("section");
+    sheet.id = "photoSaveSheet";
+    sheet.className = "photo-save-sheet";
+    sheet.setAttribute("role", "dialog");
+    sheet.setAttribute("aria-modal", "true");
+    sheet.setAttribute("aria-label", "Salva grafica in Foto");
+    sheet.innerHTML = `
+      <div class="photo-save-sheet__dialog">
+        <div class="photo-save-sheet__copy">
+          <strong>Salva in Foto</strong>
+          Tieni premuta l’immagine e scegli “Salva in Foto”.
+        </div>
+        <img class="photo-save-sheet__image" alt="Grafica della formazione pronta da salvare">
+        <button class="photo-save-sheet__close" type="button">Chiudi</button>
+      </div>
+    `;
+
+    sheet.querySelector(".photo-save-sheet__close")?.addEventListener("click", () => {
+      sheet.classList.remove("is-open");
+      sheet.setAttribute("aria-hidden", "true");
+    });
+
+    sheet.addEventListener("click", (event) => {
+      if (event.target === sheet) {
+        sheet.classList.remove("is-open");
+        sheet.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    document.body.appendChild(sheet);
+    return sheet;
+  }
+
+  function openPhotoSaveSheet() {
+    if (!currentUrl) return false;
+    const sheet = ensurePhotoSaveSheet();
+    const image = sheet.querySelector(".photo-save-sheet__image");
+    if (!image) return false;
+    image.src = currentUrl;
+    sheet.classList.add("is-open");
+    sheet.setAttribute("aria-hidden", "false");
+    return true;
+  }
+
   function downloadDesktop() {
     if (!currentBlob) return;
     const link = document.createElement("a");
@@ -544,9 +592,10 @@ window.LineupStory = (function () {
       return;
     }
 
-    const shared = await invokeNativeShare("save");
-    if (!shared) {
-      showToast("Salvataggio in Foto non disponibile su questo browser", "error");
+    // Browser web apps cannot add a file to the iOS Photos library directly.
+    // Open a clean image view so Safari offers its native long-press “Save to Photos” action.
+    if (!openPhotoSaveSheet()) {
+      showToast("Non sono riuscito ad aprire l’immagine", "error");
     }
   }
 

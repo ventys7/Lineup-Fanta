@@ -32,27 +32,32 @@
   <link rel="stylesheet" href="css/sticky-story-mobile.css">
 </head>
 <body>
+<div class="sticky-app-chrome">
 <header>
   <img class="logo" src="fantacalcio logo.png" alt="Logo">
   <h1>PianginaCUP</h1>
 </header>
+  <div class="sticky-app-chrome__controls">
+    <div class="controls">
+          <select id="managerSelect"><option>Caricamento…</option></select>
+          <button id="toggleRosterBtn" class="toggle-roster-btn">Rosa</button>
+          <select id="moduleSelect">
+            <option value="343">3-4-3</option>
+            <option value="352">3-5-2</option>
+            <option value="433">4-3-3</option>
+            <option value="442">4-4-2</option>
+            <option value="451">4-5-1</option>
+            <option value="532">5-3-2</option>
+            <option value="541">5-4-1</option>
+          </select>
+          <button id="openModalBtn">Visualizza / Copia</button>
+        </div>
+  </div>
+</div>
 
 <main class="container">
   <div class="content-wrapper">
-    <div class="controls">
-      <select id="managerSelect"><option>Caricamento…</option></select>
-      <button id="toggleRosterBtn" class="toggle-roster-btn">Rosa</button>
-      <select id="moduleSelect">
-        <option value="343">3-4-3</option>
-        <option value="352">3-5-2</option>
-        <option value="433">4-3-3</option>
-        <option value="442">4-4-2</option>
-        <option value="451">4-5-1</option>
-        <option value="532">5-3-2</option>
-        <option value="541">5-4-1</option>
-      </select>
-      <button id="openModalBtn">Visualizza / Copia</button>
-    </div>
+    
 
     <div class="grid">
       <section class="column">
