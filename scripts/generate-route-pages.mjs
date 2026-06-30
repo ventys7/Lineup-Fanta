@@ -6,29 +6,33 @@ import { fileURLToPath } from "node:url";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const checkOnly = process.argv.includes("--check");
 const template = readFileSync(resolve(root, "index.html"), "utf8");
+const iconVersion = "5";
 
 const routes = {
   fp: {
     name: "PianginaCUP",
-    favicon: "/assets/identity/fp-logo.png",
-    appleTouchIcon: "/assets/identity/fp-apple-touch-icon.png",
-    manifest: "/manifests/fp.webmanifest",
+    favicon: `/fp/favicon.png?v=${iconVersion}`,
+    appleTouchIcon: `/fp/apple-touch-icon.png?v=${iconVersion}`,
+    manifest: `/manifests/fp.webmanifest?v=${iconVersion}`,
     themeColor: "#7c3aed"
   },
   pd: {
     name: "LaLigaCUP",
-    favicon: "/assets/identity/pd-logo.png",
-    appleTouchIcon: "/assets/identity/pd-apple-touch-icon.png",
-    manifest: "/manifests/pd.webmanifest",
+    favicon: `/pd/favicon.png?v=${iconVersion}`,
+    appleTouchIcon: `/pd/apple-touch-icon.png?v=${iconVersion}`,
+    manifest: `/manifests/pd.webmanifest?v=${iconVersion}`,
     themeColor: "#b91c1c"
   }
 };
 
 function renderRoutePage(id, identity) {
   const staticHead = [
-    `  <meta name="apple-mobile-web-app-title" content="${identity.name}" data-lineup-static-identity>`,
     `  <meta name="theme-color" content="${identity.themeColor}" data-lineup-static-identity>`,
-    `  <link rel="icon" type="image/png" sizes="any" href="${identity.favicon}" data-lineup-static-identity>`,
+    `  <meta name="mobile-web-app-capable" content="yes" data-lineup-static-identity>`,
+    `  <meta name="apple-mobile-web-app-capable" content="yes" data-lineup-static-identity>`,
+    `  <meta name="apple-mobile-web-app-title" content="${identity.name}" data-lineup-static-identity>`,
+    `  <link rel="icon" type="image/png" sizes="512x512" href="${identity.favicon}" data-lineup-static-identity>`,
+    `  <link rel="shortcut icon" type="image/png" href="${identity.favicon}" data-lineup-static-identity>`,
     `  <link rel="apple-touch-icon" sizes="180x180" href="${identity.appleTouchIcon}" data-lineup-static-identity>`,
     `  <link rel="manifest" href="${identity.manifest}" data-lineup-static-identity>`
   ].join("\n");
@@ -66,5 +70,5 @@ if (checkOnly && outOfSync.length) {
 }
 
 if (!checkOnly) {
-  console.log(`✓ Generate route statiche aggiornate: ${outOfSync.length || 0}`);
+  console.log(`✓ Route statiche aggiornate: ${outOfSync.length || 0}`);
 }

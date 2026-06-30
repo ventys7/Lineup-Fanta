@@ -8,9 +8,9 @@ window.LINEUP_LEAGUES = Object.freeze({
     identity: Object.freeze({
       id: "fp",
       logo: "assets/identity/fp-logo.png",
-      favicon: "assets/identity/fp-logo.png",
-      appleTouchIcon: "assets/identity/fp-apple-touch-icon.png",
-      manifest: "manifests/fp.webmanifest"
+      favicon: "/fp/favicon.png?v=5",
+      appleTouchIcon: "/fp/apple-touch-icon.png?v=5",
+      manifest: "/manifests/fp.webmanifest?v=5"
     }),
     theme: {
       primary: "#7c3aed",
@@ -30,9 +30,9 @@ window.LINEUP_LEAGUES = Object.freeze({
     identity: Object.freeze({
       id: "pd",
       logo: "assets/identity/pd-logo.png",
-      favicon: "assets/identity/pd-logo.png",
-      appleTouchIcon: "assets/identity/pd-apple-touch-icon.png",
-      manifest: "manifests/pd.webmanifest"
+      favicon: "/pd/favicon.png?v=5",
+      appleTouchIcon: "/pd/apple-touch-icon.png?v=5",
+      manifest: "/manifests/pd.webmanifest?v=5"
     }),
     theme: {
       primary: "#b91c1c",

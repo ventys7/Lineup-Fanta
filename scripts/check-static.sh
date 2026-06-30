@@ -15,6 +15,7 @@ done
 
 python3 - <<'PYCHECK'
 from pathlib import Path
+import json
 import re
 
 html = Path("index.html").read_text(encoding="utf-8")
@@ -24,6 +25,8 @@ for path in re.findall(r'(?:src|href)="((?:js|css)/[^"?#]+)"', html):
         missing.append(path)
 if missing:
     raise SystemExit("Riferimenti locali mancanti: " + ", ".join(missing))
+
+json.loads(Path("vercel.json").read_text(encoding="utf-8"))
 PYCHECK
 
 node scripts/generate-route-pages.mjs --check
@@ -31,8 +34,10 @@ node scripts/generate-route-pages.mjs --check
 for asset in \
   assets/identity/fp-logo.png \
   assets/identity/pd-logo.png \
-  assets/identity/fp-apple-touch-icon.png \
-  assets/identity/pd-apple-touch-icon.png \
+  fp/favicon.png \
+  fp/apple-touch-icon.png \
+  pd/favicon.png \
+  pd/apple-touch-icon.png \
   manifests/fp.webmanifest \
   manifests/pd.webmanifest; do
   if [[ ! -f "$asset" ]]; then

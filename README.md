@@ -26,9 +26,16 @@ In locale, se il server statico non gestisce le rewrite Vercel, sono disponibili
 
 ## Identità visiva per rotta
 
-`/fp` usa il logo PianginaCUP e `/pd` quello LaLigaCUP nell'header, nel favicon e nell'icona Apple Home Screen. Per Safari le due route sono documenti statici generati (`fp/index.html` e `pd/index.html`): questo rende i tag `apple-touch-icon` disponibili già nel markup ricevuto, prima del JavaScript. La home `/` non pubblica un'icona di lega e resta volutamente neutra.
+`/fp` usa il logo PianginaCUP e `/pd` quello LaLigaCUP nell'header, nel favicon e nell'icona Apple Home Screen. Le due route sono documenti statici generati (`fp/index.html` e `pd/index.html`), così Safari riceve il rispettivo tag `apple-touch-icon` prima del JavaScript.
 
-Dopo ogni modifica a `index.html`, esegui `node scripts/generate-route-pages.mjs` e includi i file generati nel commit. Il controllo statico verifica che non siano fuori sync.
+Le icone Web Clip sono file fisici specifici della route:
+
+- `fp/favicon.png` e `fp/apple-touch-icon.png`
+- `pd/favicon.png` e `pd/apple-touch-icon.png`
+
+Restano intenzionalmente fuori dalla regola `no-store` di Vercel: Safari deve poterle conservare quando crea una scorciatoia Home Screen. I loro URL hanno una versione (`?v=5`) per forzare un nuovo download quando l'icona viene cambiata. La home `/` non dichiara favicon, manifest o icona Apple di lega e resta volutamente neutra.
+
+Dopo ogni modifica a `index.html` o alla configurazione delle icone, esegui `node scripts/generate-route-pages.mjs` e includi i file generati nel commit. Il controllo statico verifica che non siano fuori sync.
 
 ## Dati e persistenza
 
