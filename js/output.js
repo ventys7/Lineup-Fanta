@@ -1,138 +1,258 @@
-const roleOrder = { P: 0, D: 1, C: 2, A: 3 };
+/* OUTPUT - preview first; desktop copies explicitly, iOS selects text safely */
 
-function buildOutputText() {
+const OUTPUT_PROMPT = "Seleziona un’anteprima per copiare";
+
+function buildLineupModel() {
+  const model = window.FormationModel?.build();
+  if (!model) return null;
+
+  model.switchPair = window.LineupSwitch?.getPairForModel?.({
+    team: model.team,
+    starters: model.starters,
+    bench: model.bench
+  }) || null;
+
+  return model;
+}
+
+function getGoalkeeperBenchLabels(model) {
+  return Array.isArray(model?.goalkeeperBenchLabels) ? model.goalkeeperBenchLabels : [];
+}
+
+function buildWhatsAppOutput(model) {
+  const lines = [
+    `⚽ *${model.manager.toUpperCase()}*`,
+    `Modulo: ${model.module}`,
+    "",
+    "*TITOLARI*"
+  ];
+
+  model.starters.forEach((entry) => lines.push(`- ${entry.player.n}`));
+
+  lines.push("", "*PANCHINA*");
+  getGoalkeeperBenchLabels(model).forEach((label) => lines.push(`- ${label}`));
+  model.bench
+    .filter((entry) => entry.player.r !== "P")
+    .forEach((entry) => lines.push(`- ${entry.player.n}`));
+
+  if (model.switchPair) {
+    const switchLabel = model.switchPair.type === "plus" ? "SWITCH PLUS" : "SWITCH BASE";
+    lines.push("", `*${switchLabel}*`);
+    lines.push(`${model.switchPair.starter.n} ↔ ${model.switchPair.bench.n}`);
+  }
+
+  return lines.join("\n");
+}
+
+function getDocsSwitchSuffix(model, playerIndex) {
+  if (!model.switchPair) return "";
+
+  const isSelectedForSwitch =
+    playerIndex === model.switchPair.starterIndex ||
+    playerIndex === model.switchPair.benchIndex;
+
+  if (!isSelectedForSwitch) return "";
+  return model.switchPair.type === "plus" ? " (s+)" : " (s)";
+}
+
+function buildDocsOutput(model) {
+  const lines = [model.manager, `Modulo: ${model.module}`, "", "TITOLARI"];
+
+  model.starters.forEach((entry) => {
+    lines.push(`- ${entry.player.n}${getDocsSwitchSuffix(model, entry.index)}`);
+  });
+
+  lines.push("", "PANCHINA");
+  getGoalkeeperBenchLabels(model).forEach((label) => lines.push(`- ${label}`));
+  model.bench
+    .filter((entry) => entry.player.r !== "P")
+    .forEach((entry) => {
+      lines.push(`- ${entry.player.n}${getDocsSwitchSuffix(model, entry.index)}`);
+    });
+
+  return lines.join("\n");
+}
+
+function buildOutputText(format = "whatsapp") {
   try {
-    if (!currentManager) return "";
-
-    const module = document.getElementById("moduleSelect").value;
-    const formattedModule = [...module].join("-"); // E.g., "433" -> "4-3-3"
-    const team = db[currentManager].players;
-
-    const assignedPlayers = {};
-    const assignedBenchPlayers = {};
-
-    // 1. Mappatura slot assegnati
-    for (const [slotKey, playerIdx] of Object.entries(slotAssignments)) {
-      if (selectedPlayers.includes(playerIdx)) {
-        const player = team[playerIdx];
-        if (slotKey.startsWith('starter-')) assignedPlayers[slotKey] = player;
-        else if (slotKey.startsWith('bench-')) assignedBenchPlayers[slotKey] = player;
-      }
-    }
-
-    const assignedIndices = new Set(Object.values(slotAssignments));
-    const unassignedPlayers = selectedPlayers
-      .filter(i => !assignedIndices.has(i) && i >= 0 && i < team.length)
-      .map(i => team[i]);
-
-    const starters = [];
-
-    // 2. Gestione Titolari (Logica unificata per ruoli)
-    const rolesConfig = [
-      { key: 'GK', role: 'P', req: 1 },
-      { key: 'D', role: 'D', req: parseInt(module[0], 10) },
-      { key: 'C', role: 'C', req: parseInt(module[1], 10) },
-      { key: 'A', role: 'A', req: parseInt(module[2], 10) }
-    ];
-
-    rolesConfig.forEach(({ key, role, req }) => {
-      // Aggiungi quelli fissati manualmente negli slot
-      for (let i = 1; i <= req; i++) {
-        const p = assignedPlayers[`starter-${key}${key === 'GK' ? '1' : i}`];
-        if (p) starters.push(p);
-      }
-      // Riempi i buchi con i non assegnati dello stesso ruolo
-      const available = unassignedPlayers.filter(p => p.r === role);
-      let currentRoleCount = starters.filter(p => p.r === role).length;
-      
-      for (let i = 0; currentRoleCount < req && i < available.length; i++) {
-        starters.push(available[i]);
-        currentRoleCount++;
-      }
-    });
-
-    // 3. Gestione Panchina
-    const bench = Object.values(assignedBenchPlayers);
-    const remainingForBench = unassignedPlayers.filter(p => !starters.includes(p));
-    bench.push(...remainingForBench);
-    bench.sort((a, b) => roleOrder[a.r] - roleOrder[b.r]);
-
-    const getSwitchSuffix = (player) => {
-      const idx = team.indexOf(player);
-      const isSwitch = (switchStarterIndex === idx && switchBenchIndex !== null) || 
-                       (switchBenchIndex === idx && switchStarterIndex !== null);
-      return isSwitch ? (switchPlus ? ' (s+)' : ' (s)') : '';
-    };
-
-    // 4. Costruzione Stringa
-    let text = `⚽ **${currentManager.toUpperCase()}**\nMod: ${formattedModule}\n\nTITOLARI:\n`;
-    starters.forEach(p => text += `- ${p.n}${getSwitchSuffix(p)}\n`);
-
-    text += `\nPANCHINA:\n`;
-    const gkStarter = starters.find(p => p.r === "P");
-    
-    if (gkStarter) {
-      text += `- ${gkStarter.t || "Portiere"}\n`;
-      if (gkStarter.gkBlock) {
-        const otherBlock = team.find(p => 
-          p.r === "P" && p.isGkBlock && p.gkBlock !== gkStarter.gkBlock && 
-          !selectedPlayers.includes(team.indexOf(p))
-        );
-        if (otherBlock) text += `- ${otherBlock.t || "Portiere"}\n`;
-      }
-    }
-
-    bench.filter(p => p.r !== "P").forEach(p => {
-      text += `- ${p.n}${getSwitchSuffix(p)}\n`;
-    });
-
-    return text;
-  } catch (e) {
-    console.error("buildOutputText error:", e);
+    const model = buildLineupModel();
+    if (!model) return "";
+    return format === "docs" ? buildDocsOutput(model) : buildWhatsAppOutput(model);
+  } catch (error) {
+    console.error("buildOutputText error:", error);
     return "Errore nella generazione del testo";
   }
 }
 
-// --- Gestione UI e Clipboard ---
+let currentOutputFormat = null;
+let outputPreviewChosen = false;
 
-const toggleModal = (show) => {
+function isMobileOutput() {
+  return window.matchMedia?.("(max-width: 767px)").matches ?? false;
+}
+
+function getFormatLabel(format) {
+  return format === "docs" ? "Docs" : "WhatsApp";
+}
+
+function updateOutputActionState() {
+  const selectButton = document.getElementById("selectAllOutputBtn");
+  const copyButton = document.getElementById("copyPreviewBtn");
   const modal = document.getElementById("outputModal");
-  modal.classList.toggle("show", show);
-  modal.setAttribute("aria-hidden", !show);
-  setModalOpen(show);
-};
 
-const openModal = () => {
-  if (!currentManager) return showToast("Seleziona una squadra prima", "error");
-  document.getElementById("outputText").value = buildOutputText();
-  toggleModal(true);
-};
+  [["copyWhatsAppBtn", "whatsapp"], ["copyDocsBtn", "docs"]].forEach(([id, format]) => {
+    const button = document.getElementById(id);
+    if (!button) return;
+    const selected = currentOutputFormat === format && outputPreviewChosen;
+    button.classList.toggle("is-preview-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
 
-document.getElementById("openModalBtn").addEventListener("click", openModal);
-document.getElementById("fabCopy").addEventListener("click", openModal);
-document.getElementById("closeModalBtn").addEventListener("click", () => toggleModal(false));
+  if (selectButton) selectButton.disabled = !outputPreviewChosen;
+  if (copyButton) copyButton.disabled = !outputPreviewChosen;
+  if (modal) modal.dataset.previewReady = outputPreviewChosen ? "true" : "false";
+}
 
-document.getElementById("copyModalBtn").addEventListener("click", async () => {
-  const txt = document.getElementById("outputText").value;
-  try {
-    await navigator.clipboard.writeText(txt);
-    showToast("Formazione copiata!", "success");
-  } catch (err) {
-    fallbackCopy(txt);
+function showOutputPrompt() {
+  const textarea = document.getElementById("outputText");
+  if (textarea) {
+    textarea.value = OUTPUT_PROMPT;
+    textarea.classList.add("output-text--prompt");
   }
-});
+}
+
+function updateOutputPreview(format) {
+  currentOutputFormat = format;
+  outputPreviewChosen = true;
+
+  const textarea = document.getElementById("outputText");
+  if (textarea) {
+    textarea.value = buildOutputText(format);
+    textarea.classList.remove("output-text--prompt");
+  }
+  updateOutputActionState();
+}
+
+function toggleModal(show) {
+  const modal = document.getElementById("outputModal");
+  if (!modal) return;
+
+  modal.classList.toggle("show", show);
+  modal.setAttribute("aria-hidden", String(!show));
+  setModalOpen(show);
+}
+
+function closeModal() {
+  toggleModal(false);
+}
+
+function openModal() {
+  if (!currentManager) {
+    showToast("Seleziona una squadra prima", "error");
+    return;
+  }
+
+  currentOutputFormat = null;
+  outputPreviewChosen = false;
+  showOutputPrompt();
+  updateOutputActionState();
+  toggleModal(true);
+}
+
+async function copyText(text, format) {
+  if (!text) return;
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else if (!fallbackCopy(text)) {
+      return;
+    }
+
+    window.LineupPersistence?.markCopied(text, format);
+    showToast(`Formato ${getFormatLabel(format)} copiato!`, "success");
+  } catch (error) {
+    const copied = fallbackCopy(text);
+    if (copied) window.LineupPersistence?.markCopied(text, format);
+  }
+}
 
 function fallbackCopy(text) {
-  const textarea = document.createElement('textarea');
-  Object.assign(textarea.style, { position: 'fixed', opacity: '0' });
+  const textarea = document.createElement("textarea");
+  Object.assign(textarea.style, {
+    position: "fixed",
+    opacity: "0",
+    pointerEvents: "none"
+  });
+
   textarea.value = text;
   document.body.appendChild(textarea);
   textarea.select();
+
+  let copied = false;
   try {
-    const success = document.execCommand('copy');
-    showToast(success ? "Formazione copiata!" : "Copia fallita", success ? "success" : "error");
-  } catch (err) {
+    copied = document.execCommand("copy");
+    showToast(copied ? "Formazione copiata!" : "Copia fallita", copied ? "success" : "error");
+  } catch (error) {
     showToast("Errore durante la copia", "error");
   }
+
   document.body.removeChild(textarea);
+  return copied;
 }
+
+function blurAction(button) {
+  window.setTimeout(() => button?.blur(), 0);
+}
+
+function handleOutputAction(format, button) {
+  // Preview never copies. Only the dedicated Copy / Seleziona tutto controls do that.
+  updateOutputPreview(format);
+  blurAction(button);
+  return false;
+}
+
+function copyOutputPreview() {
+  if (!outputPreviewChosen || !currentOutputFormat) {
+    showToast(OUTPUT_PROMPT, "error");
+    return;
+  }
+  copyText(buildOutputText(currentOutputFormat), currentOutputFormat);
+}
+
+function selectAllOutput() {
+  if (!outputPreviewChosen || !currentOutputFormat) {
+    showToast(OUTPUT_PROMPT, "error");
+    return;
+  }
+
+  const textarea = document.getElementById("outputText");
+  if (!textarea || !textarea.value) return;
+
+  textarea.focus({ preventScroll: true });
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+  showToast("Testo selezionato", "success");
+}
+
+function replaceAndBindOutputButton(id, handler) {
+  const original = document.getElementById(id);
+  if (!original) return null;
+
+  const button = original.cloneNode(true);
+  original.replaceWith(button);
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    handler(event, button);
+  });
+  return button;
+}
+
+document.getElementById("openModalBtn")?.addEventListener("click", openModal);
+document.getElementById("fabCopy")?.addEventListener("click", openModal);
+document.getElementById("closeModalBtn")?.addEventListener("click", closeModal);
+replaceAndBindOutputButton("copyWhatsAppBtn", (event, button) => handleOutputAction("whatsapp", button));
+replaceAndBindOutputButton("copyDocsBtn", (event, button) => handleOutputAction("docs", button));
+replaceAndBindOutputButton("copyPreviewBtn", () => copyOutputPreview());
+replaceAndBindOutputButton("selectAllOutputBtn", () => selectAllOutput());

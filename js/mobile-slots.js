@@ -1,270 +1,143 @@
-/* MOBILE SLOTS - Rendering functions for mobile view */
+/* MOBILE SLOTS - Same formation model, touch-first interaction */
 
-
-
-function getMobileSlotContainer(slotId, isStarter){
-
-  return isStarter ? document.getElementById('mobileStartersSlots') : document.getElementById('mobileBenchSlots');
-
+function getMobileSlotContainer(slotId, isStarter) {
+  return isStarter
+    ? document.getElementById("mobileStartersSlots")
+    : document.getElementById("mobileBenchSlots");
 }
 
+function createMobileSlot(definition, entry, isStarter) {
+  const slot = document.createElement("button");
+  slot.type = "button";
+  slot.className = `slot formation-slot formation-slot--${isStarter ? "starter" : "bench"} formation-slot--mobile`;
+  slot.id = `mobile-${isStarter ? "starter" : "bench"}-${definition.id}`;
+  slot.dataset.role = definition.role;
+  slot.dataset.slotKey = definition.key;
+  slot.setAttribute("aria-label", `${definition.label}: ${entry?.player?.n || "vuoto"}`);
 
+  if (!entry?.player) slot.classList.add("empty");
+  if (entry?.player?.isTeamLabel) slot.classList.add("formation-slot--team-label");
 
-function renderMobileSlots(){
+  slot.appendChild(createFormationSlotVisual(definition.role, entry));
+  slot.onclick = () => handleMobileSlotClick(definition, isStarter, entry?.player || null);
+  return slot;
+}
 
-  if(!currentManager || !db[currentManager]) return;
-
-  
-
-  const module = document.getElementById("moduleSelect").value;
-
-  const defReq = parseInt(module[0],10);
-
-  const cenReq = parseInt(module[1],10);
-
-  const attReq = parseInt(module[2],10);
-
-  const team = db[currentManager].players;
-
-  
-
-  const assignedPlayers = {};
-
-  const assignedIndices = new Set();
-
-  
-
-  for(const slotKey in slotAssignments){
-
-    const playerIdx = slotAssignments[slotKey];
-
-    if(selectedPlayers.includes(playerIdx)){
-
-      assignedPlayers[slotKey] = team[playerIdx];
-
-      assignedIndices.add(playerIdx);
-
-    } else {
-
-      delete slotAssignments[slotKey];
-
+function groupMobileDefinitionsByRole(definitions) {
+  const groups = [];
+  definitions.forEach((definition) => {
+    const previous = groups.at(-1);
+    if (!previous || previous.role !== definition.role) {
+      groups.push({ role: definition.role, definitions: [] });
     }
+    groups.at(-1).definitions.push(definition);
+  });
+  return groups;
+}
 
-  }
+function renderMobileRoleRows(container, definitions, side, model) {
+  groupMobileDefinitionsByRole(definitions).forEach((group) => {
+    const row = document.createElement("div");
+    row.className = `formation-row formation-row--${group.role}`;
+    row.dataset.count = String(group.definitions.length);
+    row.style.setProperty("--row-count", String(group.definitions.length));
 
-  
+    group.definitions.forEach((definition) => {
+      const entry = side === "bench"
+        ? window.FormationModel.getBenchDisplayEntry(model, definition)
+        : model.slots.starter[definition.id] || null;
+      row.appendChild(createMobileSlot(definition, entry, side === "starter"));
+    });
 
-  const unassignedPlayers = selectedPlayers.filter(i => !assignedIndices.has(i)).map(i => team[i]);
+    container.appendChild(row);
+  });
+}
 
-  let counts = {P:0,D:0,C:0,A:0};
+/* Same priority layout as desktop: P P, then vertical D / C / A columns. */
+function renderMobileBenchMatrix(container, definitions, model) {
+  const keepers = definitions.filter((definition) => definition.role === "P");
+  const keeperRow = document.createElement("div");
+  keeperRow.className = "bench-keepers";
+  keeperRow.style.setProperty("--row-count", String(keepers.length));
 
-  let starters = [];
+  keepers.forEach((definition) => {
+    const entry = window.FormationModel.getBenchDisplayEntry(model, definition);
+    keeperRow.appendChild(createMobileSlot(definition, entry, false));
+  });
+  container.appendChild(keeperRow);
 
-  let bench = [];
+  const matrix = document.createElement("div");
+  matrix.className = "bench-matrix";
 
+  ["D", "C", "A"].forEach((role) => {
+    const column = document.createElement("div");
+    column.className = `bench-column bench-column--${role}`;
 
+    definitions
+      .filter((definition) => definition.role === role)
+      .forEach((definition) => {
+        const entry = window.FormationModel.getBenchDisplayEntry(model, definition);
+        column.appendChild(createMobileSlot(definition, entry, false));
+      });
 
-  unassignedPlayers.filter(p=>p.r==="P").forEach(p=>{ if(counts.P < 1){ starters.push(p); counts.P++; } else bench.push(p); });
+    matrix.appendChild(column);
+  });
 
-  unassignedPlayers.filter(p=>p.r==="D").forEach(p=>{ if(counts.D < defReq){ starters.push(p); counts.D++; } else bench.push(p); });
+  container.appendChild(matrix);
+}
 
-  unassignedPlayers.filter(p=>p.r==="C").forEach(p=>{ if(counts.C < cenReq){ starters.push(p); counts.C++; } else bench.push(p); });
+function updateMobileCounters(model) {
+  const starterCount = document.getElementById("mobileStarterCount");
+  const benchCount = document.getElementById("mobileBenchCount");
+  if (starterCount) starterCount.textContent = `(${model.counts.starters}/11)`;
+  if (benchCount) benchCount.textContent = `(${model.counts.bench}/11)`;
+}
 
-  unassignedPlayers.filter(p=>p.r==="A").forEach(p=>{ if(counts.A < attReq){ starters.push(p); counts.A++; } else bench.push(p); });
+function renderMobileSlots() {
+  const startersContainer = document.getElementById("mobileStartersSlots");
+  const benchContainer = document.getElementById("mobileBenchSlots");
+  if (!startersContainer || !benchContainer) return;
 
+  const model = window.FormationModel?.build();
+  if (!model) return;
 
+  startersContainer.replaceChildren();
+  benchContainer.replaceChildren();
+  startersContainer.style.display = "flex";
+  benchContainer.style.display = "block";
 
-  // --- TITOLARI MOBILE ---
+  renderMobileRoleRows(startersContainer, model.definitions.starter, "starter", model);
+  renderMobileBenchMatrix(benchContainer, model.definitions.bench, model);
+  updateMobileCounters(model);
 
-  const startersContainer = document.getElementById('mobileStartersSlots');
+  window.LineupSwitch?.reconcile();
+}
 
-  if(startersContainer) {
+function handleMobileSlotClick(definition, isStarter, currentPlayer) {
+  if (!currentManager) return;
 
-    startersContainer.innerHTML = '';
-
-    startersContainer.style.display = "flex";
-
-    startersContainer.style.flexDirection = "column";
-
-
-
-    const createMobileRow = (container, role, count, isStarter) => {
-
-      const row = document.createElement('div');
-
-      row.className = "formation-row";
-
-      for(let i=1; i<=count; i++){
-
-        const slotId = (role === 'P' && count === 1) ? 'GK1' : role + i;
-
-        const slotKey = (isStarter ? 'starter-' : 'bench-') + slotId;
-
-        
-
-        let p = assignedPlayers[slotKey];
-
-        if(!p){
-
-          const pool = isStarter ? starters : bench;
-
-          p = pool.find(s => s.r === role && pool.filter(x => x.r === role).indexOf(s) === (role === 'P' && isStarter ? 0 : i-1));
-
-        }
-
-        row.appendChild(createMobileSlot(slotId, p, isStarter));
-
-      }
-
-      container.appendChild(row);
-
+  const role = definition.role;
+  if (role === "P") {
+    currentPickerSlot = {
+      slotId: definition.id,
+      role,
+      isStarter,
+      currentPlayer
     };
-
-
-
-    createMobileRow(startersContainer, 'P', 1, true);
-
-    createMobileRow(startersContainer, 'D', defReq, true);
-
-    createMobileRow(startersContainer, 'C', cenReq, true);
-
-    createMobileRow(startersContainer, 'A', attReq, true);
-
-
-
-    // --- PANCHINA MOBILE ---
-
-    const benchContainer = document.getElementById('mobileBenchSlots');
-
-    if(benchContainer) {
-
-      benchContainer.innerHTML = '';
-
-      benchContainer.style.display = "flex";
-
-      benchContainer.style.flexDirection = "column";
-
-
-
-      const rowGk = document.createElement('div');
-
-      rowGk.className = "formation-row";
-
-      
-
-      const gkAssigned = assignedPlayers['starter-GK1'];
-
-      const gkStarter = gkAssigned || starters.find(p=>p.r==="P");
-
-      
-
-      const p1 = assignedPlayers['bench-P1'] || (gkStarter ? {n:gkStarter.t, r:'P', isTeamName:true} : null);
-
-      rowGk.appendChild(createMobileSlot('P1', p1, false));
-
-      
-
-      const starterGkBlock = gkStarter ? gkStarter.gkBlock : null;
-
-      const otherBlock = (gkStarter && starterGkBlock) ? team.find(p => p.r === "P" && p.isGkBlock && p.gkBlock !== starterGkBlock && !selectedPlayers.includes(team.indexOf(p))) : null;
-
-      const p2 = assignedPlayers['bench-P2'] || (otherBlock ? {n:otherBlock.t, r:'P', isTeamName:true} : null);
-
-      rowGk.appendChild(createMobileSlot('P2', p2, false));
-
-      
-
-      benchContainer.appendChild(rowGk);
-
-
-
-      createMobileRow(benchContainer, 'D', 3, false);
-
-      createMobileRow(benchContainer, 'C', 3, false);
-
-      createMobileRow(benchContainer, 'A', 3, false);
-
-    }
-
-  }
-
-}
-
-
-
-function createMobileSlot(slotId, player, isStarter){
-
-  const div = document.createElement('div');
-
-  div.className = 'slot mobile-slot ' + (player ? '' : 'empty');
-
-  div.id = 'mobile-' + (isStarter ? 'starter-' : 'bench-') + slotId;
-
-  
-
-  const role = (slotId.startsWith('P') || slotId.startsWith('GK')) ? 'P' : slotId[0];
-
-  const color = roleColors[role];
-
-  
-
-  if(player){
-
-    div.innerHTML = `<div class="slot-content" style="flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 2px; padding: 2px;">
-
-      <div class="badge" style="background:${color}; flex-shrink: 0; margin: 0; width: 16px; height: 16px; line-height: 16px; font-size: 10px; min-width: 16px;">${role}</div>
-
-      <div class="player-meta" style="white-space: normal; word-break: break-word; font-size: 0.75rem; line-height: 1; width: 100%; font-weight: 500;">${player.n}</div>
-
-    </div>`;
-
-  } else {
-
-    div.innerHTML = `<div class="slot-content" style="flex-direction: column; align-items: center; justify-content: center;">
-
-      <div class="badge" style="background:${color}; flex-shrink: 0; margin: 0; width: 16px; height: 16px; line-height: 16px; font-size: 10px; min-width: 16px;">${role}</div>
-
-      <div class="player-meta" style="color:var(--muted); font-size: 0.75rem;">+</div>
-
-    </div>`;
-
-  }
-
-  
-
-  div.onclick = () => handleMobileSlotClick(slotId, role, isStarter, player);
-
-  return div;
-
-}
-
-
-
-function handleMobileSlotClick(slotId, role, isStarter, currentPlayer){
-
-  if(!currentManager) return;
-
-  if(role === 'P'){
-
-    currentPickerSlot = {slotId, role, isStarter, currentPlayer};
-
-    showGkChoiceModalForMobile(slotId, isStarter, currentPlayer);
-
+    showGkChoiceModalForMobile(definition.id, isStarter, currentPlayer);
     return;
-
   }
 
-  if(currentPlayer && currentPlayer.isTeamName){
-
+  if (currentPlayer?.isTeamLabel) {
     showSlotPicker(role, null);
-
     return;
-
   }
 
-  currentPickerSlot = {slotId, role, isStarter, currentPlayer};
-
+  currentPickerSlot = {
+    slotId: definition.id,
+    role,
+    isStarter,
+    currentPlayer
+  };
   showSlotPicker(role, currentPlayer);
-
 }
-

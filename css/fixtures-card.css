@@ -1,0 +1,293 @@
+/* KICK-OFF FIXTURE CARD — isolated component stylesheet */
+html[data-route="league"] .kickoff-fixtures-card {
+  width: 100%;
+  margin: 0 0 20px;
+  padding: 22px;
+  border: 1px solid color-mix(in srgb, var(--primary, #7c3aed) 26%, #e2e8e5);
+  border-radius: 20px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--primary-bg, #f5f0ff) 76%, #ffffff) 0%, #ffffff 68%);
+  box-shadow: 0 10px 28px rgba(19, 33, 28, .07);
+  text-align: center;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__header,
+html[data-route="league"] .kickoff-fixtures-card__primary {
+  display: grid;
+  justify-items: center;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__header { gap: 8px; }
+
+html[data-route="league"] .kickoff-fixtures-card__competition,
+html[data-route="league"] .kickoff-fixtures-card__kickoff,
+html[data-route="league"] .kickoff-fixtures-card__countdown,
+html[data-route="league"] .kickoff-fixtures-card__round-state,
+html[data-route="league"] .kickoff-fixtures-card__panel-title,
+html[data-route="league"] .kickoff-fixtures-card__match-date,
+html[data-route="league"] .kickoff-fixtures-card__match-time,
+html[data-route="league"] .kickoff-fixtures-card__primary__teams-label,
+html[data-route="league"] .kickoff-fixtures-card__match__teams-label {
+  margin: 0;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__competition {
+  color: color-mix(in srgb, var(--primary, #7c3aed) 82%, #111);
+  font-size: clamp(.94rem, 1.8vw, 1.08rem);
+  font-weight: 950;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__countdown {
+  color: var(--primary, #7c3aed);
+  font-size: clamp(1.72rem, 3.3vw, 2.42rem);
+  font-weight: 950;
+  letter-spacing: -.055em;
+  line-height: 1;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__round-state {
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--primary, #7c3aed) 22%, #e2e8e5);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--primary, #7c3aed) 82%, #15211d);
+  background: color-mix(in srgb, var(--primary-bg, #f5f0ff) 70%, #fff);
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__primary {
+  gap: 8px;
+  margin-top: 18px;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__primary__teams,
+html[data-route="league"] .kickoff-fixtures-card__match__teams {
+  display: grid;
+  grid-template-columns: 34px minmax(0, auto) 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  width: 100%;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__primary__teams-label,
+html[data-route="league"] .kickoff-fixtures-card__match__teams-label {
+  min-width: 0;
+  color: #18221f;
+  font-size: clamp(1.06rem, 2vw, 1.3rem);
+  font-weight: 930;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+  text-align: center;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__crest {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__crest.is-missing { visibility: hidden; }
+
+html[data-route="league"] .kickoff-fixtures-card__additional {
+  color: var(--primary, #7c3aed);
+  white-space: nowrap;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__kickoff {
+  color: #66716c;
+  font-size: .88rem;
+  font-weight: 780;
+  line-height: 1.35;
+  text-transform: capitalize;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__toggle {
+  min-height: 42px;
+  margin-top: 5px;
+  padding: 10px 16px;
+  border: 1px solid color-mix(in srgb, var(--primary, #7c3aed) 30%, #dcdce4);
+  border-radius: 12px;
+  color: var(--primary, #7c3aed);
+  background: #fff;
+  font: inherit;
+  font-size: .79rem;
+  font-weight: 880;
+  cursor: pointer;
+  transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__toggle:hover,
+html[data-route="league"] .kickoff-fixtures-card__toggle:focus-visible {
+  border-color: var(--primary, #7c3aed);
+  outline: none;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__toggle.is-open {
+  border-color: var(--primary, #7c3aed);
+  color: #fff;
+  background: var(--primary, #7c3aed);
+}
+
+html[data-route="league"] .kickoff-fixtures-card__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  overflow: hidden;
+  border-top: 0 solid transparent;
+  transition: grid-template-rows .22s ease, margin-top .22s ease, padding-top .22s ease, border-color .22s ease;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__panel-content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 18px;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .16s ease, transform .22s ease;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__panel.is-open {
+  grid-template-rows: 1fr;
+  margin-top: 17px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--primary, #7c3aed) 16%, #dfe4e1);
+}
+
+html[data-route="league"] .kickoff-fixtures-card__panel.is-open .kickoff-fixtures-card__panel-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html[data-route="league"] .kickoff-fixtures-card__panel-title {
+  grid-column: 1 / -1;
+  color: color-mix(in srgb, var(--primary, #7c3aed) 80%, #17221e);
+  font-size: .82rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__match {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px 10px;
+  border: 1px solid color-mix(in srgb, var(--primary, #7c3aed) 13%, #e6e7ea);
+  border-radius: 14px;
+  background: rgba(255,255,255,.66);
+  text-align: center;
+  transition: opacity .18s ease, filter .18s ease;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__match.is-played {
+  opacity: .48;
+  filter: grayscale(.58);
+}
+html[data-route="league"] .kickoff-fixtures-card__match.is-played .kickoff-fixtures-card__match__teams-label {
+  font-style: italic;
+}
+html[data-route="league"] .kickoff-fixtures-card__match.is-live {
+  border-color: color-mix(in srgb, var(--primary, #7c3aed) 48%, #e6e7ea);
+  background: color-mix(in srgb, var(--primary-bg, #f5f0ff) 55%, #fff);
+}
+html[data-route="league"] .kickoff-fixtures-card__match.is-postponed {
+  opacity: .68;
+  filter: grayscale(.35);
+}
+
+html[data-route="league"] .kickoff-fixtures-card__match-date {
+  color: #68736d;
+  font-size: .72rem;
+  font-weight: 820;
+  line-height: 1.25;
+  text-transform: capitalize;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__match-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 18px;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__match-time {
+  color: var(--primary, #7c3aed);
+  font-size: .86rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__state {
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: rgba(23, 67, 57, .1);
+  color: #496259;
+  font-size: .61rem;
+  font-weight: 850;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+html[data-route="league"] .kickoff-fixtures-card__state.is-live { color: #fff; background: var(--primary, #7c3aed); }
+
+html[data-route="league"] .kickoff-fixtures-card__match__teams {
+  grid-template-columns: 27px minmax(0, auto) 27px;
+  gap: 8px;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__match__teams-label {
+  font-size: .88rem;
+  font-weight: 850;
+}
+
+html[data-route="league"] .kickoff-fixtures-card__match .kickoff-fixtures-card__crest {
+  width: 26px;
+  height: 26px;
+}
+
+@media (max-width: 767px) {
+  html[data-route="league"] .kickoff-fixtures-card {
+    width: 100%;
+    margin: 0 0 18px;
+    padding: 20px 15px;
+    border-radius: 18px;
+  }
+
+  html[data-route="league"] .kickoff-fixtures-card__competition { font-size: .96rem; }
+  html[data-route="league"] .kickoff-fixtures-card__countdown { font-size: 1.92rem; }
+  html[data-route="league"] .kickoff-fixtures-card__primary { margin-top: 16px; }
+
+  html[data-route="league"] .kickoff-fixtures-card__primary__teams {
+    grid-template-columns: 31px minmax(0, auto) 31px;
+    gap: 9px;
+  }
+  html[data-route="league"] .kickoff-fixtures-card__primary__teams-label { font-size: 1.08rem; }
+  html[data-route="league"] .kickoff-fixtures-card__crest { width: 29px; height: 29px; }
+  html[data-route="league"] .kickoff-fixtures-card__kickoff { font-size: .84rem; }
+  html[data-route="league"] .kickoff-fixtures-card__toggle { width: 100%; margin-top: 6px; }
+
+  html[data-route="league"] .kickoff-fixtures-card__panel-content {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  html[data-route="league"] .kickoff-fixtures-card__match { padding: 12px 10px; }
+  html[data-route="league"] .kickoff-fixtures-card__match__teams-label { font-size: .9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-route="league"] .kickoff-fixtures-card__panel,
+  html[data-route="league"] .kickoff-fixtures-card__panel-content,
+  html[data-route="league"] .kickoff-fixtures-card__toggle {
+    transition: none;
+  }
+}

@@ -1,66 +1,83 @@
-/* SWITCH UI - Rendering functions */
+/* SWITCH UI - Shared desktop/mobile rendering, rebuilt as a compact visual pair */
 
-function updateSwitchUI(){
-  const starterSlot = document.getElementById('switchStarterSlot');
-  const benchSlot = document.getElementById('switchBenchSlot');
-  const starterSlotMobile = document.getElementById('switchStarterSlotMobile');
-  const benchSlotMobile = document.getElementById('switchBenchSlotMobile');
-  
-  // Show switch section when manager is selected
-  const switchSection = document.getElementById('switchSection');
-  const switchSectionMobile = document.getElementById('mobileSwitchSection');
-  if(switchSection && currentManager){
-    switchSection.style.display = "block";
-  }
-  if(switchSectionMobile && currentManager){
-    switchSectionMobile.style.display = "block";
-  }
-  
-  if(!starterSlot || !benchSlot){
-    setTimeout(updateSwitchUI, 100);
-    return;
-  }
-  
-  const clearStarterBtn = document.getElementById('clearStarterSwitch');
-  const clearBenchBtn = document.getElementById('clearBenchSwitch');
-  const clearStarterBtnMobile = document.getElementById('clearStarterSwitchMobile');
-  const clearBenchBtnMobile = document.getElementById('clearBenchSwitchMobile');
-  
-  if(!db || !currentManager || !db[currentManager]) return;
-  
-  const team = db[currentManager].players;
-  if(!team || team.length === 0) return;
-  
-  function renderSwitchSlot(slotEl, playerIndex, isStarter){
-    if(!slotEl) return;
-    
-    if(playerIndex === null || !team[playerIndex]){
-      slotEl.innerHTML = '<div class="switch-slot-content"><span class="switch-slot-placeholder">+</span></div>';
-      slotEl.classList.remove('has-player');
+function updateSwitchUI() {
+  const switchSection = document.getElementById("switchSection");
+  const switchSectionMobile = document.getElementById("mobileSwitchSection");
+  const isVisible = Boolean(currentManager);
+
+  if (switchSection) switchSection.style.display = isVisible ? "block" : "none";
+  if (switchSectionMobile) switchSectionMobile.style.display = isVisible ? "block" : "none";
+  if (!isVisible || !db || !currentManager || !db[currentManager]) return;
+
+  const team = db[currentManager].players || [];
+  const state = window.LineupSwitch?.getState() || {
+    starterIndex: switchStarterIndex,
+    benchIndex: switchBenchIndex,
+    plus: switchPlus
+  };
+
+  function renderSwitchSlot(slotEl, playerIndex) {
+    if (!slotEl) return;
+
+    const player = Number.isInteger(playerIndex) ? team[playerIndex] : null;
+    slotEl.replaceChildren();
+    slotEl.classList.toggle("has-player", Boolean(player));
+    slotEl.dataset.role = player?.r || "";
+
+    const content = document.createElement("span");
+    content.className = "switch-slot-content";
+
+    if (!player) {
+      const placeholder = document.createElement("span");
+      placeholder.className = "switch-slot-placeholder";
+      placeholder.textContent = "＋";
+      content.appendChild(placeholder);
     } else {
-      const p = team[playerIndex];
-      const color = roleColors[p.r] || '#dc3545';
-      slotEl.innerHTML = `<div class="switch-slot-content">
-        <div class="badge" style="background:${color}">${p.r}</div>
-        <span class="player-name">${p.n}</span>
-      </div>`;
-      slotEl.classList.add('has-player');
+      const role = document.createElement("span");
+      role.className = "switch-slot__role";
+      role.dataset.role = player.r;
+      role.textContent = player.r;
+
+      const identity = document.createElement("span");
+      identity.className = "switch-slot__identity";
+
+      const name = document.createElement("span");
+      name.className = "switch-slot__name";
+      name.textContent = player.n || "Giocatore";
+
+      const club = document.createElement("span");
+      club.className = "switch-slot__team";
+      club.textContent = player.t || "";
+
+      identity.append(name, club);
+      content.append(role, identity);
     }
+
+    slotEl.appendChild(content);
   }
-  
-  renderSwitchSlot(starterSlot, switchStarterIndex, true);
-  renderSwitchSlot(benchSlot, switchBenchIndex, false);
-  renderSwitchSlot(starterSlotMobile, switchStarterIndex, true);
-  renderSwitchSlot(benchSlotMobile, switchBenchIndex, false);
-  
-  const showClear = (val, btn) => { if(btn) btn.style.display = val !== null ? 'inline-block' : 'none'; };
-  showClear(switchStarterIndex, clearStarterBtn);
-  showClear(switchBenchIndex, clearBenchBtn);
-  showClear(switchStarterIndex, clearStarterBtnMobile);
-  showClear(switchBenchIndex, clearBenchBtnMobile);
-  
-  const plusBtn = document.getElementById('switchPlusBtn');
-  const plusBtnMobile = document.getElementById('switchPlusBtnMobile');
-  if(plusBtn) plusBtn.classList.toggle('active', switchPlus);
-  if(plusBtnMobile) plusBtnMobile.classList.toggle('active', switchPlus);
+
+  renderSwitchSlot(document.getElementById("switchStarterSlot"), state.starterIndex);
+  renderSwitchSlot(document.getElementById("switchBenchSlot"), state.benchIndex);
+  renderSwitchSlot(document.getElementById("switchStarterSlotMobile"), state.starterIndex);
+  renderSwitchSlot(document.getElementById("switchBenchSlotMobile"), state.benchIndex);
+
+  function setClearVisibility(button, value) {
+    if (button) button.style.display = Number.isInteger(value) ? "inline-flex" : "none";
+  }
+
+  setClearVisibility(document.getElementById("clearStarterSwitch"), state.starterIndex);
+  setClearVisibility(document.getElementById("clearBenchSwitch"), state.benchIndex);
+  setClearVisibility(document.getElementById("clearStarterSwitchMobile"), state.starterIndex);
+  setClearVisibility(document.getElementById("clearBenchSwitchMobile"), state.benchIndex);
+
+  [
+    document.getElementById("switchPlusBtn"),
+    document.getElementById("switchPlusBtnMobile")
+  ].forEach((button) => {
+    if (!button) return;
+    button.classList.toggle("active", state.plus);
+    button.dataset.mode = state.plus ? "plus" : "base";
+    button.setAttribute("aria-pressed", String(state.plus));
+    button.title = state.plus ? "Switch Plus attivo" : "Passa allo Switch Plus";
+  });
 }

@@ -1,0 +1,1201 @@
+/* LINEUP FANTA — one active formation layout
+   This replaces the stacked Step 6 CSS patches. */
+
+:root {
+  --pitch-deep: #174339;
+  --pitch-mid: #286552;
+  --pitch-light: #3a7f67;
+  --pitch-line: rgba(240, 255, 248, .35);
+  --formation-ink: #173d32;
+  --formation-muted: #6e837b;
+  --formation-surface: #f4faf7;
+  --formation-border: rgba(23, 67, 57, .14);
+}
+
+/* ----- shared controls / desktop canvas ----- */
+
+html[data-route="league"] .content-wrapper { gap: 0; }
+
+html[data-route="league"] .controls {
+  position: relative;
+  top: auto;
+  z-index: 1;
+  border-color: color-mix(in srgb, var(--primary) 16%, #d7e6df);
+  box-shadow: 0 14px 34px rgba(23, 67, 57, .08);
+}
+
+html[data-route="league"] .column {
+  padding: 18px;
+  border-color: rgba(23, 67, 57, .12);
+  box-shadow: 0 18px 44px rgba(23, 67, 57, .09);
+}
+
+html[data-route="league"] .section-title-row,
+html[data-route="league"] .column > .mt-12.font-600 {
+  align-items: center;
+  color: var(--formation-ink);
+  font-size: .82rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* The roster is an overlay. It cannot resize the pitch, and scroll cannot chain
+   from its inner list into the page. */
+html[data-route="league"] .roster-drawer {
+  position: fixed;
+  /* Header + controls are one sticky shell: start the drawer beneath it. */
+  top: var(--app-chrome-height, 132px);
+  right: 0;
+  bottom: 0;
+  width: min(420px, 92vw) !important;
+  height: auto !important;
+  visibility: hidden;
+  transform: translateX(105%);
+  transition: transform .22s ease, visibility .22s step-end;
+  z-index: 700;
+  overflow: hidden;
+  background: var(--card);
+  border-left: 1px solid var(--primary-border);
+  box-shadow: -16px 0 44px rgba(23, 67, 57, .18);
+}
+html[data-route="league"] .roster-drawer.open {
+  visibility: visible;
+  transform: translateX(0);
+  transition: transform .22s ease;
+}
+html[data-route="league"] .roster-drawer-inner {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+html[data-route="league"].roster-open,
+html[data-route="league"].roster-open body {
+  overscroll-behavior: none;
+}
+
+/* ----- shared formation primitives ----- */
+
+html[data-route="league"] #startersSlots,
+html[data-route="league"] #mobileStartersSlots {
+  position: relative;
+  isolation: isolate;
+  display: flex !important;
+  flex-direction: column-reverse !important;
+  width: 100%;
+  margin-top: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 22px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.035) 50%, transparent 50%) 0 0 / 64px 64px,
+    linear-gradient(180deg, var(--pitch-light), var(--pitch-mid) 52%, var(--pitch-deep));
+  box-shadow: inset 0 0 0 1px rgba(4, 35, 26, .28), inset 0 -30px 90px rgba(4, 35, 26, .18);
+}
+
+html[data-route="league"] #startersSlots::before,
+html[data-route="league"] #mobileStartersSlots::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 18px;
+  border: 2px solid var(--pitch-line);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+html[data-route="league"] #startersSlots::after,
+html[data-route="league"] #mobileStartersSlots::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  right: 18px;
+  left: 18px;
+  height: 1px;
+  background: var(--pitch-line);
+  pointer-events: none;
+}
+
+html[data-route="league"] #startersSlots .formation-row,
+html[data-route="league"] #mobileStartersSlots .formation-row {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+html[data-route="league"] .slot.formation-slot {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  overflow: visible;
+  cursor: pointer;
+}
+
+html[data-route="league"] .slot.formation-slot:hover,
+html[data-route="league"] .slot.formation-slot:active {
+  transform: none;
+  filter: none;
+}
+
+html[data-route="league"] .formation-slot__content {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  place-items: center;
+}
+
+html[data-route="league"] .formation-shirt {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "role"
+    "name"
+    "team";
+  justify-items: center;
+  align-content: center;
+  width: clamp(110px, 12vw, 142px);
+  min-height: 108px;
+  padding: 9px 10px 10px;
+  row-gap: 0;
+  border: 1px solid rgba(255,255,255,.64);
+  border-radius: 14px 14px 18px 18px;
+  color: #fff;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--primary-light) 78%, transparent),
+    color-mix(in srgb, var(--primary) 86%, transparent)
+  );
+  box-shadow: 0 9px 18px rgba(4, 28, 21, .25), inset 0 1px rgba(255,255,255,.28);
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+
+html[data-route="league"] .formation-shirt::before,
+html[data-route="league"] .formation-shirt::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  width: 14px;
+  height: 24px;
+  border-radius: 7px;
+  background: inherit;
+  box-shadow: inherit;
+  z-index: 0;
+}
+
+html[data-route="league"] .formation-shirt::before {
+  left: -7px;
+  transform: rotate(24deg);
+}
+html[data-route="league"] .formation-shirt::after {
+  right: -7px;
+  transform: rotate(-24deg);
+}
+
+html[data-route="league"] .formation-shirt > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-route="league"] .formation-slot:hover .formation-shirt,
+html[data-route="league"] .formation-slot:focus-visible .formation-shirt,
+html[data-route="league"] .formation-slot.drag-over .formation-shirt {
+  transform: translateY(-3px);
+  box-shadow: 0 13px 24px rgba(4, 28, 21, .3), inset 0 1px rgba(255,255,255,.3);
+}
+
+html[data-route="league"] .formation-slot.drag-over .formation-shirt {
+  outline: 3px solid rgba(219, 255, 235, .78);
+}
+
+html[data-route="league"] .formation-shirt--empty {
+  color: rgba(239, 255, 247, .84);
+  background: rgba(7, 41, 31, .22);
+  border: 1px dashed rgba(239, 255, 247, .54);
+  box-shadow: none;
+}
+
+html[data-route="league"] .formation-shirt--empty::before,
+html[data-route="league"] .formation-shirt--empty::after {
+  box-shadow: none;
+}
+
+html[data-route="league"] .formation-slot--team-label .formation-shirt {
+  color: #24473d;
+  background: #dceee6;
+  border-color: #b9d9cb;
+  box-shadow: 0 5px 12px rgba(23, 67, 57, .1);
+}
+
+html[data-route="league"] .formation-shirt__role {
+  grid-area: role;
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 20px;
+  margin-bottom: 14px;
+  border-radius: 999px;
+  border: 0;
+  color: #15382e;
+  background: rgba(255,255,255,.92);
+  font-size: .61rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+html[data-route="league"] .formation-shirt__name,
+html[data-route="league"] .formation-shirt__team {
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+  text-align: center;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+html[data-route="league"] .formation-shirt__name {
+  grid-area: name;
+  color: inherit;
+  font-size: .86rem;
+  font-weight: 850;
+  line-height: 1.12;
+}
+
+html[data-route="league"] .formation-shirt__team {
+  grid-area: team;
+  display: block;
+  margin-top: 5px;
+  color: rgba(255,255,255,.8);
+  font-size: .69rem;
+  font-weight: 650;
+  line-height: 1.1;
+}
+
+html[data-route="league"] .formation-slot--team-label .formation-shirt__team {
+  display: none;
+}
+
+/* Fixed role colours: independent from FP / PD theme. */
+html[data-route="league"] .formation-shirt[data-role="P"] .formation-shirt__role {
+  color: #a16207;
+  background: #fef3c7;
+}
+html[data-route="league"] .formation-shirt[data-role="D"] .formation-shirt__role {
+  color: #2563eb;
+  background: #dbeafe;
+}
+html[data-route="league"] .formation-shirt[data-role="C"] .formation-shirt__role {
+  color: #15803d;
+  background: #dcfce7;
+}
+html[data-route="league"] .formation-shirt[data-role="A"] .formation-shirt__role {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* ----- bench matrix ----- */
+
+html[data-route="league"] #benchSlots,
+html[data-route="league"] #mobileBenchSlots {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid rgba(23, 67, 57, .12);
+  border-radius: 18px;
+  background: #f4faf7;
+}
+
+html[data-route="league"] .bench-keepers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: min(100%, 480px);
+  margin: 0 auto 12px;
+}
+
+html[data-route="league"] .bench-matrix {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+html[data-route="league"] .bench-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+html[data-route="league"] #benchSlots .formation-slot,
+html[data-route="league"] #mobileBenchSlots .formation-slot {
+  min-height: 92px;
+}
+
+html[data-route="league"] #benchSlots .formation-shirt,
+html[data-route="league"] #mobileBenchSlots .formation-shirt {
+  width: 100%;
+  min-height: 92px;
+  padding: 8px 9px 9px;
+  color: #21443a;
+  background: rgba(255,255,255,.94);
+  border-color: rgba(217,233,226,.96);
+  border-radius: 12px;
+  box-shadow: 0 4px 11px rgba(23, 67, 57, .08);
+}
+
+html[data-route="league"] #benchSlots .formation-shirt::before,
+html[data-route="league"] #benchSlots .formation-shirt::after,
+html[data-route="league"] #mobileBenchSlots .formation-shirt::before,
+html[data-route="league"] #mobileBenchSlots .formation-shirt::after {
+  display: none;
+}
+
+html[data-route="league"] #benchSlots .formation-shirt--empty,
+html[data-route="league"] #mobileBenchSlots .formation-shirt--empty {
+  color: #83938d;
+  background: rgba(88, 104, 98, .14);
+  border-color: rgba(128, 145, 138, .32);
+  box-shadow: none;
+}
+
+html[data-route="league"] #benchSlots .formation-shirt__name,
+html[data-route="league"] #mobileBenchSlots .formation-shirt__name {
+  color: #21443a;
+  font-size: .82rem;
+}
+
+html[data-route="league"] #benchSlots .formation-shirt__team,
+html[data-route="league"] #mobileBenchSlots .formation-shirt__team {
+  color: #667a72;
+  font-size: .66rem;
+}
+
+html[data-route="league"] #benchSlots .formation-slot--team-label .formation-shirt__team,
+html[data-route="league"] #mobileBenchSlots .formation-slot--team-label .formation-shirt__team {
+  display: none;
+}
+
+/* ----- Switch ----- */
+
+html[data-route="league"] .switch-section {
+  width: 100%;
+  margin: 18px 0 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+html[data-route="league"] .switch-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--formation-border);
+  border-radius: 18px;
+  background: var(--formation-surface);
+}
+
+html[data-route="league"] .switch-panel__header {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+html[data-route="league"] .switch-panel__title h3 {
+  margin: 0;
+  color: var(--formation-ink);
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+html[data-route="league"] .switch-panel__eyebrow {
+  margin: 4px 0 0;
+  color: var(--formation-muted);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+html[data-route="league"] .switch-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  order: 2;
+}
+
+html[data-route="league"] .switch-picker-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  text-align: center;
+}
+
+html[data-route="league"] .switch-picker-label {
+  color: var(--formation-muted);
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+html[data-route="league"] .switch-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 94px;
+  padding: 8px;
+  border: 1px dashed rgba(23, 67, 57, .26);
+  border-radius: 13px;
+  background: rgba(255,255,255,.76);
+  color: var(--formation-ink);
+  box-shadow: none;
+}
+
+html[data-route="league"] .switch-slot:hover,
+html[data-route="league"] .switch-slot:active {
+  transform: none;
+  filter: none;
+  border-color: var(--primary);
+  background: var(--primary-bg);
+}
+
+html[data-route="league"] .switch-slot.has-player {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--primary) 44%, #d7e6df);
+  background: color-mix(in srgb, var(--primary-bg) 72%, #fff);
+}
+
+html[data-route="league"] .switch-slot-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+
+html[data-route="league"] .switch-slot__role {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--formation-ink);
+  font-size: .62rem;
+  font-weight: 900;
+}
+
+html[data-route="league"] .switch-slot[data-role="D"] .switch-slot__role { color: #2563eb; background: #dbeafe; }
+html[data-route="league"] .switch-slot[data-role="C"] .switch-slot__role { color: #15803d; background: #dcfce7; }
+html[data-route="league"] .switch-slot[data-role="A"] .switch-slot__role { color: #dc2626; background: #fee2e2; }
+
+html[data-route="league"] .switch-slot__identity {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  align-items: center;
+  text-align: center;
+}
+
+html[data-route="league"] .switch-slot__name,
+html[data-route="league"] .switch-slot__team {
+  overflow: visible;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+html[data-route="league"] .switch-slot__name {
+  color: var(--formation-ink);
+  font-size: .73rem;
+  font-weight: 850;
+  line-height: 1.1;
+}
+
+html[data-route="league"] .switch-slot__team {
+  margin-top: 3px;
+  color: var(--formation-muted);
+  font-size: .58rem;
+  font-weight: 650;
+  line-height: 1.08;
+}
+
+html[data-route="league"] .switch-slot-placeholder {
+  color: #a7b9b1;
+  font-size: 1.35rem;
+}
+
+html[data-route="league"] .switch-clear-btn {
+  align-self: center;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  color: #dc2626;
+  background: #fff;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+html[data-route="league"] .switch-connector {
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+html[data-route="league"] .switch-mode-toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  order: 3;
+  align-self: center;
+  width: min(240px, 100%);
+  min-height: 46px;
+  margin: 0 auto;
+  padding: 3px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primary) 28%, #d7e6df);
+  border-radius: 999px;
+  color: var(--formation-muted);
+  background: #fff;
+  isolation: isolate;
+}
+
+html[data-route="league"] .switch-mode-toggle:hover,
+html[data-route="league"] .switch-mode-toggle:active {
+  transform: none;
+  filter: none;
+  background: #fff;
+}
+
+html[data-route="league"] .switch-mode-toggle::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  transition: transform .18s ease;
+}
+
+html[data-route="league"] .switch-mode-toggle.active::before {
+  transform: translateX(100%);
+}
+
+html[data-route="league"] .switch-mode-toggle > span {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  place-items: center;
+  color: var(--formation-muted);
+  font-size: .82rem;
+  font-weight: 850;
+  line-height: 1;
+  text-align: center;
+  transition: color .18s ease;
+}
+
+html[data-route="league"] .switch-mode-toggle > span:first-child {
+  color: #fff;
+}
+html[data-route="league"] .switch-mode-toggle.active > span:first-child {
+  color: var(--formation-muted);
+}
+html[data-route="league"] .switch-mode-toggle.active > span:last-child {
+  color: #fff;
+}
+
+/* ----- Output flow ----- */
+
+html[data-route="league"] .output-modal-box { max-width: 720px; }
+html[data-route="league"] .output-modal__heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  position: relative;
+}
+html[data-route="league"] .output-modal__title-wrap h3 {
+  margin: 0;
+  text-align: center;
+}
+html[data-route="league"] .output-close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 34px;
+  min-height: 34px;
+  padding: 0;
+  color: #4b5563;
+  background: #fff;
+}
+html[data-route="league"] .output-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+html[data-route="league"] .output-copy-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+html[data-route="league"] .output-copy-btn {
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 0;
+  color: #fff;
+  font-size: .84rem;
+}
+html[data-route="league"] .output-copy-btn:hover,
+html[data-route="league"] .output-copy-btn:active {
+  transform: none;
+  filter: none;
+}
+html[data-route="league"] .output-copy-btn--whatsapp {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+html[data-route="league"] .output-copy-btn--docs {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+}
+html[data-route="league"] .output-copy-btn.is-preview-active {
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.78), 0 5px 15px rgba(15,23,42,.18);
+}
+html[data-route="league"] .output-modal__content #outputText {
+  width: 100%;
+  min-height: 250px;
+  height: 250px;
+  resize: vertical;
+  text-align: left;
+  white-space: pre-wrap;
+}
+html[data-route="league"] .output-modal__content #outputText.output-text--prompt {
+  color: #687a73;
+  font-style: italic;
+  text-align: center;
+}
+html[data-route="league"] .output-copy-preview-btn,
+html[data-route="league"] .output-select-all-btn {
+  width: 100%;
+  min-height: 42px;
+  color: #fff;
+  border: 0;
+}
+html[data-route="league"] .output-copy-preview-btn {
+  background: linear-gradient(135deg, #d97706, #ea580c);
+}
+html[data-route="league"] .output-select-all-btn {
+  display: none;
+  background: linear-gradient(135deg, #d97706, #ea580c);
+}
+html[data-route="league"] .output-copy-preview-btn:disabled,
+html[data-route="league"] .output-select-all-btn:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+  filter: grayscale(.2);
+}
+
+/* ----- desktop layout ----- */
+
+@media (min-width: 768px) {
+  html[data-route="league"] .controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 10px;
+  }
+  html[data-route="league"] .controls #managerSelect {
+    grid-column: 2;
+    min-width: 164px;
+  }
+  html[data-route="league"] .controls #toggleRosterBtn { grid-column: 3; }
+  html[data-route="league"] .controls #moduleSelect {
+    grid-column: 4;
+    min-width: 104px;
+  }
+  html[data-route="league"] .controls #openModalBtn {
+    grid-column: 5;
+    justify-self: end;
+    margin-left: 0;
+  }
+  html[data-route="league"] .controls select,
+  html[data-route="league"] .controls button:not(#openModalBtn) {
+    text-align: center;
+    text-align-last: center;
+  }
+
+  html[data-route="league"] .grid > .column {
+    display: block;
+    width: 100%;
+    padding: 18px;
+  }
+  html[data-route="league"] .desktop-formation-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1016px);
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+  }
+  html[data-route="league"] .desktop-formation-main {
+    width: 100%;
+    min-width: 0;
+  }
+  html[data-route="league"] .desktop-formation-main > .section-title-row {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: 30px;
+    text-align: center;
+  }
+  html[data-route="league"] .desktop-formation-main > .section-title-row .reset-btn-small {
+    position: absolute;
+    right: 0;
+  }
+  html[data-route="league"] .desktop-formation-main > .mt-12.font-600 {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  html[data-route="league"] #startersSlots {
+    min-height: 560px;
+    padding: 30px 26px;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  html[data-route="league"] #startersSlots .formation-row {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 1.8vw, 20px);
+    width: 100%;
+  }
+  html[data-route="league"] #startersSlots .formation-slot {
+    width: auto;
+    max-width: none;
+  }
+  html[data-route="league"] #startersSlots .formation-shirt {
+    width: clamp(118px, 12.4vw, 150px);
+    min-height: 120px;
+  }
+  html[data-route="league"] #startersSlots .formation-row[data-count="5"] .formation-shirt {
+    width: clamp(96px, 10.4vw, 132px);
+  }
+
+  html[data-route="league"] .switch-section--desktop {
+    position: static;
+    margin: 18px 0 20px;
+  }
+  html[data-route="league"] .switch-section--desktop .switch-panel {
+    width: 100%;
+  }
+
+  html[data-route="league"] #benchSlots .formation-slot {
+    min-height: 98px;
+  }
+}
+
+/* ----- mobile layout ----- */
+
+@media (max-width: 767px) {
+  html[data-route="league"] .container { margin-top: 14px; }
+  html[data-route="league"] .controls {
+    position: static;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px;
+    border-radius: 14px;
+    text-align: center;
+  }
+  html[data-route="league"] .controls select {
+    flex: 1 1 142px;
+    min-width: 0;
+    text-align: center;
+    text-align-last: center;
+  }
+  html[data-route="league"] .controls #managerSelect,
+  html[data-route="league"] .controls #moduleSelect {
+    text-align: center;
+  }
+
+  html[data-route="league"] #mobileLayout {
+    display: flex !important;
+    flex-direction: column;
+    padding-bottom: 88px;
+  }
+  html[data-route="league"] #mobileLayout > .mobile-section:first-child { order: 1; }
+  html[data-route="league"] #mobileSwitchSection { order: 2; margin: 14px 0 20px; }
+  html[data-route="league"] #mobileLayout > .mobile-section:nth-of-type(2) { order: 3; }
+
+  html[data-route="league"] .mobile-section { margin-top: 16px; }
+  html[data-route="league"] .mobile-section .mobile-title,
+  html[data-route="league"] .mobile-title-row .mobile-title {
+    color: var(--formation-ink);
+    font-size: .82rem;
+    font-weight: 850;
+    letter-spacing: .08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  html[data-route="league"] .mobile-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  html[data-route="league"] .mobile-title-row .reset-btn-mobile {
+    position: absolute;
+    right: 0;
+  }
+
+  /* Important: the PITCH does not move. Only every player row is offset within it. */
+  html[data-route="league"] #mobileStartersSlots {
+    min-height: 500px;
+    padding: 18px 12px 28px;
+    justify-content: center;
+    gap: 17px;
+  }
+  html[data-route="league"] #mobileStartersSlots::before { inset: 13px; }
+  html[data-route="league"] #mobileStartersSlots::after { right: 13px; left: 13px; }
+
+  html[data-route="league"] #mobileStartersSlots .formation-row {
+    display: grid;
+    grid-template-columns: repeat(var(--row-count), minmax(0, 1fr));
+    align-items: stretch;
+    justify-content: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    gap: 4px;
+    top: -10px;
+  }
+
+  /* The full physical box is specified at the SLOT level. Empty and filled
+     shirts inherit exactly the same box. */
+  html[data-route="league"] #mobileStartersSlots .formation-slot,
+  html[data-route="league"] #mobileStartersSlots .formation-slot.empty,
+  html[data-route="league"] #mobileStartersSlots .formation-slot:not(.empty) {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: 86px;
+    min-height: 86px;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-slot__content {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-shirt,
+  html[data-route="league"] #mobileStartersSlots .formation-shirt--empty,
+  html[data-route="league"] #mobileStartersSlots .formation-shirt--selected {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    height: 86px;
+    min-height: 86px;
+    margin: 0;
+    padding: 7px 3px 8px;
+    overflow: visible;
+    border-radius: 12px 12px 16px 16px;
+  }
+
+  /* Sleeves stay inside the shirt, so none of them cross the pitch touchline. */
+  html[data-route="league"] #mobileStartersSlots .formation-shirt::before,
+  html[data-route="league"] #mobileStartersSlots .formation-shirt::after {
+    display: block;
+    top: 10px;
+    width: 7px;
+    height: 17px;
+    opacity: .82;
+    box-shadow: none;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-shirt::before {
+    left: 0;
+    transform: rotate(22deg);
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-shirt::after {
+    right: 0;
+    transform: rotate(-22deg);
+  }
+
+  html[data-route="league"] #mobileStartersSlots .formation-shirt__role {
+    width: 19px;
+    height: 18px;
+    margin-bottom: 9px;
+    font-size: .56rem;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-shirt__name {
+    font-size: clamp(.66rem, 2.35vw, .80rem);
+    line-height: 1.06;
+    letter-spacing: -.02em;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-shirt__team {
+    margin-top: 4px;
+    font-size: clamp(.54rem, 1.95vw, .64rem);
+    line-height: 1.05;
+  }
+
+  /* 5 across has a little less vertical mass, but its words never split
+     in the middle. It may wrap only at a real whitespace boundary. */
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] {
+    gap: 3px;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-slot,
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt {
+    height: 78px;
+    min-height: 78px;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt {
+    padding: 6px 2px 7px;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt__role {
+    width: 17px;
+    height: 16px;
+    margin-bottom: 7px;
+    font-size: .5rem;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt__name {
+    font-size: clamp(.54rem, 1.98vw, .66rem);
+    line-height: 1.03;
+    letter-spacing: -.045em;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt__team {
+    margin-top: 3px;
+    font-size: clamp(.46rem, 1.68vw, .55rem);
+    line-height: 1.03;
+  }
+
+  /* Goalkeeper keeps a normal kit width, never a full-field row. */
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="1"] {
+    grid-template-columns: 88px;
+    justify-content: center;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="1"] .formation-slot,
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="1"] .formation-shirt {
+    width: 88px;
+    min-width: 88px;
+    max-width: 88px;
+  }
+
+  html[data-route="league"] #mobileBenchSlots {
+    padding: 10px 7px;
+    border-radius: 14px;
+  }
+  html[data-route="league"] #mobileBenchSlots .bench-keepers {
+    gap: 7px;
+    margin-bottom: 8px;
+  }
+  html[data-route="league"] #mobileBenchSlots .bench-matrix {
+    gap: 7px;
+  }
+  html[data-route="league"] #mobileBenchSlots .bench-column { gap: 7px; }
+  html[data-route="league"] #mobileBenchSlots .bench-keepers .formation-slot,
+  html[data-route="league"] #mobileBenchSlots .bench-keepers .formation-shirt {
+    min-height: 80px;
+  }
+  html[data-route="league"] #mobileBenchSlots .bench-column .formation-slot,
+  html[data-route="league"] #mobileBenchSlots .bench-column .formation-shirt {
+    min-height: 98px;
+  }
+
+  html[data-route="league"] .mobile-switch .switch-panel { gap: 12px; }
+  html[data-route="league"] .mobile-switch .switch-pair {
+    grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr);
+    gap: 8px;
+  }
+  html[data-route="league"] .mobile-switch .switch-slot { min-height: 92px; }
+  html[data-route="league"] .mobile-switch .switch-connector {
+    align-self: center;
+    justify-self: center;
+  }
+  html[data-route="league"] .mobile-switch .switch-mode-toggle {
+    width: min(220px, 100%);
+    min-height: 46px;
+  }
+
+  html[data-route="league"] .output-copy-preview-btn { display: none; }
+  html[data-route="league"] .output-select-all-btn { display: block; }
+  html[data-route="league"] .output-modal__content #outputText { min-height: 260px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-route="league"] .formation-shirt,
+  html[data-route="league"] .roster-drawer,
+  html[data-route="league"] .switch-mode-toggle::before {
+    transition: none;
+  }
+}
+
+/* ----- 9:16 STORY EXPORT ----- */
+html[data-route="league"] .output-story-btn {
+  width: 100%;
+  min-height: 46px;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  font-size: .9rem;
+  font-weight: 850;
+  box-shadow: 0 8px 18px rgba(124,58,237,.22);
+}
+
+html[data-route="league"] .output-story-btn:hover,
+html[data-route="league"] .output-story-btn:active {
+  transform: none;
+  filter: none;
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
+}
+
+html[data-route="league"] .story-modal {
+  padding: 18px;
+}
+
+html[data-route="league"] .story-modal-box {
+  width: min(100%, 520px);
+  max-width: 520px;
+  max-height: calc(100dvh - 36px);
+  overflow: auto;
+  padding: 18px;
+  border-radius: 24px;
+  background: #f7fbf8;
+}
+
+html[data-route="league"] .story-modal__heading {
+  position: relative;
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+html[data-route="league"] .story-modal__heading h3 {
+  margin: 0;
+  color: var(--formation-ink, #173d32);
+  font-size: 1rem;
+  text-align: center;
+}
+
+html[data-route="league"] .story-close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 34px;
+  min-height: 34px;
+  padding: 0;
+  border: 1px solid rgba(23,67,57,.14);
+  border-radius: 999px;
+  color: #4b5f57;
+  background: #fff;
+}
+
+html[data-route="league"] .story-preview-frame {
+  display: grid;
+  min-height: 420px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #101714;
+  box-shadow: 0 16px 36px rgba(23,67,57,.15);
+}
+
+html[data-route="league"] .story-preview-image {
+  display: block;
+  width: 100%;
+  max-width: 382px;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+}
+
+html[data-route="league"] .story-status {
+  min-height: 18px;
+  margin: 10px 0 0;
+  color: var(--formation-muted, #6e837b);
+  font-size: .78rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+html[data-route="league"] .story-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+html[data-route="league"] .story-action {
+  min-height: 44px;
+  padding: 8px 6px;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  font-size: .76rem;
+  font-weight: 850;
+}
+
+html[data-route="league"] .story-action:hover,
+html[data-route="league"] .story-action:active {
+  transform: none;
+  filter: none;
+}
+
+html[data-route="league"] .story-action:disabled {
+  cursor: wait;
+  opacity: .5;
+}
+
+html[data-route="league"] .story-action--share { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+html[data-route="league"] .story-action--copy { background: linear-gradient(135deg, #2563eb, #4f46e5); }
+
+@media (max-width: 767px) {
+  html[data-route="league"] .story-modal { padding: 12px; }
+  html[data-route="league"] .story-modal-box {
+    width: min(100%, 430px);
+    max-height: calc(100dvh - 24px);
+    padding: 14px;
+    border-radius: 20px;
+  }
+  html[data-route="league"] .story-preview-frame { min-height: 360px; }
+  html[data-route="league"] .story-preview-image { max-width: min(100%, 320px); }
+  html[data-route="league"] .story-actions { gap: 6px; }
+  html[data-route="league"] .story-action { min-height: 42px; font-size: .69rem; }
+}

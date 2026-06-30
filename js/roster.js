@@ -1,90 +1,130 @@
 /* ROSTER - Roster rendering and player toggle */
 
-function renderRoster(){
+function renderRoster() {
   const container = document.getElementById("roster");
   container.innerHTML = "";
-  if(!currentManager) return;
+  if (!currentManager) return;
+
   const team = db[currentManager];
-  
   const shownBlocks = new Set();
-  
-  team.players.forEach((p, idx)=>{
-    if(p.isGkBlock && shownBlocks.has(p.gkBlock)) return;
-    if(p.isGkBlock) shownBlocks.add(p.gkBlock);
-    
-    const isDisabled = p.isGkBlock && disabledBlocks.has(p.gkBlock);
-    
+
+  team.players.forEach((player, index) => {
+    if (player.isGkBlock && shownBlocks.has(player.gkBlock)) return;
+    if (player.isGkBlock) shownBlocks.add(player.gkBlock);
+
+    const selectedGkIndex = player.isGkBlock
+      ? window.GkBlocks?.getSelectedIndexForBlock(player.gkBlock)
+      : null;
+    const isDisabled = player.isGkBlock && window.GkBlocks?.isBlockDisabled(player.gkBlock);
+    const cardPlayerIndex = Number.isInteger(selectedGkIndex) ? selectedGkIndex : index;
+
     const card = document.createElement("div");
     card.className = "player-card";
-    if(isDisabled) card.classList.add("disabled");
-    card.id = `p-${idx}`;
+    card.id = `p-${index}`;
+    card.dataset.playerIndex = String(cardPlayerIndex);
+
+    if (player.isGkBlock) card.dataset.gkBlock = player.gkBlock;
+    if (isDisabled) card.classList.add("disabled");
+
+    const hasDraggablePlayer = !player.isGkBlock || Number.isInteger(selectedGkIndex);
     card.tabIndex = isDisabled ? -1 : 0;
-    card.draggable = !isDisabled;
-    card.ondragstart = (e) => { draggedPlayerIndex = idx; draggedPlayerRole = p.r; card.classList.add('dragging'); };
-    card.ondragend = () => { draggedPlayerIndex = null; draggedPlayerRole = null; card.classList.remove('dragging'); };
-    card.onclick = (isDisabled || p.r !== 'P') ? null : ()=> togglePlayer(idx);
-    card.onkeydown = (isDisabled || p.r !== 'P') ? null : (e)=> { if(e.key==="Enter") togglePlayer(idx); };
-    
-    const left = document.createElement("div"); left.className="player-left";
-    const badge = document.createElement("div"); badge.className="badge " + (p.r||"U"); badge.textContent = p.r||"?";
+    card.draggable = !isDisabled && hasDraggablePlayer;
+
+    card.ondragstart = () => {
+      draggedPlayerIndex = cardPlayerIndex;
+      draggedPlayerRole = player.r;
+      card.classList.add("dragging");
+    };
+
+    card.ondragend = () => {
+      draggedPlayerIndex = null;
+      draggedPlayerRole = null;
+      card.classList.remove("dragging");
+    };
+
+    card.onclick = isDisabled ? null : () => togglePlayer(index);
+    card.onkeydown = isDisabled
+      ? null
+      : (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            togglePlayer(index);
+          }
+        };
+
+    const left = document.createElement("div");
+    left.className = "player-left";
+
+    const badge = document.createElement("div");
+    badge.className = "badge " + (player.r || "U");
+    badge.textContent = player.r || "?";
 
     const meta = document.createElement("div");
-    const displayName = p.isGkBlock ? p.gkBlock : p.n;
-    const nameEl = document.createElement("div"); nameEl.className="player-meta"; nameEl.textContent = displayName;
-    const teamEl = document.createElement("div"); teamEl.className="player-sub"; teamEl.textContent = p.t || "";
-    meta.appendChild(nameEl); meta.appendChild(teamEl);
+    const displayName = player.isGkBlock ? player.gkBlock : player.n;
+    const nameEl = document.createElement("div");
+    nameEl.className = "player-meta";
+    nameEl.textContent = displayName;
 
-    left.appendChild(badge); left.appendChild(meta);
+    const teamEl = document.createElement("div");
+    teamEl.className = "player-sub";
+    teamEl.textContent = player.t || "";
 
-    const right = document.createElement("div"); right.style.fontSize="0.9rem"; right.style.color="var(--muted)";
-    if(isDisabled) right.textContent = "🔒";
+    meta.appendChild(nameEl);
+    meta.appendChild(teamEl);
+    left.appendChild(badge);
+    left.appendChild(meta);
 
-    card.appendChild(left); card.appendChild(right);
+    const right = document.createElement("div");
+    right.className = "player-card__status";
+
+    if (isDisabled) {
+      right.textContent = "🔒";
+    } else if (player.isGkBlock && Number.isInteger(selectedGkIndex)) {
+      right.textContent = "✓";
+      right.setAttribute("aria-label", "Blocco portieri selezionato");
+    }
+
+    card.appendChild(left);
+    card.appendChild(right);
     container.appendChild(card);
   });
 
   updateRosterUI();
 }
 
-function togglePlayer(index){
-  if(!currentManager) return;
+function togglePlayer(index) {
+  if (!currentManager) return;
+
   const player = db[currentManager].players[index];
-  const team = db[currentManager].players;
+  if (!player) return;
 
-  if(player.isGkBlock && disabledBlocks.has(player.gkBlock)){
-    showToast("Hai già selezionato un altro blocco portieri!", "error");
-    return;
-  }
+  if (player.r === "P" && player.isGkBlock) {
+    const selectedGkIndex = window.GkBlocks?.getSelectedIndexForBlock(player.gkBlock);
 
-  if(selectedPlayers.includes(index)){
-    if(player.gkPartner){
-      const partnerIndex = team.findIndex(p => p.gkBlock === player.gkBlock && p.gkPartner === player.n);
-      if(partnerIndex !== -1){
-        selectedPlayers = selectedPlayers.filter(i=>i!==index && i!==partnerIndex);
-      }
-      disabledBlocks.clear();
-    }
-    selectedPlayers = selectedPlayers.filter(i=>i!==index);
-    renderRoster();
-    renderFormation();
-    if(isMobile) renderMobileSlots();
-    return;
-  }
-
-  if(player.r === "P" && player.gkPartner){
-    const partnerNotSelected = team.some((p, i) => 
-      p.gkBlock === player.gkBlock && 
-      p.gkPartner === player.n && 
-      !selectedPlayers.includes(i)
-    );
-    
-    if(partnerNotSelected){
-      showGkChoiceModal(player.gkBlock, player, index);
+    if (Number.isInteger(selectedGkIndex)) {
+      window.GkBlocks.remove(selectedGkIndex);
+      refreshAfterGkChange();
       return;
     }
+
+    if (window.GkBlocks?.isBlockDisabled(player.gkBlock)) {
+      showToast("Hai già selezionato un altro blocco portieri!", "error");
+      return;
+    }
+
+    showGkChoiceModal(player.gkBlock);
+    return;
   }
 
-  if(selectedPlayers.length >= MAX_SELECTED){
+  if (selectedPlayers.includes(index)) {
+    selectedPlayers = selectedPlayers.filter((playerIndex) => playerIndex !== index);
+    renderRoster();
+    renderFormation();
+    if (isMobile) renderMobileSlots();
+    return;
+  }
+
+  if (selectedPlayers.length >= MAX_SELECTED) {
     showToast(`Puoi selezionare massimo ${MAX_SELECTED} giocatori.`, "error");
     return;
   }
@@ -93,49 +133,67 @@ function togglePlayer(index){
   const defReq = parseInt(module[0], 10);
   const cenReq = parseInt(module[1], 10);
   const attReq = parseInt(module[2], 10);
+  const benchLimits = { P: 2, D: 3, C: 3, A: 3 };
+  const starterCounts = { P: 0, D: 0, C: 0, A: 0 };
+  const benchCounts = { P: 0, D: 0, C: 0, A: 0 };
 
-  const BENCH_LIMITS = {P:2, D:3, C:3, A:3};
+  selectedPlayers.forEach((playerIndex) => {
+    const selected = db[currentManager].players[playerIndex];
+    const role = selected?.r;
+    if (starterCounts[role] === undefined) return;
 
-  const starterCounts = {P:0, D:0, C:0, A:0};
-  const benchCounts = {P:0, D:0, C:0, A:0};
+    const starterLimit =
+      role === "P" ? 1 : role === "D" ? defReq : role === "C" ? cenReq : attReq;
 
-  selectedPlayers.forEach(i => {
-    const p = db[currentManager].players[i];
-    const role = p.r;
-    if(starterCounts[role] !== undefined){
-      if(starterCounts[role] < (role === 'P' ? 1 : role === 'D' ? defReq : role === 'C' ? cenReq : attReq)){
-        starterCounts[role]++;
-      } else {
-        benchCounts[role]++;
-      }
+    if (starterCounts[role] < starterLimit) {
+      starterCounts[role] += 1;
+    } else {
+      benchCounts[role] += 1;
     }
   });
 
   const role = player.r;
-  const starterMax = role === 'P' ? 1 : role === 'D' ? defReq : role === 'C' ? cenReq : attReq;
-  const benchMax = BENCH_LIMITS[role] || 0;
+  const starterMax =
+    role === "P" ? 1 : role === "D" ? defReq : role === "C" ? cenReq : attReq;
+  const benchMax = benchLimits[role] || 0;
 
-  if(starterCounts[role] >= starterMax && benchCounts[role] >= benchMax){
-    const roleName = role === 'P' ? 'portieri' : role === 'D' ? 'difensori' : role === 'C' ? 'centrocampisti' : 'attaccanti';
-    showToast(`Hai già raggiunto il massimo per i ${roleName} (${starterMax} titolari + ${benchMax} panchina)`, "error");
+  if (starterCounts[role] >= starterMax && benchCounts[role] >= benchMax) {
+    const roleName =
+      role === "P"
+        ? "portieri"
+        : role === "D"
+          ? "difensori"
+          : role === "C"
+            ? "centrocampisti"
+            : "attaccanti";
+
+    showToast(
+      `Hai già raggiunto il massimo per i ${roleName} (${starterMax} titolari + ${benchMax} panchina)`,
+      "error"
+    );
     return;
   }
 
   selectedPlayers.push(index);
   renderRoster();
   renderFormation();
-  if(isMobile) renderMobileSlots();
+  if (isMobile) renderMobileSlots();
 }
 
-function updateRosterUI(){
-  document.querySelectorAll('#roster .player-card').forEach(c=>c.classList.remove('selected'));
-  selectedPlayers.forEach(i=>{
-    const el = document.getElementById(`p-${i}`);
-    if(el) el.classList.add('selected');
+function updateRosterUI() {
+  document.querySelectorAll("#roster .player-card").forEach((card) => {
+    card.classList.remove("selected");
+
+    const isSelectedPlayer = selectedPlayers.includes(Number(card.dataset.playerIndex));
+    const selectedGkForBlock =
+      card.dataset.gkBlock &&
+      Number.isInteger(window.GkBlocks?.getSelectedIndexForBlock(card.dataset.gkBlock));
+
+    if (isSelectedPlayer || selectedGkForBlock) card.classList.add("selected");
   });
 }
 
-function loadTeam(){
+function loadTeam() {
   currentManager = document.getElementById("managerSelect").value;
   selectedPlayers = [];
   lastStarters = [];
@@ -145,6 +203,6 @@ function loadTeam(){
   clearSwitch();
   renderRoster();
   renderFormation();
-  if(isMobile) renderMobileSlots();
+  if (isMobile) renderMobileSlots();
   updateSwitchUI();
 }

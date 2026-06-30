@@ -1,256 +1,246 @@
 let currentPickerSlot = null;
 
-function setupModalClickOutside(){
-  const modals = ['slotPickerModal', 'gkChoiceModal', 'switchStarterModal', 'switchBenchModal', 'outputModal'];
-  
-  modals.forEach(modalId => {
+function setupModalClickOutside() {
+  const modals = [
+    "slotPickerModal",
+    "gkChoiceModal",
+    "switchStarterModal",
+    "switchBenchModal",
+    "outputModal"
+  ];
+
+  modals.forEach((modalId) => {
     const modal = document.getElementById(modalId);
-    if(!modal) return;
-    
-    const box = modal.querySelector('.box');
-    if(box){
-      box.addEventListener('click', e => e.stopPropagation());
-      box.addEventListener('touchmove', e => e.stopPropagation(), {passive: false});
+    if (!modal) return;
+
+    const box = modal.querySelector(".box");
+    if (box) {
+      box.addEventListener("click", (event) => event.stopPropagation());
+      box.addEventListener("touchmove", (event) => event.stopPropagation(), { passive: false });
     }
-    
-    modal.addEventListener('click', (e) => {
-      if(e.target === modal){
-        if(modalId === 'slotPickerModal') closeSlotPicker();
-        else if(modalId === 'gkChoiceModal') closeGkModal();
-        else if(modalId === 'switchStarterModal') closeSwitchStarterModal();
-        else if(modalId === 'switchBenchModal') closeSwitchBenchModal();
-        else if(modalId === 'outputModal') closeModal();
-      }
+
+    modal.addEventListener("click", (event) => {
+      if (event.target !== modal) return;
+
+      if (modalId === "slotPickerModal") closeSlotPicker();
+      else if (modalId === "gkChoiceModal") closeGkModal();
+      else if (modalId === "switchStarterModal") closeSwitchStarterModal();
+      else if (modalId === "switchBenchModal") closeSwitchBenchModal();
+      else if (modalId === "outputModal") closeModal();
     });
   });
 }
 
-function showSlotPicker(role, currentPlayer){
-  const modal = document.getElementById('slotPickerModal');
-  const roleLabel = document.getElementById('pickerRoleLabel');
-  const currentDiv = document.getElementById('currentPlayerInPicker');
-  const listDiv = document.getElementById('pickerPlayerList');
-  
-  const roleNames = {P:'Portiere',D:'Difensore',C:'Centrocampista',A:'Attaccante'};
+function showSlotPicker(role, currentPlayer) {
+  const modal = document.getElementById("slotPickerModal");
+  const roleLabel = document.getElementById("pickerRoleLabel");
+  const currentDiv = document.getElementById("currentPlayerInPicker");
+  const listDiv = document.getElementById("pickerPlayerList");
+  const roleNames = { P: "Portiere", D: "Difensore", C: "Centrocampista", A: "Attaccante" };
+
   roleLabel.textContent = roleNames[role] || role;
-  
-  if(currentPlayer){
-    currentDiv.style.display = 'block';
+
+  if (currentPlayer) {
+    currentDiv.style.display = "block";
     currentDiv.innerHTML = `<div class="picker-player in-slot">
       <div class="badge" style="background:${roleColors[role]}">${role}</div>
       <div class="player-info">
-        <span class="name">${currentPlayer.n}</span>
-        <span class="team">${currentPlayer.t || ''}</span>
+        <span class="name"></span>
+        <span class="team"></span>
       </div>
       <span class="picker-remove-btn">✕</span>
     </div>`;
+    currentDiv.querySelector(".name").textContent = currentPlayer.n;
+    currentDiv.querySelector(".team").textContent = currentPlayer.t || "";
     currentDiv.onclick = () => removeFromPicker();
   } else {
-    currentDiv.style.display = 'none';
+    currentDiv.style.display = "none";
   }
-  
+
   const team = db[currentManager].players;
-  const rolePlayers = team.filter(p => p.r === role && !p.isGkBlock);
-  
-  listDiv.innerHTML = '';
-  rolePlayers.forEach(p => {
-    const idx = team.indexOf(p);
-    const isSelected = selectedPlayers.includes(idx);
-    
-    const div = document.createElement('div');
-    div.className = 'picker-player' + (isSelected ? ' selected' : '');
-    div.innerHTML = `
-      <div class="badge" style="background:${roleColors[role]}">${role}</div>
-      <div class="player-info">
-        <span class="name">${p.n}</span>
-        <span class="team">${p.t || ''}</span>
-      </div>
-      ${isSelected ? '<span style="color:var(--accent)">✓</span>' : ''}
-    `;
-    div.onclick = () => selectFromPicker(idx);
-    listDiv.appendChild(div);
+  const rolePlayers = team.filter((player) => player.r === role && !player.isGkBlock);
+  listDiv.innerHTML = "";
+
+  rolePlayers.forEach((player) => {
+    const index = team.indexOf(player);
+    const isSelected = selectedPlayers.includes(index);
+    const option = document.createElement("div");
+    option.className = "picker-player" + (isSelected ? " selected" : "");
+
+    const badge = document.createElement("div");
+    badge.className = "badge";
+    badge.style.background = roleColors[role];
+    badge.textContent = role;
+
+    const info = document.createElement("div");
+    info.className = "player-info";
+    const name = document.createElement("span");
+    name.className = "name";
+    name.textContent = player.n;
+    const teamName = document.createElement("span");
+    teamName.className = "team";
+    teamName.textContent = player.t || "";
+    info.append(name, teamName);
+
+    option.append(badge, info);
+
+    if (isSelected) {
+      const selectedIcon = document.createElement("span");
+      selectedIcon.style.color = "var(--accent)";
+      selectedIcon.textContent = "✓";
+      option.appendChild(selectedIcon);
+    }
+
+    option.onclick = () => selectFromPicker(index);
+    listDiv.appendChild(option);
   });
-  
-  modal.classList.add('show');
-  modal.setAttribute('aria-hidden', 'false');
+
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
   setModalOpen(true);
 }
 
-function selectFromPicker(playerIndex){
-  if(!currentPickerSlot) return;
-  const {slotId, role, isStarter, currentPlayer} = currentPickerSlot;
+function selectFromPicker(playerIndex) {
+  if (!currentPickerSlot) return;
+
+  const { slotId, isStarter, currentPlayer } = currentPickerSlot;
   const team = db[currentManager].players;
-  const player = team[playerIndex];
-  
-  const slotKey = (isStarter ? 'starter-' : 'bench-') + slotId;
-  
-  if(currentPlayer && currentPlayer.n){
-    const teamIdx = team.findIndex(p => p.n === currentPlayer.n && p.r === currentPlayer.r);
-    if(teamIdx > -1 && selectedPlayers.includes(teamIdx)){
-      selectedPlayers = selectedPlayers.filter(i => i !== teamIdx);
+  const slotKey = (isStarter ? "starter-" : "bench-") + slotId;
+
+  if (currentPlayer?.n) {
+    const currentIndex = team.findIndex(
+      (player) => player.n === currentPlayer.n && player.r === currentPlayer.r
+    );
+    if (currentIndex > -1 && selectedPlayers.includes(currentIndex)) {
+      selectedPlayers = selectedPlayers.filter((index) => index !== currentIndex);
     }
   }
-  
-  if(selectedPlayers.includes(playerIndex)){
-    for(const key in slotAssignments){
-      if(slotAssignments[key] === playerIndex){
-        delete slotAssignments[key];
-        break;
-      }
-    }
-    selectedPlayers = selectedPlayers.filter(i => i !== playerIndex);
+
+  if (selectedPlayers.includes(playerIndex)) {
+    Object.keys(slotAssignments).forEach((key) => {
+      if (slotAssignments[key] === playerIndex) delete slotAssignments[key];
+    });
+    selectedPlayers = selectedPlayers.filter((index) => index !== playerIndex);
   }
-  
+
   selectedPlayers.push(playerIndex);
   slotAssignments[slotKey] = playerIndex;
-  
+
   closeSlotPicker();
   renderMobileSlots();
-  if(!isMobile) renderFormation();
+  if (!isMobile) renderFormation();
 }
 
-function removeFromPicker(){
-  if(!currentPickerSlot) return;
-  const {slotId, role, isStarter, currentPlayer} = currentPickerSlot;
-  const slotKey = (isStarter ? 'starter-' : 'bench-') + slotId;
-  
-  if(currentPlayer && currentPlayer.n){
+function removeFromPicker() {
+  if (!currentPickerSlot) return;
+
+  const { slotId, currentPlayer, isStarter } = currentPickerSlot;
+  const slotKey = (isStarter ? "starter-" : "bench-") + slotId;
+
+  if (currentPlayer?.n) {
     const team = db[currentManager].players;
-    const currentIdx = team.findIndex(p => p.n === currentPlayer.n && p.r === currentPlayer.r);
-    if(currentIdx > -1 && selectedPlayers.includes(currentIdx)){
-      selectedPlayers = selectedPlayers.filter(i => i !== currentIdx);
+    const currentIndex = team.findIndex(
+      (player) => player.n === currentPlayer.n && player.r === currentPlayer.r
+    );
+    if (currentIndex > -1 && selectedPlayers.includes(currentIndex)) {
+      selectedPlayers = selectedPlayers.filter((index) => index !== currentIndex);
     }
   }
-  
+
   delete slotAssignments[slotKey];
-  
   closeSlotPicker();
   renderMobileSlots();
-  if(!isMobile) renderFormation();
+  if (!isMobile) renderFormation();
 }
 
-function closeSlotPicker(){
-  const modal = document.getElementById('slotPickerModal');
-  modal.classList.remove('show');
-  modal.setAttribute('aria-hidden', 'true');
+function closeSlotPicker() {
+  const modal = document.getElementById("slotPickerModal");
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
   currentPickerSlot = null;
   setModalOpen(false);
 }
 
-function showGkChoiceModalForMobile(slotId, isStarter, currentPlayer){
-  if(!currentManager) return;
-  const team = db[currentManager].players;
-  const gkBlocks = [...new Set(team.filter(p => p.r === "P" && p.isGkBlock).map(p => p.gkBlock))];
-  
-  if(gkBlocks.length === 0) return;
-  
-  currentPickerSlot = {slotId, role:'P', isStarter, currentPlayer};
-  
-  const modal = document.getElementById('gkChoiceModal');
-  const choicesDiv = document.getElementById('gkChoices');
-  document.getElementById('gkBlockName').textContent = 'Portiere';
-  
-  choicesDiv.innerHTML = '';
+function showGkChoiceModalForMobile(slotId, isStarter, currentPlayer) {
+  if (!currentManager) return;
 
-  if(currentPlayer && !currentPlayer.isTeamName){
-    const currentDiv = document.createElement('div');
-    currentDiv.className = 'picker-player in-slot';
-    currentDiv.style.marginBottom = '8px';
-    currentDiv.style.display = 'flex';
-    currentDiv.style.alignItems = 'center';
-    currentDiv.style.justifyContent = 'space-between';
-    currentDiv.style.background = '#fff5f5';
-    currentDiv.style.border = '2px solid #dc3545';
-    currentDiv.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="badge" style="background:#e6b800">P</div>
-        <div class="player-info">
-          <span class="name" style="font-weight:600">${currentPlayer.n}</span>
-          <span class="team" style="font-size:0.8rem;color:var(--muted)">${currentPlayer.t || ''}</span>
-        </div>
-      </div>
-      <span style="color:#dc3545;font-weight:bold;font-size:1.2rem;cursor:pointer;padding:4px" onclick="removeCurrentGk()">✕</span>
-    `;
-    choicesDiv.appendChild(currentDiv);
-    
-    window.removeCurrentGk = () => {
-      if(currentPlayer && currentPlayer.gkBlock){
-        const team = db[currentManager].players;
-        const blockPlayers = team.filter(p => p.gkBlock === currentPlayer.gkBlock);
-        blockPlayers.forEach(p => {
-          const idx = team.indexOf(p);
-          selectedPlayers = selectedPlayers.filter(i => i !== idx);
-        });
-      }
-      const idx = team.findIndex(p => p.n === currentPlayer.n && p.r === 'P');
-      if(idx > -1 && selectedPlayers.includes(idx)){
-        selectedPlayers = selectedPlayers.filter(i => i !== idx);
-      }
-      delete slotAssignments['starter-GK1'];
-      delete slotAssignments['bench-GK1'];
-      delete slotAssignments['bench-GK2'];
-      disabledBlocks.clear();
-      closeGkModal();
-      renderRoster();
-      renderMobileSlots();
-      if(!isMobile) renderFormation();
-      updateSwitchUI();
-    };
+  const team = db[currentManager].players;
+  const groups = window.GkBlocks?.getGroups().filter((group) => group.blockName) || [];
+  if (groups.length === 0) return;
+
+  currentPickerSlot = { slotId, role: "P", isStarter, currentPlayer };
+
+  const modal = document.getElementById("gkChoiceModal");
+  const choicesDiv = document.getElementById("gkChoices");
+  const blockName = document.getElementById("gkBlockName");
+  const selectedGoalkeeper = window.GkBlocks?.getSelectedPlayer();
+
+  blockName.textContent = "Portiere";
+  choicesDiv.innerHTML = "";
+
+  if (selectedGoalkeeper) {
+    const selectedRow = document.createElement("div");
+    selectedRow.className = "gk-current-selection";
+
+    const label = document.createElement("span");
+    label.textContent = `${selectedGoalkeeper.n}${selectedGoalkeeper.t ? ` · ${selectedGoalkeeper.t}` : ""}`;
+
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "gk-current-selection__remove";
+    removeButton.setAttribute("aria-label", "Rimuovi portiere selezionato");
+    removeButton.textContent = "✕";
+    removeButton.onclick = () => removeCurrentGk();
+
+    selectedRow.append(label, removeButton);
+    choicesDiv.appendChild(selectedRow);
   }
 
-  gkBlocks.forEach(block => {
-    const blockPlayer = team.find(p => p.gkBlock === block);
-    const blockTeam = blockPlayer ? blockPlayer.t : '';
-    const blockLabel = block + (blockTeam ? ` (${blockTeam})` : '');
-    
-    const btn = document.createElement('button');
-    btn.textContent = blockLabel;
-    btn.style.padding = "10px 20px";
-    btn.style.borderRadius = "8px";
-    btn.style.border = "1px solid #e6e7ea";
-    btn.style.background = "var(--card)";
-    btn.style.cursor = "pointer";
-    btn.style.fontWeight = "bold";
-    btn.onclick = () => {
-      const blockPlayers = team.filter(p => p.gkBlock === block);
-      if(blockPlayers.length > 1){
-        showGkChoiceModal(block, blockPlayers[0], team.indexOf(blockPlayers[0]));
-      } else if(blockPlayers.length === 1){
-        confirmGkSelectionMobile(team.indexOf(blockPlayers[0]));
-      }
-    };
-    choicesDiv.appendChild(btn);
+  groups.forEach((group) => {
+    const representative = group.players[0]?.player;
+    const groupTeam = representative?.t || "";
+    const selectedIndex = window.GkBlocks?.getSelectedIndexForBlock(group.blockName);
+    const isDisabled = window.GkBlocks?.isBlockDisabled(group.blockName);
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "gk-block-btn";
+    button.textContent = `${group.blockName}${groupTeam ? ` (${groupTeam})` : ""}`;
+
+    if (isDisabled) {
+      button.disabled = true;
+      button.title = "Rimuovi prima il blocco portieri selezionato";
+    }
+
+    if (Number.isInteger(selectedIndex)) {
+      button.classList.add("selected");
+    }
+
+    button.onclick = () => showGkChoiceModal(group.blockName, { mode: "mobile" });
+    choicesDiv.appendChild(button);
   });
-  
-  modal.classList.add('show');
-  modal.setAttribute('aria-hidden', 'false');
+
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
   setModalOpen(true);
 }
 
-function confirmGkSelectionMobile(index){
+function removeCurrentGk() {
+  if (!window.GkBlocks?.remove()) return;
+
   closeGkModal();
-  const team = db[currentManager].players;
-  const player = team[index];
-  
-  selectedPlayers = selectedPlayers.filter(i => team[i].r !== 'P');
-  
-  selectedPlayers.push(index);
-  
-  delete slotAssignments['starter-GK1'];
-  delete slotAssignments['bench-GK1'];
-  delete slotAssignments['bench-GK2'];
-  
-  if(player.gkBlock){
-    const allBlocks = [...new Set(team.filter(p => p.isGkBlock).map(p => p.gkBlock))];
-    allBlocks.forEach(block => {
-      if(block !== player.gkBlock){
-        disabledBlocks.add(block);
-      }
-    });
-  }
-  
-  renderMobileSlots();
-  if(!isMobile) renderFormation();
+  renderRoster();
+  renderFormation();
+  if (isMobile) renderMobileSlots();
+  updateSwitchUI();
 }
 
-setupModalClickOutside();
+function confirmGkSelectionMobile(index) {
+  if (!window.GkBlocks?.select(index)) return;
+
+  closeGkModal();
+  renderRoster();
+  renderFormation();
+  if (isMobile) renderMobileSlots();
+  updateSwitchUI();
+}

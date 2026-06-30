@@ -1,5 +1,5 @@
 /* CONFIG */
-const CSV_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR1qCSKkMUZ6W_-_OG8qjTYEQTwF4aPqgtg3XjOGqphRHRDlnFynozJsC0t6WeFjY8XCXjr-R1ZVaww/pub?gid=556989324&single=true&output=csv";
+const CSV_BASE_URL = window.LINEUP_FANTA?.league?.csvUrl || "";
 const ALLOWED_MODULES = ["343","352","433","442","451","532","541"];
 const MAX_SELECTED = 22;
 
@@ -24,6 +24,7 @@ function splitCSVLine(line){
 
 async function loadCSV(){
   try{
+    db = {};
     const url = CSV_BASE_URL + "&t=" + Date.now();
     const res = await fetch(url);
     const txt = await res.text();
@@ -89,12 +90,17 @@ async function loadCSV(){
     });
 
     populateManagers();
-    renderFormation();
-    if(window.innerWidth < 768 && typeof renderMobileSlots === 'function'){
-      renderMobileSlots();
-    }
-    if(typeof updateSwitchUI === 'function'){
-      setTimeout(() => updateSwitchUI(), 100);
+
+    const restoredDraft = window.LineupPersistence?.restoreAfterCsv?.();
+
+    if(!restoredDraft){
+      renderFormation();
+      if(window.innerWidth < 768 && typeof renderMobileSlots === 'function'){
+        renderMobileSlots();
+      }
+      if(typeof updateSwitchUI === 'function'){
+        setTimeout(() => updateSwitchUI(), 100);
+      }
     }
   }catch(err){
     console.error("CSV load error", err);

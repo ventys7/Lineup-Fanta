@@ -1,68 +1,68 @@
-/* STATE */
-let pendingGkIndex = null;
+/* GK MODAL - Choose the real goalkeeper inside one logical block */
 
-/* Funzioni per popup scelta portiere */
-function showGkChoiceModal(blockName, selectedGk, clickedIndex){
+let gkModalMode = "desktop";
+
+function showGkChoiceModal(blockName, { mode = "desktop" } = {}) {
+  const group = window.GkBlocks?.getGroup(blockName);
+  if (!group) return;
+
+  if (window.GkBlocks.isBlockDisabled(blockName)) {
+    showToast("Hai già selezionato un altro blocco portieri!", "error");
+    return;
+  }
+
   const modal = document.getElementById("gkChoiceModal");
   const choicesDiv = document.getElementById("gkChoices");
-  document.getElementById("gkBlockName").textContent = blockName;
-  
-  const team = db[currentManager].players;
-  const blockPlayers = team.filter(p => p.gkBlock === blockName);
-  
+  const title = document.getElementById("gkBlockName");
+
+  gkModalMode = mode;
+  title.textContent = blockName;
   choicesDiv.innerHTML = "";
-  blockPlayers.forEach(p => {
-    const btn = document.createElement("button");
-    btn.textContent = p.n;
-    btn.style.padding = "10px 20px";
-    btn.style.borderRadius = "8px";
-    btn.style.border = "1px solid #e6e7ea";
-    btn.style.background = "var(--card)";
-    btn.style.cursor = "pointer";
-    btn.style.fontWeight = "bold";
-    btn.onclick = () => {
-      const idx = team.indexOf(p);
-      confirmGkSelection(idx);
-    };
-    choicesDiv.appendChild(btn);
+
+  group.players.forEach(({ player, index }) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "gk-choice-btn";
+    button.textContent = player.n;
+    button.addEventListener("click", () => {
+      if (gkModalMode === "mobile") {
+        confirmGkSelectionMobile(index);
+      } else {
+        confirmGkSelection(index);
+      }
+    });
+    choicesDiv.appendChild(button);
   });
-  
+
   modal.classList.add("show");
   modal.setAttribute("aria-hidden", "false");
-  pendingGkIndex = clickedIndex;
   setModalOpen(true);
 }
 
-function confirmGkSelection(index){
-  closeGkModal();
-  const team = db[currentManager].players;
-  const player = team[index];
-  
-  // Aggiungi il portiere scelto
-  selectedPlayers.push(index);
-  
-  // Disabilita gli ALTRI blocchi (non quello selezionato)
-  if(player.gkBlock){
-    const allBlocks = [...new Set(team.filter(p => p.isGkBlock).map(p => p.gkBlock))];
-    allBlocks.forEach(block => {
-      if(block !== player.gkBlock){
-        disabledBlocks.add(block);
-      }
-    });
-  }
-  
+function refreshAfterGkChange() {
   renderRoster();
   renderFormation();
-  if(window.innerWidth < 768 && typeof renderMobileSlots === 'function'){
+
+  if (isMobile && typeof renderMobileSlots === "function") {
     renderMobileSlots();
   }
+
+  if (typeof updateSwitchUI === "function") updateSwitchUI();
 }
 
-function closeGkModal(){
-  document.activeElement.blur();
+function confirmGkSelection(index) {
+  if (!window.GkBlocks?.select(index)) return;
+  closeGkModal();
+  refreshAfterGkChange();
+}
+
+function closeGkModal() {
+  const activeElement = document.activeElement;
+  if (activeElement instanceof HTMLElement) activeElement.blur();
+
   const modal = document.getElementById("gkChoiceModal");
   modal.classList.remove("show");
   modal.setAttribute("aria-hidden", "true");
-  pendingGkIndex = null;
+  gkModalMode = "desktop";
   setModalOpen(false);
 }

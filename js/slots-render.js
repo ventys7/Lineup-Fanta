@@ -1,242 +1,172 @@
-/* SLOTS RENDER - Rendering functions for slots */
+/* SLOTS RENDER - Desktop field and bench from the shared FormationModel */
 
-function renderFormation(){
-  // Hide slots if no manager selected
-  if(!currentManager){
-    document.getElementById("startersSlots").style.display = "none";
-    document.getElementById("benchSlots").style.display = "none";
+function createFormationSlotVisual(role, entry, { compact = false } = {}) {
+  const content = document.createElement("div");
+  content.className = "formation-slot__content";
+
+  const shirt = document.createElement("div");
+  shirt.className = "formation-shirt";
+  shirt.dataset.role = role;
+
+  const roleBadge = document.createElement("span");
+  roleBadge.className = "formation-shirt__role";
+  roleBadge.textContent = role;
+
+  const name = document.createElement("span");
+  name.className = "formation-shirt__name";
+
+  const team = document.createElement("span");
+  team.className = "formation-shirt__team";
+
+  if (entry?.player) {
+    shirt.classList.add("formation-shirt--selected");
+    name.textContent = entry.player.n || "Giocatore";
+    team.textContent = compact ? "" : (entry.player.t || "");
+  } else {
+    shirt.classList.add("formation-shirt--empty");
+    name.textContent = "Scegli";
+    team.textContent = compact ? "" : "Tocca lo slot";
+  }
+
+  shirt.append(roleBadge, name, team);
+  content.appendChild(shirt);
+  return content;
+}
+
+function bindDesktopDrag(slot, entry) {
+  if (!entry?.player || entry.player.isTeamLabel || !Number.isInteger(entry.index)) return;
+
+  slot.draggable = true;
+  slot.ondragstart = () => {
+    draggedPlayerIndex = entry.index;
+    draggedPlayerRole = entry.player.r;
+    slot.classList.add("dragging");
+  };
+  slot.ondragend = () => {
+    draggedPlayerIndex = null;
+    draggedPlayerRole = null;
+    slot.classList.remove("dragging");
+  };
+}
+
+function createDesktopSlot(definition, entry, side) {
+  const slot = document.createElement("button");
+  slot.type = "button";
+  slot.className = `slot formation-slot formation-slot--${side}`;
+  slot.id = `${side}-${definition.id}`;
+  slot.dataset.role = definition.role;
+  slot.dataset.slotKey = definition.key;
+  slot.setAttribute("aria-label", `${definition.label}: ${entry?.player?.n || "vuoto"}`);
+
+  if (!entry?.player) slot.classList.add("empty");
+  if (entry?.player?.isTeamLabel) slot.classList.add("formation-slot--team-label");
+
+  slot.appendChild(createFormationSlotVisual(definition.role, entry));
+  slot.onclick = () => openSlotPicker(side, definition.id);
+  slot.ondragover = (event) => {
+    event.preventDefault();
+    slot.classList.add("drag-over");
+  };
+  slot.ondragleave = () => slot.classList.remove("drag-over");
+  slot.ondrop = (event) => handleDrop(event, side, definition.id);
+
+  bindDesktopDrag(slot, entry);
+  return slot;
+}
+
+function groupDefinitionsByRole(definitions) {
+  const groups = [];
+  definitions.forEach((definition) => {
+    const previous = groups.at(-1);
+    if (!previous || previous.role !== definition.role) {
+      groups.push({ role: definition.role, definitions: [] });
+    }
+    groups.at(-1).definitions.push(definition);
+  });
+  return groups;
+}
+
+function renderRoleRows(container, definitions, slots, side, model) {
+  groupDefinitionsByRole(definitions).forEach((group) => {
+    const row = document.createElement("div");
+    row.className = `formation-row formation-row--${group.role}`;
+    row.dataset.count = String(group.definitions.length);
+    row.style.setProperty("--row-count", String(group.definitions.length));
+
+    group.definitions.forEach((definition) => {
+      const entry = side === "bench"
+        ? window.FormationModel.getBenchDisplayEntry(model, definition)
+        : slots[definition.id] || null;
+      row.appendChild(createDesktopSlot(definition, entry, side));
+    });
+
+    container.appendChild(row);
+  });
+}
+
+/* Bench is deliberately not a pyramid: P P above three role columns D / C / A.
+   Within each column, the vertical order is the bench priority for that role. */
+function renderBenchMatrix(container, definitions, model) {
+  const keepers = definitions.filter((definition) => definition.role === "P");
+  const movementRoles = ["D", "C", "A"];
+
+  const keeperRow = document.createElement("div");
+  keeperRow.className = "bench-keepers";
+  keeperRow.style.setProperty("--row-count", String(keepers.length));
+  keepers.forEach((definition) => {
+    const entry = window.FormationModel.getBenchDisplayEntry(model, definition);
+    keeperRow.appendChild(createDesktopSlot(definition, entry, "bench"));
+  });
+  container.appendChild(keeperRow);
+
+  const matrix = document.createElement("div");
+  matrix.className = "bench-matrix";
+
+  movementRoles.forEach((role) => {
+    const column = document.createElement("div");
+    column.className = `bench-column bench-column--${role}`;
+
+    definitions
+      .filter((definition) => definition.role === role)
+      .forEach((definition) => {
+        const entry = window.FormationModel.getBenchDisplayEntry(model, definition);
+        column.appendChild(createDesktopSlot(definition, entry, "bench"));
+      });
+
+    matrix.appendChild(column);
+  });
+
+  container.appendChild(matrix);
+}
+
+function updateDesktopCounters(model) {
+  const starterCount = document.getElementById("starterCount");
+  const benchCount = document.getElementById("benchCount");
+  if (starterCount) starterCount.textContent = `(${model.counts.starters}/11)`;
+  if (benchCount) benchCount.textContent = `(${model.counts.bench}/11)`;
+}
+
+function renderFormation() {
+  const startersContainer = document.getElementById("startersSlots");
+  const benchContainer = document.getElementById("benchSlots");
+  if (!startersContainer || !benchContainer) return;
+
+  const model = window.FormationModel?.build();
+  if (!model) {
+    startersContainer.style.display = "none";
+    benchContainer.style.display = "none";
     return;
   }
 
-  const module = document.getElementById("moduleSelect").value;
-  const defReq = parseInt(module[0],10);
-  const cenReq = parseInt(module[1],10);
-  const attReq = parseInt(module[2],10);
+  startersContainer.style.display = "flex";
+  benchContainer.style.display = "block";
+  startersContainer.replaceChildren();
+  benchContainer.replaceChildren();
 
-  const startersContainer = document.getElementById("startersSlots");
-  startersContainer.style.display = "flex"; 
-  startersContainer.innerHTML = "";
-  
-  const starterSlots = {};
+  renderRoleRows(startersContainer, model.definitions.starter, model.slots.starter, "starter", model);
+  renderBenchMatrix(benchContainer, model.definitions.bench, model);
+  updateDesktopCounters(model);
 
-  // Funzione interna per creare una riga di reparto
-  const createRoleRow = (container, role, count, type, slotsObj) => {
-    const rowDiv = document.createElement("div");
-    rowDiv.className = "formation-row";
-    
-    for(let i=1; i<=count; i++){
-      const id = (role === 'P' && count === 1) ? "GK1" : role + i;
-      const slot = document.createElement("div");
-      slot.className = "slot empty";
-      slot.id = type + "-" + id;
-      slot.style.cursor = "pointer";
-      // Rimosso position relative
-      
-      slot.onclick = () => openSlotPicker(type, id);
-      slot.ondragover = (e) => { e.preventDefault(); slot.classList.add('drag-over'); };
-      slot.ondragleave = () => { slot.classList.remove('drag-over'); };
-      slot.ondrop = (e) => handleDrop(e, type, id);
-      
-      slotsObj[id] = slot;
-      rowDiv.appendChild(slot);
-    }
-    container.appendChild(rowDiv);
-  };
-
-  // Creazione righe TITOLARI
-  createRoleRow(startersContainer, 'P', 1, 'starter', starterSlots);
-  createRoleRow(startersContainer, 'D', defReq, 'starter', starterSlots);
-  createRoleRow(startersContainer, 'C', cenReq, 'starter', starterSlots);
-  createRoleRow(startersContainer, 'A', attReq, 'starter', starterSlots);
-
-  // Inizializzazione grafica slot vuoti titolari
-  Object.keys(starterSlots).forEach(id=>{
-    const role = getRoleFromSlotId(id);
-    const color = roleColors[role] || '#dc3545';
-    // Style: white-space normal e word-break per far andare il nome a capo
-    starterSlots[id].innerHTML = `<div class="slot-content" style="flex-wrap: wrap;">
-      <div class="badge" style="background:${color}; flex-shrink: 0;">${role}</div>
-      <div class="player-meta" style="color:var(--muted); white-space: normal; word-break: break-word; line-height: 1.1;">vuoto</div>
-    </div>`;
-    starterSlots[id].classList.add("empty");
-  });
-
-  if(!currentManager || !db[currentManager]) return;
-
-  // --- PANCHINA (Trasformata in Piramidale) ---
-  const benchContainer = document.getElementById("benchSlots");
-  benchContainer.style.display = "flex";
-  benchContainer.style.flexDirection = "column";
-  benchContainer.innerHTML = "";
-  const benchSlots = {};
-
-  createRoleRow(benchContainer, 'P', 2, 'bench', benchSlots);
-  createRoleRow(benchContainer, 'D', 3, 'bench', benchSlots);
-  createRoleRow(benchContainer, 'C', 3, 'bench', benchSlots);
-  createRoleRow(benchContainer, 'A', 3, 'bench', benchSlots);
-
-  // Inizializzazione grafica slot vuoti panchina
-  Object.keys(benchSlots).forEach(id=>{
-    const role = getRoleFromSlotId(id);
-    const color = roleColors[role] || '#dc3545';
-    benchSlots[id].innerHTML = `<div class="slot-content" style="flex-wrap: wrap;">
-      <div class="badge" style="background:${color}; flex-shrink: 0;">${role}</div>
-      <div class="player-meta" style="color:var(--muted); white-space: normal; word-break: break-word; line-height: 1.1;">vuoto</div>
-    </div>`;
-    benchSlots[id].classList.add("empty");
-  });
-
-  // --- ASSEGNAZIONE GIOCATORI (Logica originale intatta) ---
-  const team = db[currentManager].players;
-  const assignedPlayers = {};
-  const assignedBenchPlayers = {};
-  
-  for(const slotKey in slotAssignments){
-    const playerIdx = slotAssignments[slotKey];
-    if(selectedPlayers.includes(playerIdx)){
-      if(slotKey.startsWith('starter-')){
-        assignedPlayers[slotKey] = team[playerIdx];
-      } else if(slotKey.startsWith('bench-')){
-        assignedBenchPlayers[slotKey] = team[playerIdx];
-      }
-    } else {
-      delete slotAssignments[slotKey];
-    }
-  }
-  
-  const assignedIndices = new Set();
-  for(const key in slotAssignments) assignedIndices.add(slotAssignments[key]);
-  
-  const unassignedPlayers = selectedPlayers.filter(i => !assignedIndices.has(i) && i >= 0 && i < team.length).map(i => team[i]);
-  
-  let counts = {P:0,D:0,C:0,A:0};
-  let starters = [];
-  let bench = [];
-
-  const gks = unassignedPlayers.filter(p=>p.r==="P");
-  gks.forEach(p=>{ if(counts.P < 1){ starters.push(p); counts.P++; } else bench.push(p); });
-
-  const defs = unassignedPlayers.filter(p=>p.r==="D");
-  defs.forEach(p=>{ if(counts.D<defReq){ starters.push(p); counts.D++; } else bench.push(p); });
-
-  const cents = unassignedPlayers.filter(p=>p.r==="C");
-  cents.forEach(p=>{ if(counts.C<cenReq){ starters.push(p); counts.C++; } else bench.push(p); });
-
-  const atts = unassignedPlayers.filter(p=>p.r==="A");
-  atts.forEach(p=>{ if(counts.A<attReq){ starters.push(p); counts.A++; } else bench.push(p); });
-
-  lastStarters = starters.slice();
-  lastBench = bench.slice();
-
-  let starterRoleCounts = {P:0,D:0,C:0,A:0};
-  
-  // Update UI per starter assegnati
-  for(const slotKey in assignedPlayers){
-    const slotId = slotKey.replace('starter-', '');
-    const p = assignedPlayers[slotKey];
-    const playerIdx = team.indexOf(p);
-    if(starterSlots[slotId]){
-      starterSlots[slotId].innerHTML = `<div class="slot-content" style="flex-wrap: wrap;">
-          <div class="badge" style="background:${roleColors[p.r]}">${p.r}</div>
-          <div class="player-meta" style="white-space: normal; word-break: break-word;">${p.n}</div></div>`;
-      starterSlots[slotId].classList.remove("empty");
-      starterSlots[slotId].draggable = true;
-      starterSlots[slotId].ondragstart = (e) => { 
-        draggedPlayerIndex = playerIdx; 
-        draggedPlayerRole = p.r; 
-        starterSlots[slotId].classList.add('dragging'); 
-      };
-      starterSlots[slotId].ondragend = () => { 
-        draggedPlayerIndex = null; 
-        draggedPlayerRole = null; 
-        starterSlots[slotId].classList.remove('dragging'); 
-      };
-    }
-  }
-  
-  // Update UI per starter automatici
-  starters.forEach(p=>{
-    const role = p.r;
-    let slotId = (role === 'P') ? "GK1" : role + (++starterRoleCounts[role]);
-    if(assignedPlayers['starter-' + slotId]) return;
-    if(starterSlots[slotId]){
-      starterSlots[slotId].innerHTML = `<div class="slot-content" style="flex-wrap: wrap;">
-        <div class="badge" style="background:${roleColors[role]}">${role}</div>
-        <div class="player-meta" style="white-space: normal; word-break: break-word;">${p.n}</div></div>`;
-      starterSlots[slotId].classList.remove("empty");
-    }
-  });
-
-  // Update UI Panchina
-  const benchRoleSlots = { P:["P1","P2"], D:["D1","D2","D3"], C:["C1","C2","C3"], A:["A1","A2","A3"] };
-  let benchRoleCounts = {P:0,D:0,C:0,A:0};
-  
-  for(const slotKey in assignedBenchPlayers){
-    const slotId = slotKey.replace('bench-', '');
-    const p = assignedBenchPlayers[slotKey];
-    const playerIdx = team.indexOf(p);
-    if(benchSlots[slotId]){
-      benchSlots[slotId].innerHTML = `<div class="slot-content" style="flex-wrap: wrap;">
-        <div class="badge" style="background:${roleColors[p.r]}">${p.r}</div>
-        <div class="player-meta" style="white-space: normal; word-break: break-word;">${p.n}</div></div>`;
-      benchSlots[slotId].classList.remove("empty");
-      benchSlots[slotId].draggable = true;
-      benchSlots[slotId].ondragstart = (e) => { 
-        draggedPlayerIndex = playerIdx; 
-        draggedPlayerRole = p.r; 
-        benchSlots[slotId].classList.add('dragging'); 
-      };
-      benchSlots[slotId].ondragend = () => { 
-        draggedPlayerIndex = null; 
-        draggedPlayerRole = null; 
-        benchSlots[slotId].classList.remove('dragging'); 
-      };
-      benchRoleCounts[p.r]++;
-    }
-  }
-  
-  const gkStarter = starters.find(p=>p.r==="P") || assignedPlayers['starter-GK1'];
-  if(!assignedBenchPlayers['bench-P1'] && gkStarter && benchSlots["P1"]){
-    benchSlots["P1"].innerHTML = `<div class="slot-content" style="flex-wrap: wrap;"><div class="badge P">P</div><div class="player-meta" style="white-space: normal; word-break: break-word;">${gkStarter.t || "Portiere"}</div></div>`;
-    benchSlots["P1"].classList.remove("empty");
-    benchRoleCounts.P = 1;
-  }
-  
-  const starterGkBlock = gkStarter ? gkStarter.gkBlock : null;
-  if(!assignedBenchPlayers['bench-P2'] && gkStarter && starterGkBlock && benchSlots["P2"]){
-    const otherBlock = team.find(p => p.r === "P" && p.isGkBlock && p.gkBlock !== starterGkBlock && !selectedPlayers.includes(team.indexOf(p)));
-    if(otherBlock){
-      benchSlots["P2"].innerHTML = `<div class="slot-content" style="flex-wrap: wrap;"><div class="badge P">P</div><div class="player-meta" style="white-space: normal; word-break: break-word;">${otherBlock.t || "Portiere"}</div></div>`;
-      benchSlots["P2"].classList.remove("empty");
-      benchRoleCounts.P = 2;
-    }
-  }
-  
-  bench.filter(p => p.r !== "P").forEach(p=>{
-    const role = p.r;
-    const slotId = benchRoleSlots[role][benchRoleCounts[role]];
-    if(!slotId || assignedBenchPlayers['bench-' + slotId]) return;
-    const playerIdx = team.indexOf(p);
-    if(benchSlots[slotId]){
-      benchSlots[slotId].innerHTML = `<div class="slot-content" style="flex-wrap: wrap;"><div class="badge ${role}">${role}</div><div class="player-meta" style="white-space: normal; word-break: break-word;">${p.n}</div></div>`;
-      benchSlots[slotId].classList.remove("empty");
-      benchSlots[slotId].draggable = true;
-      benchSlots[slotId].ondragstart = (e) => { 
-        draggedPlayerIndex = playerIdx; 
-        draggedPlayerRole = p.r; 
-        benchSlots[slotId].classList.add('dragging'); 
-      };
-      benchSlots[slotId].ondragend = () => { 
-        draggedPlayerIndex = null; 
-        draggedPlayerRole = null; 
-        benchSlots[slotId].classList.remove('dragging'); 
-      };
-      benchRoleCounts[role]++;
-    }
-  });
-
-  const totalStarters = starters.length + Object.keys(assignedPlayers).filter(k => k.startsWith('starter-')).length;
-  const totalBench = bench.length + Object.keys(assignedBenchPlayers).length + (benchRoleCounts.P || 0);
-  document.getElementById("starterCount").textContent = `(${totalStarters}/11)`;
-  document.getElementById("benchCount").textContent = `(${totalBench}/11)`;
+  window.LineupSwitch?.reconcile();
+  window.LineupPersistence?.queueDraftSave?.();
 }

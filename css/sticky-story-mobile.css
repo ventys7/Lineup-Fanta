@@ -1,0 +1,76 @@
+/* LINEUP FANTA — one sticky app chrome
+   Header and controls must share the SAME sticky ancestor.
+   This avoids Safari/iOS treating the controls as a second independent sticky element. */
+
+html[data-route="league"] .app-chrome {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1100 !important;
+  width: 100%;
+  background: var(--bg);
+  box-shadow: 0 10px 22px rgba(23, 67, 57, .10);
+}
+
+html[data-route="league"] .app-chrome > header {
+  position: relative !important;
+  top: auto !important;
+  z-index: auto !important;
+  width: 100%;
+}
+
+html[data-route="league"] .app-chrome > .sticky-app-chrome__controls {
+  position: relative !important;
+  top: auto !important;
+  z-index: auto !important;
+  width: 100%;
+  padding: 8px 16px 10px;
+  border-top: 1px solid rgba(23, 67, 57, .08);
+  background: var(--bg);
+}
+
+html[data-route="league"] .app-chrome > .sticky-app-chrome__controls .controls {
+  position: relative !important;
+  top: auto !important;
+  z-index: auto !important;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 8px 18px rgba(23, 67, 57, .08);
+}
+
+html[data-route="league"] .container {
+  margin-top: 14px;
+  padding-top: 0;
+}
+
+html[data-route="league"] .content-wrapper { min-width: 0; }
+
+@media (max-width: 767px) {
+  html[data-route="league"] .app-chrome > .sticky-app-chrome__controls {
+    padding: 6px 10px 8px;
+  }
+
+  html[data-route="league"] .app-chrome > .sticky-app-chrome__controls .controls {
+    gap: 6px;
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  html[data-route="league"] .output-copy-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  html[data-route="league"] .output-copy-btn {
+    min-width: 0;
+    min-height: 48px;
+    padding: 7px 5px;
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    font-size: clamp(.66rem, 3.2vw, .76rem);
+    line-height: 1.12;
+    text-align: center;
+  }
+}
