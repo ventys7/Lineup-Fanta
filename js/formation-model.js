@@ -166,9 +166,6 @@ window.FormationModel = (function () {
       changedAssignments: didCleanAssignments
     };
 
-    lastStarters = starters.map((entry) => entry.player);
-    lastBench = bench.map((entry) => entry.player);
-
     return model;
   }
 

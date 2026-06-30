@@ -303,15 +303,8 @@ body.modal-open { overflow: hidden !important; touch-action: none !important; }
 }
 #outputText:focus { outline: none; border-color: var(--primary); }
 
-#copyModalBtn {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: #fff; font-weight: 700;
-  border: none;
-  box-shadow: 0 4px 12px rgba(124,58,237,0.25);
-}
-#copyModalBtn:hover { box-shadow: 0 6px 18px rgba(124,58,237,0.35); }
 
-#closeModalBtn, #selectAllBtn {
+#closeModalBtn {
   background: #fff;
   border: 1.5px solid var(--primary-border);
   color: #374151;
@@ -377,16 +370,6 @@ button[onclick^="close"] {
   border: 1.5px solid var(--primary-border);
   border-radius: 12px;
 }
-.switch-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.switch-plus-btn {
-  padding: 4px 12px; font-size: 0.78rem; border-radius: 7px;
-  background: #fff; border: 1.5px solid var(--primary-border);
-  color: var(--muted); cursor: pointer; transition: all .18s;
-}
-.switch-plus-btn.active {
-  background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 700;
-}
-.switch-container { display: flex; gap: 12px; }
 .switch-picker-wrapper {
   flex: 1; display: flex; flex-direction: column; gap: 4px; align-items: center;
 }
@@ -423,7 +406,6 @@ button[onclick^="close"] {
 /* ── MOBILE SECTION ── */
 .mobile-section { margin-bottom: 20px; }
 .mobile-section .mobile-title { font-size: 1rem; margin: 0 0 8px; color: var(--primary); font-weight: 700; }
-.mobile-slot { cursor: pointer; }
 
 /* ── RESPONSIVE ── */
 @media(max-width:767px) {
@@ -454,11 +436,9 @@ button[onclick^="close"] {
     border: 1.5px solid #fecaca; background: #fef2f2;
     color: #ef4444; cursor: pointer; font-weight: 600;
   }
-  #copyModalBtn  { display: none; }
   .mobile-section { margin-top: 24px; }
   .mobile-section .mobile-title { text-align: center; }
   .reset-btn     { padding: 6px 10px; font-size: 1.1rem; order: -1; }
-  .controls .auto-right { order: 1; }
   .controls      { padding: 10px; gap: 8px; justify-content: center; flex-wrap: wrap; text-align: center; }
   .controls select, .controls button { padding: 6px 8px; font-size: 0.83rem; }
   header h1 { font-size: 1.2rem; }

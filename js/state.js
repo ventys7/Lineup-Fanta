@@ -1,13 +1,11 @@
 /* SHARED STATE - Used across multiple modules */
 let currentManager = "";
 let selectedPlayers = [];
-let lastStarters = [];
-let lastBench = [];
 let slotAssignments = {};
 let draggedPlayerIndex = null;
 let draggedPlayerRole = null;
 let isModalOpen = false;
-let isMobile = window.innerWidth < 768;
+let isMobile = window.matchMedia("(max-width: 767px)").matches;
 
 /* Modal state management */
 function setModalOpen(open){

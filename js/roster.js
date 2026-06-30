@@ -196,8 +196,6 @@ function updateRosterUI() {
 function loadTeam() {
   currentManager = document.getElementById("managerSelect").value;
   selectedPlayers = [];
-  lastStarters = [];
-  lastBench = [];
   disabledBlocks.clear();
   slotAssignments = {};
   clearSwitch();

@@ -22,12 +22,23 @@ function splitCSVLine(line){
   });
 }
 
+function getCsvRequestUrl(){
+  if (!CSV_BASE_URL) throw new Error("CSV non configurato");
+
+  const url = new URL(CSV_BASE_URL, window.location.href);
+  url.searchParams.set("t", String(Date.now()));
+  return url.toString();
+}
+
 async function loadCSV(){
   try{
     db = {};
-    const url = CSV_BASE_URL + "&t=" + Date.now();
-    const res = await fetch(url);
+    const res = await fetch(getCsvRequestUrl(), { cache: "no-store" });
+    if (!res.ok) throw new Error(`CSV request failed (${res.status})`);
+
     const txt = await res.text();
+    if (/^\s*<!doctype html/i.test(txt)) throw new Error("Risposta CSV non valida");
+
     const lines = txt.split(/\r?\n/).filter(l=>l.trim().length>0);
     if(lines.length===0) throw new Error("CSV vuoto");
 
@@ -95,7 +106,7 @@ async function loadCSV(){
 
     if(!restoredDraft){
       renderFormation();
-      if(window.innerWidth < 768 && typeof renderMobileSlots === 'function'){
+      if(isMobile && typeof renderMobileSlots === 'function'){
         renderMobileSlots();
       }
       if(typeof updateSwitchUI === 'function'){

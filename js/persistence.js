@@ -192,8 +192,6 @@
       if (!Number.isInteger(switchBenchIndex)) switchBenchIndex = null;
 
       switchPlus = Boolean(draft.switch?.plus);
-      lastStarters = [];
-      lastBench = [];
 
       rebuildDisabledBlocks(team);
 
