@@ -472,7 +472,28 @@ window.LineupStory = (function () {
     return currentBlob ? new File([currentBlob], currentFileName, { type: "image/png" }) : null;
   }
 
-  function download() {
+  function isMobileStoryContext() {
+    return window.matchMedia?.("(max-width: 767px)").matches ||
+      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent || "");
+  }
+
+  function canShareFile(file) {
+    if (!file || typeof navigator.share !== "function") return false;
+
+    try {
+      return typeof navigator.canShare !== "function" || navigator.canShare({ files: [file] });
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function updateMobileActionLabels() {
+    const saveButton = document.getElementById("saveStoryBtn");
+    if (!saveButton) return;
+    saveButton.textContent = isMobileStoryContext() ? "Salva in Foto" : "Salva";
+  }
+
+  function downloadDesktop() {
     if (!currentBlob) return;
     const link = document.createElement("a");
     link.href = currentUrl || URL.createObjectURL(currentBlob);
@@ -483,49 +504,87 @@ window.LineupStory = (function () {
     showToast("Immagine pronta per il salvataggio", "success");
   }
 
-  async function share() {
+  async function invokeNativeShare(intent = "share") {
     const file = storyFile();
-    if (!file) return;
+    if (!file || !canShareFile(file)) return false;
 
     try {
-      if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
-        await navigator.share({
-          title: "Formazione Lineup Fanta",
-          text: "Formazione creata con Lineup Fanta",
-          files: [file]
-        });
-        return;
+      await navigator.share({
+        title: "Formazione Lineup Fanta",
+        files: [file]
+      });
+
+      if (intent === "save") {
+        showToast("Nel pannello scegli “Salva immagine”", "success");
       }
-      download();
+      return true;
     } catch (error) {
-      if (error?.name !== "AbortError") showToast("Condivisione non disponibile", "error");
+      // An intentional close is handled and must not trigger a fallback download.
+      if (error?.name === "AbortError") return true;
+      console.warn("Native share failed", error);
+      return false;
+    }
+  }
+
+  async function share() {
+    const shared = await invokeNativeShare("share");
+    if (shared) return;
+
+    if (isMobileStoryContext()) {
+      showToast("Condivisione non supportata su questo browser", "error");
+      return;
+    }
+
+    downloadDesktop();
+  }
+
+  async function save() {
+    if (!isMobileStoryContext()) {
+      downloadDesktop();
+      return;
+    }
+
+    const shared = await invokeNativeShare("save");
+    if (!shared) {
+      showToast("Salvataggio in Foto non disponibile su questo browser", "error");
     }
   }
 
   async function copyImage() {
     if (!currentBlob) return;
 
-    if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
-      showToast("Copia immagine non supportata qui: usa Condividi o Salva", "error");
+    if (!window.isSecureContext || !navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+      showToast("Copia immagine richiede HTTPS e un browser compatibile", "error");
       return;
     }
 
-    try {
-      await navigator.clipboard.write([
-        new ClipboardItem({ "image/png": currentBlob })
-      ]);
-      showToast("Immagine copiata", "success");
-    } catch (error) {
-      showToast("Copia immagine non disponibile: usa Condividi o Salva", "error");
+    const candidates = [
+      () => new ClipboardItem({ "image/png": currentBlob }),
+      () => new ClipboardItem({ "image/png": Promise.resolve(currentBlob) })
+    ];
+
+    for (const makeItem of candidates) {
+      try {
+        await navigator.clipboard.write([makeItem()]);
+        showToast("Immagine copiata", "success");
+        return;
+      } catch (error) {
+        console.warn("Clipboard image attempt failed", error);
+      }
     }
+
+    showToast("Copia immagine non disponibile: usa Condividi", "error");
   }
 
   function bind() {
-    document.getElementById("openStoryBtn")?.addEventListener("click", open);
+    document.getElementById("openStoryBtn")?.addEventListener("click", () => {
+      updateMobileActionLabels();
+      open();
+    });
     document.getElementById("closeStoryBtn")?.addEventListener("click", close);
     document.getElementById("shareStoryBtn")?.addEventListener("click", share);
     document.getElementById("copyStoryBtn")?.addEventListener("click", copyImage);
-    document.getElementById("saveStoryBtn")?.addEventListener("click", download);
+    document.getElementById("saveStoryBtn")?.addEventListener("click", save);
 
     document.getElementById("storyModal")?.addEventListener("click", (event) => {
       if (event.target === event.currentTarget) close();
