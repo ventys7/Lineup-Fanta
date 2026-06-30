@@ -1156,7 +1156,7 @@ html[data-route="league"] .story-status {
 
 html[data-route="league"] .story-actions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 14px;
 }
@@ -1184,7 +1184,6 @@ html[data-route="league"] .story-action:disabled {
 
 html[data-route="league"] .story-action--share { background: linear-gradient(135deg, #0f766e, #14b8a6); }
 html[data-route="league"] .story-action--copy { background: linear-gradient(135deg, #2563eb, #4f46e5); }
-html[data-route="league"] .story-action--save { background: linear-gradient(135deg, #d97706, #ea580c); }
 
 @media (max-width: 767px) {
   html[data-route="league"] .story-modal { padding: 12px; }

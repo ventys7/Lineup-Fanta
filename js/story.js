@@ -1,4 +1,4 @@
-/* LINEUP STORY — 9:16 canvas preview, share, copy image and save */
+/* LINEUP STORY — 9:16 canvas preview, share and copy image */
 
 window.LineupStory = (function () {
   const WIDTH = 1080;
@@ -470,21 +470,6 @@ window.LineupStory = (function () {
 
   function storyFile() {
     return currentBlob ? new File([currentBlob], currentFileName, { type: "image/png" }) : null;
-  }
-
-  function isMobileStoryContext() {
-    return window.matchMedia?.("(max-width: 767px)").matches ||
-      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent || "");
-  }
-
-  function canShareFile(file) {
-    if (!file || typeof navigator.share !== "function") return false;
-
-    try {
-      return typeof navigator.canShare !== "function" || navigator.canShare({ files: [file] });
-    } catch (error) {
-      return false;
-    }
   }
 
   function downloadDesktop() {
