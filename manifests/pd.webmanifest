@@ -1,0 +1,16 @@
+{
+  "name": "LaLigaCUP · Lineup Fanta",
+  "short_name": "LaLigaCUP",
+  "start_url": "/pd",
+  "display": "standalone",
+  "background_color": "#fffafa",
+  "theme_color": "#b91c1c",
+  "icons": [
+    {
+      "src": "/assets/identity/pd-logo.png",
+      "sizes": "640x640",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

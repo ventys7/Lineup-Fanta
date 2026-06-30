@@ -26,12 +26,25 @@ if missing:
     raise SystemExit("Riferimenti locali mancanti: " + ", ".join(missing))
 PYCHECK
 
-for asset in assets/identity/fp-logo.png assets/identity/pd-logo.png; do
+node scripts/generate-route-pages.mjs --check
+
+for asset in \
+  assets/identity/fp-logo.png \
+  assets/identity/pd-logo.png \
+  assets/identity/fp-apple-touch-icon.png \
+  assets/identity/pd-apple-touch-icon.png \
+  manifests/fp.webmanifest \
+  manifests/pd.webmanifest; do
   if [[ ! -f "$asset" ]]; then
     echo "Errore: asset identita mancante: $asset" >&2
     exit 1
   fi
 done
+
+if grep -q '<link rel="apple-touch-icon"' index.html; then
+  echo "Errore: la home non deve dichiarare un'icona Apple di lega." >&2
+  exit 1
+fi
 
 if find . -maxdepth 1 -type d -name '.lineup-backup-*' -print -quit | grep -q .; then
   echo "Errore: è presente una cartella backup della patch nella root." >&2

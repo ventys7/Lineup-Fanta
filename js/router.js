@@ -4,8 +4,8 @@
 
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
   const pathLeague =
-    path === "/fp" ? "fp" :
-    path === "/pd" ? "pd" :
+    ["/fp", "/fp/index.html"].includes(path) ? "fp" :
+    ["/pd", "/pd/index.html"].includes(path) ? "pd" :
     null;
 
   const leagueId =

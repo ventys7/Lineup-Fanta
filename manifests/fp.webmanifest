@@ -1,0 +1,16 @@
+{
+  "name": "PianginaCUP · Lineup Fanta",
+  "short_name": "PianginaCUP",
+  "start_url": "/fp",
+  "display": "standalone",
+  "background_color": "#f8f7ff",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/assets/identity/fp-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

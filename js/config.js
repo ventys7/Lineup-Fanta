@@ -6,9 +6,11 @@ window.LINEUP_LEAGUES = Object.freeze({
     flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR1qCSKkMUZ6W_-_OG8qjTYEQTwF4aPqgtg3XjOGqphRHRDlnFynozJsC0t6WeFjY8XCXjr-R1ZVaww/pub?gid=556989324&single=true&output=csv",
     identity: Object.freeze({
+      id: "fp",
       logo: "assets/identity/fp-logo.png",
       favicon: "assets/identity/fp-logo.png",
-      appleTouchIcon: "assets/identity/fp-logo.png"
+      appleTouchIcon: "assets/identity/fp-apple-touch-icon.png",
+      manifest: "manifests/fp.webmanifest"
     }),
     theme: {
       primary: "#7c3aed",
@@ -26,9 +28,11 @@ window.LINEUP_LEAGUES = Object.freeze({
     flag: "🇪🇸",
     csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSlE8BNQI1bOPsOlg2aO7TTHr0RpJD9rCj_EP3QRpsBho6D3s_ZCtmMibhbjx0Ehc5jexbagbf_t9j0/pub?gid=1583604307&single=true&output=csv",
     identity: Object.freeze({
+      id: "pd",
       logo: "assets/identity/pd-logo.png",
       favicon: "assets/identity/pd-logo.png",
-      appleTouchIcon: "assets/identity/pd-logo.png"
+      appleTouchIcon: "assets/identity/pd-apple-touch-icon.png",
+      manifest: "manifests/pd.webmanifest"
     }),
     theme: {
       primary: "#b91c1c",

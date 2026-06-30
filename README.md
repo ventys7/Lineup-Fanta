@@ -26,7 +26,9 @@ In locale, se il server statico non gestisce le rewrite Vercel, sono disponibili
 
 ## Identità visiva per rotta
 
-`/fp` usa il logo PianginaCUP e `/pd` quello LaLigaCUP sia nell'header sia nei tag `icon` e `apple-touch-icon`. La home `/` non pubblica un'icona di lega: resta volutamente neutra in tab e bookmark. I percorsi sono definiti in `js/config.js`; gli asset stanno in `assets/identity/`.
+`/fp` usa il logo PianginaCUP e `/pd` quello LaLigaCUP nell'header, nel favicon e nell'icona Apple Home Screen. Per Safari le due route sono documenti statici generati (`fp/index.html` e `pd/index.html`): questo rende i tag `apple-touch-icon` disponibili già nel markup ricevuto, prima del JavaScript. La home `/` non pubblica un'icona di lega e resta volutamente neutra.
+
+Dopo ogni modifica a `index.html`, esegui `node scripts/generate-route-pages.mjs` e includi i file generati nel commit. Il controllo statico verifica che non siano fuori sync.
 
 ## Dati e persistenza
 
