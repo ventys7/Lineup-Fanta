@@ -44,7 +44,8 @@ html[data-route="league"] .column > .mt-12.font-600 {
    from its inner list into the page. */
 html[data-route="league"] .roster-drawer {
   position: fixed;
-  top: 62px;
+  /* Header + controls are one sticky shell: start the drawer beneath it. */
+  top: var(--app-chrome-height, 132px);
   right: 0;
   bottom: 0;
   width: min(420px, 92vw) !important;

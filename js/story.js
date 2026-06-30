@@ -472,6 +472,21 @@ window.LineupStory = (function () {
     return currentBlob ? new File([currentBlob], currentFileName, { type: "image/png" }) : null;
   }
 
+  function isMobileStoryContext() {
+    return window.matchMedia?.("(max-width: 767px)").matches ||
+      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent || "");
+  }
+
+  function canShareFile(file) {
+    if (!file || typeof navigator.share !== "function") return false;
+
+    try {
+      return typeof navigator.canShare !== "function" || navigator.canShare({ files: [file] });
+    } catch (error) {
+      return false;
+    }
+  }
+
   function downloadDesktop() {
     if (!currentBlob) return;
     const link = document.createElement("a");
@@ -514,7 +529,10 @@ window.LineupStory = (function () {
   }
 
   async function copyImage() {
-    if (!currentBlob) return;
+    if (!currentBlob) {
+      showToast("Attendi che l’anteprima sia pronta", "error");
+      return;
+    }
 
     if (!window.isSecureContext || !navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
       showToast("Copia immagine richiede HTTPS e un browser compatibile", "error");
