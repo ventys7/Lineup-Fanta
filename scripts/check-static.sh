@@ -26,6 +26,13 @@ if missing:
     raise SystemExit("Riferimenti locali mancanti: " + ", ".join(missing))
 PYCHECK
 
+for asset in assets/identity/fp-logo.png assets/identity/pd-logo.png; do
+  if [[ ! -f "$asset" ]]; then
+    echo "Errore: asset identita mancante: $asset" >&2
+    exit 1
+  fi
+done
+
 if find . -maxdepth 1 -type d -name '.lineup-backup-*' -print -quit | grep -q .; then
   echo "Errore: è presente una cartella backup della patch nella root." >&2
   exit 1

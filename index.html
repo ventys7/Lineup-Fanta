@@ -1,41 +1,74 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <!-- LINEUP FANTA: resolve the route before legacy FP markup can paint -->
-  <script id="lineup-prepaint-router">
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var previewLeague = params.get("league");
-      var path = window.location.pathname.replace(/\/+$/, "") || "/";
-      var pathLeague = path === "/fp" ? "fp" : (path === "/pd" ? "pd" : null);
-      var leagueId = (previewLeague === "fp" || previewLeague === "pd")
-        ? previewLeague
-        : pathLeague;
-
-      document.documentElement.dataset.route = leagueId ? "league" : "home";
-
-      if (!leagueId) {
-        document.title = "Lineup Fanta";
-      }
-    })();
-  </script>
-
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PianginaCUP</title>
-<link rel="icon" type="image/png" href="fantacalcio logo.png">
-<link rel="stylesheet" href="css/style.css">
 <base href="/">
+<title>Lineup Fanta</title>
+<script src="js/config.js"></script>
+<script id="lineup-prepaint-router">
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const previewLeague = params.get("league");
+    const path = window.location.pathname.replace(/\/+$/, "") || "/";
+    const pathLeague = path === "/fp" ? "fp" : (path === "/pd" ? "pd" : null);
+    const leagueId = ["fp", "pd"].includes(previewLeague) ? previewLeague : pathLeague;
+    const league = leagueId ? window.LINEUP_LEAGUES[leagueId] : null;
+
+    function applyIdentity(identity) {
+      document.querySelectorAll("link[data-lineup-identity]").forEach((link) => link.remove());
+      if (!identity) return;
+
+      [
+        { rel: "icon", href: identity.favicon },
+        { rel: "apple-touch-icon", href: identity.appleTouchIcon }
+      ].forEach(({ rel, href }) => {
+        const link = document.createElement("link");
+        link.rel = rel;
+        link.href = href;
+        link.type = "image/png";
+        link.dataset.lineupIdentity = rel;
+        document.head.append(link);
+      });
+    }
+
+    window.applyLineupIdentity = applyIdentity;
+    document.documentElement.dataset.route = league ? "league" : "home";
+
+    if (league) {
+      document.documentElement.dataset.league = league.id;
+      document.title = `${league.name} · Lineup Fanta`;
+      applyIdentity(league.identity);
+    } else {
+      delete document.documentElement.dataset.league;
+      document.title = "Lineup Fanta";
+      applyIdentity(null);
+    }
+  })();
+</script>
+<link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/landing.css">
 <link rel="stylesheet" href="css/formation-clean.css">
 <link rel="stylesheet" href="css/fixtures-card.css">
-  <link rel="stylesheet" href="css/sticky-story-mobile.css">
+<link rel="stylesheet" href="css/sticky-story-mobile.css">
 </head>
 <body>
 <div class="app-chrome">
   <header>
-    <img class="logo" src="fantacalcio logo.png" alt="Logo">
-    <h1>PianginaCUP</h1>
+    <img id="leagueLogo" class="logo" alt="" hidden>
+    <h1 id="leagueTitle"></h1>
+    <script>
+      (function () {
+        const league = window.LINEUP_LEAGUES?.[document.documentElement.dataset.league];
+        const logo = document.getElementById("leagueLogo");
+        const title = document.getElementById("leagueTitle");
+        if (!league || !logo || !title) return;
+        logo.src = league.identity.logo;
+        logo.alt = `Logo ${league.name}`;
+        logo.hidden = false;
+        title.textContent = league.name;
+      })();
+    </script>
   </header>
   <div class="sticky-app-chrome__controls">
     <div class="controls">
@@ -253,7 +286,6 @@
 <!-- Toast container -->
 <div id="toastContainer" aria-hidden="true"></div>
 
-<script src="js/config.js"></script>
 <script src="js/router.js"></script>
 <script src="js/csv.js"></script>
 <script src="js/state.js"></script>

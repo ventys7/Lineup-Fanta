@@ -24,6 +24,10 @@ In locale, se il server statico non gestisce le rewrite Vercel, sono disponibili
 | Calendario | `js/fixtures.js`, `css/fixtures-card.css` | Card Kick-off ottenuta solo da endpoint cache-only. |
 | Interfaccia | `css/style.css`, `css/formation-clean.css`, `css/sticky-story-mobile.css`, `css/landing.css` | Base, campo, sticky header/story e landing. |
 
+## Identità visiva per rotta
+
+`/fp` usa il logo PianginaCUP e `/pd` quello LaLigaCUP sia nell'header sia nei tag `icon` e `apple-touch-icon`. La home `/` non pubblica un'icona di lega: resta volutamente neutra in tab e bookmark. I percorsi sono definiti in `js/config.js`; gli asset stanno in `assets/identity/`.
+
 ## Dati e persistenza
 
 Ogni lega usa il proprio CSV in `js/config.js`. Le chiavi browser sono isolate con prefissi `lineup-fp:` e `lineup-pd:`; la bozza contiene manager, modulo, selezioni, posizioni manuali e switch.

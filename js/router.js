@@ -27,6 +27,18 @@
     return isLocalStaticServer ? `/?league=${id}` : `/${id}`;
   }
 
+  function applyLeagueIdentity() {
+    const logo = document.getElementById("leagueLogo");
+
+    if (logo) {
+      logo.src = league.identity.logo;
+      logo.alt = `Logo ${league.name}`;
+      logo.hidden = false;
+    }
+
+    window.applyLineupIdentity?.(league.identity);
+  }
+
   function applyLeagueTheme() {
     if (!league) return;
 
@@ -40,6 +52,8 @@
     document.documentElement.style.setProperty("--primary-bg", theme.primaryBg);
     document.documentElement.style.setProperty("--primary-border", theme.primaryBorder);
     document.documentElement.style.setProperty("--bg", theme.background);
+
+    applyLeagueIdentity();
 
     const title = document.querySelector("header h1");
     if (title) title.textContent = league.name;
@@ -62,6 +76,8 @@
 
   function renderLeaguePicker() {
     document.title = "Lineup Fanta";
+    delete document.documentElement.dataset.league;
+    window.applyLineupIdentity?.(null);
     document.body.dataset.route = "home";
 
     const landing = document.createElement("main");
