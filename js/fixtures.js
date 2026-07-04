@@ -16,13 +16,13 @@ window.LineupFixtures = (function () {
   function getEndpoint() {
     const league = getLeague();
     if (!league?.id) return null;
-    return `${API_BASE}?league=${encodeURIComponent(league.id)}`;
+    return `${API_BASE}?league=${encodeURIComponent(league.id)}&fresh=1`;
   }
 
   function crestUrl(teamId) {
     const normalizedId = String(teamId || "").trim();
     return /^\d+$/.test(normalizedId)
-      ? `${KICKOFF_ORIGIN}/api/crest/${normalizedId}`
+      ? `${KICKOFF_ORIGIN}/api/crest/${normalizedId}?fresh=1`
       : null;
   }
 
