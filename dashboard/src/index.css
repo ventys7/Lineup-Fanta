@@ -1345,3 +1345,391 @@
     padding: 0 10px 11px;
   }
 }
+
+/* STEP 5A - Classifica multi-lega da CSV pubblicato. */
+.lf-standings-shell {
+  padding: 22px 16px 34px;
+}
+
+.lf-standings-card {
+  max-width: 1060px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.lf-standings-state {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 34px 24px;
+  text-align: center;
+}
+
+.lf-standings-state strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #1f2d28;
+  font-size: 17px;
+}
+
+.lf-standings-state p {
+  margin: 0;
+  color: #6c7a74;
+  font-size: 13px;
+}
+
+.lf-standings-state .lf-spinner {
+  margin: 0 auto 12px;
+}
+
+.lf-standings-state--error strong {
+  color: #c33131;
+}
+
+.lf-standings-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5ebe8;
+  background: #fbfcfc;
+}
+
+.lf-standings-toolbar button {
+  min-width: 118px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid #dce5e1;
+  border-radius: 10px;
+  background: #fff;
+  color: #68766f;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.lf-standings-toolbar button.is-active {
+  border-color: var(--primary-border);
+  background: var(--primary-bg);
+  color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary-border);
+}
+
+.lf-standings-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.lf-standings-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  color: #26332e;
+  font-size: 12px;
+}
+
+.lf-standings-table th,
+.lf-standings-table td {
+  height: 48px;
+  padding: 0 10px;
+  border-bottom: 1px solid #e8eeeb;
+  background: #fff;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lf-standings-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 38px;
+  background: #f6f9f7;
+  color: #74817b;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.lf-standings-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.lf-standings-table tbody tr:hover td {
+  background: #fbfcfc;
+}
+
+.lf-standings-table .lf-standings-rank-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 44px;
+  padding: 0 6px;
+  box-shadow: 1px 0 0 #e8eeeb;
+}
+
+.lf-standings-table thead .lf-standings-rank-col {
+  z-index: 5;
+}
+
+.lf-standings-table .lf-standings-team-col {
+  position: sticky;
+  left: 44px;
+  z-index: 2;
+  width: 220px;
+  padding-right: 14px;
+  padding-left: 12px;
+  box-shadow: 1px 0 0 #e8eeeb;
+  text-align: left;
+}
+
+.lf-standings-table thead .lf-standings-team-col {
+  z-index: 5;
+}
+
+.lf-standings-table .is-points {
+  color: var(--primary);
+  font-size: 13px;
+}
+
+.lf-standings-table .is-positive {
+  color: #168052;
+  font-weight: 900;
+}
+
+.lf-standings-table .is-negative {
+  color: #c14545;
+  font-weight: 900;
+}
+
+.lf-standings-team-cell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.lf-standings-team-cell strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #1d2a25;
+  font-size: 12px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+}
+
+.lf-standings-team-mark {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--primary-border);
+  border-radius: 8px;
+  background: var(--primary-bg);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.lf-standings-penalty {
+  display: inline-flex;
+  min-height: 18px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 5px;
+  border: 1px solid #f2c4c4;
+  border-radius: 999px;
+  background: #fff1f1;
+  color: #b43232;
+  font-size: 8px;
+  font-weight: 950;
+}
+
+.lf-standings-table tbody tr.is-top-1 td {
+  background: color-mix(in srgb, var(--primary-bg) 45%, #fff);
+}
+
+.lf-standings-table tbody tr.is-top-2 td,
+.lf-standings-table tbody tr.is-top-3 td {
+  background: color-mix(in srgb, var(--primary-bg) 22%, #fff);
+}
+
+.lf-standings-fantasy-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 18px 18px;
+}
+
+.lf-standings-table--fantasy {
+  min-width: 0;
+  table-layout: auto;
+}
+
+.lf-standings-table--fantasy th:first-child,
+.lf-standings-table--fantasy td:first-child {
+  width: 52px;
+}
+
+.lf-standings-table--fantasy th:nth-child(2),
+.lf-standings-table--fantasy td:nth-child(2) {
+  text-align: left;
+}
+
+.lf-standings-table--fantasy th:last-child,
+.lf-standings-table--fantasy td:last-child {
+  width: 150px;
+}
+
+.lf-standings-table--fantasy .is-fantasy-points {
+  color: var(--primary);
+  font-size: 13px;
+}
+
+@media (max-width: 767px) {
+  .lf-standings-shell {
+    padding: 12px 8px 24px;
+  }
+
+  .lf-standings-toolbar {
+    padding: 10px 8px;
+  }
+
+  .lf-standings-toolbar button {
+    min-width: 104px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 9px;
+    font-size: 10px;
+  }
+
+  .lf-standings-table {
+    min-width: 735px;
+    font-size: 10.5px;
+  }
+
+  .lf-standings-table th,
+  .lf-standings-table td {
+    height: 43px;
+    padding: 0 7px;
+  }
+
+  .lf-standings-table thead th {
+    height: 34px;
+    font-size: 8px;
+  }
+
+  .lf-standings-table .lf-standings-rank-col {
+    width: 38px;
+  }
+
+  .lf-standings-table .lf-standings-team-col {
+    left: 38px;
+    width: 170px;
+    padding-right: 8px;
+    padding-left: 7px;
+  }
+
+  .lf-standings-team-cell {
+    gap: 6px;
+  }
+
+  .lf-standings-team-cell strong {
+    font-size: 10.5px;
+  }
+
+  .lf-standings-team-mark {
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
+    border-radius: 7px;
+    font-size: 9px;
+  }
+
+  .lf-standings-penalty {
+    min-height: 16px;
+    padding: 1px 4px;
+    font-size: 7px;
+  }
+
+  .lf-standings-fantasy-wrap {
+    padding: 0 6px 10px;
+  }
+
+  .lf-standings-table--fantasy {
+    min-width: 0;
+  }
+
+  .lf-standings-table--fantasy th:first-child,
+  .lf-standings-table--fantasy td:first-child {
+    width: 38px;
+  }
+
+  .lf-standings-table--fantasy th:last-child,
+  .lf-standings-table--fantasy td:last-child {
+    width: 104px;
+  }
+}
+
+/* STEP 5B - Ordinamento ciclico GF/GS nella classifica principale. */
+.lf-standings-table thead th.is-sorted {
+  background: color-mix(in srgb, var(--primary-bg) 72%, #f6f9f7);
+  color: var(--primary);
+}
+
+.lf-standings-sort-button {
+  display: inline-flex;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.lf-standings-sort-button:focus-visible {
+  border-radius: 5px;
+  outline: 2px solid var(--primary-border);
+  outline-offset: 2px;
+}
+
+.lf-standings-sort-icon {
+  display: inline-flex;
+  min-width: 9px;
+  align-items: center;
+  justify-content: center;
+  color: #98a49f;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.lf-standings-table thead th.is-sorted .lf-standings-sort-icon {
+  color: var(--primary);
+}
+
+@media (max-width: 767px) {
+  .lf-standings-sort-button {
+    gap: 2px;
+  }
+
+  .lf-standings-sort-icon {
+    min-width: 8px;
+    font-size: 9px;
+  }
+}

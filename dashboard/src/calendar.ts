@@ -117,7 +117,7 @@ export function parseCalendarCsv(csvText: string, expectedMatches: number): Cale
         matches.length === expectedMatches &&
         matches.every((match) => match.homeGoals !== null && match.awayGoals !== null)
       );
-      const status = complete ? "calcolata" : "da_calcolare";
+      const status: CalendarMatchday["status"] = complete ? "calcolata" : "da_calcolare";
 
       return {
         fantasyMatchdayNumber,

@@ -30,6 +30,8 @@ type LineupLeague = {
     calendarDocUrl?: string;
     calendarExpectedMatches?: number;
     calendarCompetitionLabel?: string;
+    standingsCsvUrl?: string;
+    standingsFallbackUrl?: string;
   };
 };
 
