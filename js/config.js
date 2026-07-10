@@ -8,6 +8,9 @@ window.LINEUP_LEAGUES = Object.freeze({
     leagueData: Object.freeze({
       standingsCsvUrl: "/data/fp/classifica.csv",
       calendarCsvUrl: "/data/fp/calendario.csv",
+      calendarDocUrl: "https://docs.google.com/document/d/e/2PACX-1vSwwHhS8hSRFVrlz0mwYgjzq7UG9aTEFuHd7Qh1RA4CmnXQ11bCs59I6VTsusSAxW_m88a99vyHNngH/pub",
+      calendarExpectedMatches: 4,
+      calendarCompetitionLabel: "Premier League",
       matchdayLinksKey: "fp"
     }),
     identity: Object.freeze({
@@ -35,6 +38,9 @@ window.LINEUP_LEAGUES = Object.freeze({
     leagueData: Object.freeze({
       standingsCsvUrl: "/data/pd/classifica.csv",
       calendarCsvUrl: "/data/pd/calendario.csv",
+      calendarDocUrl: "",
+      calendarExpectedMatches: 4,
+      calendarCompetitionLabel: "Liga",
       matchdayLinksKey: "pd"
     }),
     identity: Object.freeze({

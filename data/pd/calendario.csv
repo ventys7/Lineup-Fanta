@@ -1,5 +1,1 @@
-real_round_number,fantasy_matchday_number,status,is_split,home_team,away_team,home_goals,away_goals,note
-2,1,calcolata,false,Squadra PD A,Squadra PD D,3,0,
-2,1,calcolata,false,Squadra PD B,Squadra PD C,2,2,
-3,2,da_calcolare,false,Squadra PD A,Squadra PD C,,,
-3,2,da_calcolare,false,Squadra PD D,Squadra PD B,,,
+real_round_number,fantasy_matchday_number,status,home_team,away_team,home_total,away_total,home_goals,away_goals,note
