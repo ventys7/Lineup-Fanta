@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createLogger } from "./debug/logger";
+import { isLocalPreviewHostname } from "./shared/environment";
 import { fetchFreshText, useSectionRefresh } from "./liveRefresh";
 import { useLeagueAssets } from "./hooks";
 import { Calendar } from "./pages/Calendar";
@@ -8,29 +10,7 @@ import {
   type MatchdayRegistry
 } from "./matchdayLinks";
 
-function isLocalPreviewHostname(hostname: string): boolean {
-  const host = String(hostname ?? "")
-    .trim()
-    .toLowerCase()
-    .replace(/^\[|\]$/g, "");
-
-  if (
-    host === "localhost"
-    || host === "127.0.0.1"
-    || host === "0.0.0.0"
-    || host === "::1"
-    || host.endsWith(".local")
-  ) {
-    return true;
-  }
-
-  return (
-    /^10\./.test(host)
-    || /^192\.168\./.test(host)
-    || /^172\.(1[6-9]|2\d|3[01])\./.test(host)
-    || /^169\.254\./.test(host)
-  );
-}
+const log = createLogger("calendar");
 
 const EMPTY_REGISTRY: MatchdayRegistry = {
   activeFantasyMatchday: null,
@@ -81,7 +61,7 @@ export default function CalendarApp() {
         } catch (liveError) {
           const localPreview = isLocalPreviewHostname(window.location.hostname);
           if (!localPreview || !calendarUrl || controller.signal.aborted) throw liveError;
-          console.warn("Calendar live API unavailable in local preview, using local snapshot", liveError);
+          log.warn("live API unavailable; using local snapshot", liveError);
           csvText = await fetchFreshText(calendarUrl, controller.signal);
         }
 
@@ -104,16 +84,16 @@ export default function CalendarApp() {
           }
         } catch (linksError) {
           if (controller.signal.aborted) return;
-          console.warn("Matchday registry unavailable in Calendar", linksError);
+          log.warn("matchday registry unavailable", linksError);
         }
         hasLoadedData.current = true;
         setStatus("ready");
       } catch (loadError) {
         if (controller.signal.aborted) return;
-        console.error("Calendar load error", loadError);
+        log.error("load failed", loadError);
 
         if (hasLoadedData.current) {
-          console.warn("Aggiornamento interno del Calendario non riuscito: mantengo gli ultimi dati validi.");
+          log.warn("refresh failed; keeping last valid calendar");
           return;
         }
 
@@ -156,7 +136,6 @@ export default function CalendarApp() {
       leagueId={leagueId}
       leagueName={leagueName}
       matchdays={matchdays}
-      expectedMatches={expectedMatches}
       registry={registry}
       assets={assets}
       detailRefreshToken={refreshToken}

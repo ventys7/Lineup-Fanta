@@ -4,33 +4,48 @@ import App from "./App";
 import RoseApp from "./RoseApp";
 import CalendarApp from "./CalendarApp";
 import StandingsApp from "./StandingsApp";
-import "./index.css";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { createLogger } from "./debug/logger";
+import "./styles/runtime.css";
+import "./styles/listone.css";
+import "./styles/teams.css";
+import "./styles/calendar.css";
+import "./styles/standings.css";
+import "./styles/match-detail/01-core.css";
+import "./styles/match-detail/02-calendar-mobile.css";
+import "./styles/match-detail/03-modal.css";
+import "./styles/match-detail/04-player-identity.css";
+import "./styles/match-detail/05-layout.css";
+import "./styles/match-detail/06-sizing.css";
+import "./styles/match-detail/07-sticky-symmetry.css";
+import "./styles/match-detail/08-mobile-bench.css";
 
-const listoneRoot = document.getElementById("league-dashboard-root");
-const roseRoot = document.getElementById("league-rose-root");
-const calendarRoot = document.getElementById("league-calendar-root");
-const standingsRoot = document.getElementById("league-standings-root");
+const log = createLogger("bootstrap");
 
-if (listoneRoot) {
-  ReactDOM.createRoot(listoneRoot).render(
-    <React.StrictMode><App /></React.StrictMode>
+function mount(rootId: string, name: string, app: React.ReactNode): void {
+  const root = document.getElementById(rootId);
+  if (!root) {
+    log.debug("root not present", { rootId, name });
+    return;
+  }
+
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <ErrorBoundary name={name}>{app}</ErrorBoundary>
+    </React.StrictMode>
   );
+  log.debug("mounted", { rootId, name });
 }
 
-if (roseRoot) {
-  ReactDOM.createRoot(roseRoot).render(
-    <React.StrictMode><RoseApp /></React.StrictMode>
-  );
-}
+window.addEventListener("error", (event) => {
+  log.error("unhandled window error", event.error ?? event.message);
+});
 
-if (calendarRoot) {
-  ReactDOM.createRoot(calendarRoot).render(
-    <React.StrictMode><CalendarApp /></React.StrictMode>
-  );
-}
+window.addEventListener("unhandledrejection", (event) => {
+  log.error("unhandled promise rejection", event.reason);
+});
 
-if (standingsRoot) {
-  ReactDOM.createRoot(standingsRoot).render(
-    <React.StrictMode><StandingsApp /></React.StrictMode>
-  );
-}
+mount("league-dashboard-root", "Listone", <App />);
+mount("league-rose-root", "Rose", <RoseApp />);
+mount("league-calendar-root", "Calendario", <CalendarApp />);
+mount("league-standings-root", "Classifica", <StandingsApp />);

@@ -54,3 +54,12 @@ Il controllo verifica sintassi JavaScript, riferimenti locali di CSS/JS nell'HTM
 ## Sviluppo
 
 L'app non richiede build né dipendenze npm: è HTML/CSS/JavaScript statico. Per una prova locale basta un server statico; in produzione Vercel serve le route `/fp` e `/pd` tramite `vercel.json`.
+
+## Verifica e debug
+
+```bash
+npm run verify
+npm run dev
+```
+
+Per i log dettagliati aprire la pagina con `?debug=1`. La guida completa è in [`docs/DEBUGGING.md`](docs/DEBUGGING.md).

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { createLogger } from "../debug/logger";
 import { UsersIcon } from "../icons";
 import { TeamCard } from "../components/teams/TeamCard";
 import type { TeamSquad, RoleKey } from "../components/teams/types";
@@ -7,6 +8,7 @@ import { loadTeamProfiles, type TeamProfiles } from "../teamProfiles";
 import { useSectionRefresh } from "../liveRefresh";
 
 const ROLE_TARGETS: Record<RoleKey, number> = { P: 2, D: 8, C: 8, A: 6 };
+const log = createLogger("teams");
 
 type TeamsListProps = {
   assets: DashboardAsset[];
@@ -26,7 +28,7 @@ export function TeamsList({ assets, leagueId, profilesUrl }: TeamsListProps) {
         if (!cancelled) setProfiles(loadedProfiles);
       })
       .catch((error) => {
-        console.warn("Team profiles load error", error);
+        log.warn("profiles load failed", error);
         if (!cancelled) setProfiles({});
       });
 

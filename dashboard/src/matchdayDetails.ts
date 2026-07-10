@@ -1,4 +1,6 @@
-import { stripEmojiText } from "./playerResolver";
+import { isLocalPreviewHostname } from "./shared/environment";
+import { fetchNoStoreJson } from "./shared/network";
+import { normalizeSearchText, stripEmojiText } from "./shared/text";
 
 export type SwitchType = "base" | "plus" | null;
 
@@ -50,38 +52,8 @@ export type CachedMatchdayDetails = {
   matches: MatchdayMatchup[];
 };
 
-function isLocalPreviewHostname(hostname: string): boolean {
-  const host = String(hostname ?? "")
-    .trim()
-    .toLowerCase()
-    .replace(/^\[|\]$/g, "");
-
-  if (
-    host === "localhost"
-    || host === "127.0.0.1"
-    || host === "0.0.0.0"
-    || host === "::1"
-    || host.endsWith(".local")
-  ) {
-    return true;
-  }
-
-  return (
-    /^10\./.test(host)
-    || /^192\.168\./.test(host)
-    || /^172\.(1[6-9]|2\d|3[01])\./.test(host)
-    || /^169\.254\./.test(host)
-  );
-}
-
 function normalizeTeamName(value: string): string {
-  return stripEmojiText(value)
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[’']/g, "")
-    .replace(/[^a-z0-9]+/g, "")
-    .trim();
+  return normalizeSearchText(value);
 }
 
 function parseLegacyPlayer(value: unknown): MatchdayPlayer {
@@ -203,28 +175,20 @@ export async function fetchMatchdayDetail(options: {
   });
 
   try {
-    const response = await fetch(`/api/matchday?${params.toString()}`, {
-      cache: "no-store",
-      signal: options.signal
-    });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return normalizeResponse(await response.json() as MatchdayDetailResponse);
+    const response = await fetchNoStoreJson<MatchdayDetailResponse>(
+      `/api/matchday?${params.toString()}`,
+      options.signal
+    );
+    return normalizeResponse(response);
   } catch (apiError) {
     if (options.signal.aborted) throw apiError;
+    if (!isLocalPreviewHostname(window.location.hostname)) throw apiError;
 
-    const localPreview = isLocalPreviewHostname(window.location.hostname);
-    if (!localPreview) throw apiError;
-
-    const fallbackUrl = `/data/${options.leagueId}/matchdays/${options.fantasyMatchdayNumber}.json?v=${Date.now()}`;
-    const fallbackResponse = await fetch(fallbackUrl, {
-      cache: "no-store",
-      signal: options.signal
-    });
-
-    if (!fallbackResponse.ok) throw apiError;
-
-    const cached = await fallbackResponse.json() as CachedMatchdayDetails;
+    const fallbackUrl = `/data/${options.leagueId}/matchdays/${options.fantasyMatchdayNumber}.json`;
+    const cached = await fetchNoStoreJson<CachedMatchdayDetails>(
+      fallbackUrl,
+      options.signal
+    );
     const matchup = selectCachedMatchup(
       cached,
       options.matchIndex,

@@ -1,0 +1,439 @@
+.lf-calendar-shell {
+  padding: 22px 16px 34px;
+}
+
+.lf-calendar-card {
+  max-width: 980px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.lf-calendar-state {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 34px 24px;
+  text-align: center;
+}
+
+.lf-calendar-state strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #1f2d28;
+  font-size: 17px;
+}
+
+.lf-calendar-state p {
+  margin: 0;
+  color: #6c7a74;
+  font-size: 13px;
+}
+
+.lf-calendar-state .lf-spinner {
+  margin: 0 auto 12px;
+}
+
+.lf-calendar-state--error strong {
+  color: #c33131;
+}
+
+.lf-calendar-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 18px 10px;
+}
+
+.lf-calendar-nav {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--primary-border);
+  border-radius: 11px;
+  background: var(--primary-bg);
+  color: var(--primary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.lf-calendar-nav:disabled {
+  cursor: default;
+  opacity: .35;
+}
+
+.lf-calendar-select-wrap {
+  display: flex;
+  min-width: 170px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lf-calendar-select-wrap span {
+  color: #75827d;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.lf-calendar-select-wrap select {
+  width: 100%;
+  height: 38px;
+  padding: 0 34px 0 12px;
+  border: 1px solid #dce5e1;
+  border-radius: 11px;
+  outline: 0;
+  background: #fff;
+  color: #1d2b26;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.lf-calendar-select-wrap select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-bg);
+}
+
+.lf-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 22px 16px;
+  border-bottom: 1px solid #e6ece9;
+}
+
+.lf-calendar-heading p {
+  margin: 0 0 2px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.lf-calendar-heading h2 {
+  margin: 0;
+  color: #17231f;
+  font-size: 23px;
+  line-height: 1.1;
+}
+
+.lf-calendar-status-wrap {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lf-calendar-status {
+  display: inline-flex;
+  min-height: 25px;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.lf-calendar-status--calcolata {
+  border-color: #a7e7c7;
+  background: #eafaf2;
+  color: #167a4b;
+}
+
+.lf-calendar-status--da_calcolare {
+  border-color: #f1cf99;
+  background: #fff7e9;
+  color: #9a5b0a;
+}
+
+.lf-calendar-status-wrap small {
+  color: #7f8d87;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.lf-calendar-matches {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 16px 18px 20px;
+}
+
+.lf-calendar-match {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1fr);
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 12px;
+  border: 1px solid #e0e8e4;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 14px rgba(22, 44, 35, .04);
+}
+
+.lf-calendar-match.is-pending {
+  background: #fbfcfc;
+}
+
+.lf-calendar-team {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lf-calendar-team strong {
+  overflow: hidden;
+  color: #1b2924;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lf-calendar-team span {
+  color: #7a8983;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.lf-calendar-team--home {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.lf-calendar-team--away {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.lf-calendar-score {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--primary-border);
+  border-radius: 12px;
+  background: var(--primary-bg);
+  color: var(--primary);
+}
+
+.lf-calendar-score b {
+  font-size: 19px;
+  font-weight: 950;
+}
+
+.lf-calendar-score i,
+.lf-calendar-score em {
+  color: #85928d;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.lf-calendar-note {
+  grid-column: 1 / -1;
+  margin: 2px 0 0;
+  color: #9a5b0a;
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .lf-calendar-shell {
+    padding: 12px 8px 24px;
+  }
+
+  .lf-calendar-toolbar {
+    gap: 6px;
+    padding: 12px 10px 8px;
+  }
+
+  .lf-calendar-nav {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    font-size: 21px;
+  }
+
+  .lf-calendar-select-wrap {
+    min-width: 140px;
+  }
+
+  .lf-calendar-select-wrap select {
+    height: 34px;
+    border-radius: 9px;
+    font-size: 12px;
+  }
+
+  .lf-calendar-heading {
+    align-items: flex-start;
+    gap: 8px;
+    padding: 11px 12px 13px;
+  }
+
+  .lf-calendar-heading p {
+    font-size: 8px;
+  }
+
+  .lf-calendar-heading h2 {
+    font-size: 17px;
+  }
+
+  .lf-calendar-status {
+    min-height: 21px;
+    padding: 2px 6px;
+    font-size: 7px;
+  }
+
+  .lf-calendar-status-wrap small {
+    font-size: 8px;
+  }
+
+  .lf-calendar-matches {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    padding: 10px 8px 14px;
+  }
+
+  .lf-calendar-match {
+    grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr);
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 11px;
+  }
+
+  .lf-calendar-team strong {
+    font-size: 11px;
+  }
+
+  .lf-calendar-team span {
+    font-size: 8.5px;
+  }
+
+  .lf-calendar-score {
+    min-height: 35px;
+    gap: 5px;
+    border-radius: 9px;
+  }
+
+  .lf-calendar-score b {
+    font-size: 15px;
+  }
+}
+
+.lf-calendar-toolbar {
+  display: grid;
+  grid-template-columns: 38px minmax(190px, 230px) 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 16px 10px;
+}
+
+.lf-calendar-select-wrap {
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.lf-calendar-select-wrap span {
+  text-align: center;
+}
+
+.lf-calendar-select-wrap select {
+  width: 100%;
+  padding-right: 34px;
+  padding-left: 34px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%2375827d' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.7' d='m2 2 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  text-align: center;
+  text-align-last: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.lf-calendar-select-wrap small {
+  display: block;
+  margin-top: 1px;
+  color: #7f8d87;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.lf-calendar-heading {
+  display: none !important;
+}
+
+.lf-calendar-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px 14px;
+  border-bottom: 1px solid #e6ece9;
+}
+
+.lf-calendar-status-wrap {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.lf-calendar-status-wrap small {
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .lf-calendar-toolbar {
+    grid-template-columns: 34px minmax(0, 158px) 34px;
+    gap: 6px;
+    padding: 12px 8px 9px;
+  }
+
+  .lf-calendar-select-wrap {
+    min-width: 0;
+  }
+
+  .lf-calendar-select-wrap select {
+    height: 34px;
+    padding-right: 30px;
+    padding-left: 30px;
+    background-position: right 10px center;
+    font-size: 12px;
+    text-align: center;
+    text-align-last: center;
+  }
+
+  .lf-calendar-select-wrap small {
+    font-size: 8px;
+  }
+
+  .lf-calendar-summary {
+    padding: 0 10px 11px;
+  }
+}

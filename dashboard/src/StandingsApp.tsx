@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchFreshText, useSectionRefresh } from "./liveRefresh";
+import { createLogger } from "./debug/logger";
 import { Standings } from "./pages/Standings";
 import { parseStandingsCsv, type StandingsData } from "./standings";
 
 const EMPTY_DATA: StandingsData = { league: [], fantasy: [] };
+const log = createLogger("standings");
 
 export default function StandingsApp() {
   const league = window.LINEUP_FANTA?.league;
@@ -14,6 +16,7 @@ export default function StandingsApp() {
   const [data, setData] = useState<StandingsData>(EMPTY_DATA);
   const [error, setError] = useState("");
   const hasLoadedData = useRef(false);
+  const lastCsvText = useRef("");
   const refreshToken = useSectionRefresh("classifica");
 
   useEffect(() => {
@@ -37,24 +40,26 @@ export default function StandingsApp() {
           csvText = await fetchFreshText(standingsUrl, controller.signal);
         } catch (primaryError) {
           if (!fallbackUrl || controller.signal.aborted) throw primaryError;
-          console.warn("Standings primary source unavailable, using fallback", primaryError);
+          log.warn("primary source unavailable; using fallback", primaryError);
           csvText = await fetchFreshText(fallbackUrl, controller.signal);
         }
 
-        const parsed = parseStandingsCsv(csvText);
-        if (parsed.league.length === 0 && hasLoadedData.current) {
-          throw new Error("Aggiornamento vuoto della Classifica");
+        if (csvText !== lastCsvText.current) {
+          const parsed = parseStandingsCsv(csvText);
+          if (parsed.league.length === 0 && hasLoadedData.current) {
+            throw new Error("Aggiornamento vuoto della Classifica");
+          }
+          lastCsvText.current = csvText;
+          setData(parsed);
         }
-
-        setData(parsed);
         hasLoadedData.current = true;
         setStatus("ready");
       } catch (loadError) {
         if (controller.signal.aborted) return;
-        console.error("Standings load error", loadError);
+        log.error("load failed", loadError);
 
         if (hasLoadedData.current) {
-          console.warn("Aggiornamento interno della Classifica non riuscito: mantengo gli ultimi dati validi.");
+          log.warn("refresh failed; keeping last valid standings");
           return;
         }
 
