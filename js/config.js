@@ -5,6 +5,11 @@ window.LINEUP_LEAGUES = Object.freeze({
     label: "Fanta Premier",
     flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR1qCSKkMUZ6W_-_OG8qjTYEQTwF4aPqgtg3XjOGqphRHRDlnFynozJsC0t6WeFjY8XCXjr-R1ZVaww/pub?gid=556989324&single=true&output=csv",
+    leagueData: Object.freeze({
+      standingsCsvUrl: "/data/fp/classifica.csv",
+      calendarCsvUrl: "/data/fp/calendario.csv",
+      matchdayLinksKey: "fp"
+    }),
     identity: Object.freeze({
       id: "fp",
       logo: "assets/identity/fp-logo.png",
@@ -27,6 +32,11 @@ window.LINEUP_LEAGUES = Object.freeze({
     label: "Fanta Liga",
     flag: "🇪🇸",
     csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSlE8BNQI1bOPsOlg2aO7TTHr0RpJD9rCj_EP3QRpsBho6D3s_ZCtmMibhbjx0Ehc5jexbagbf_t9j0/pub?gid=1583604307&single=true&output=csv",
+    leagueData: Object.freeze({
+      standingsCsvUrl: "/data/pd/classifica.csv",
+      calendarCsvUrl: "/data/pd/calendario.csv",
+      matchdayLinksKey: "pd"
+    }),
     identity: Object.freeze({
       id: "pd",
       logo: "assets/identity/pd-logo.png",

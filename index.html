@@ -63,6 +63,25 @@
 <link rel="stylesheet" href="css/formation-clean.css">
 <link rel="stylesheet" href="css/fixtures-card.css">
 <link rel="stylesheet" href="css/sticky-story-mobile.css">
+<link rel="stylesheet" href="css/league-dashboard.css">
+<script id="lineup-dashboard-style-loader">
+  (function () {
+    const token = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    window.__LINEUP_DASHBOARD_RELOAD_TOKEN__ = token;
+
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = `/assets/dashboard/dashboard.css?v=${encodeURIComponent(token)}`;
+    stylesheet.dataset.lineupDashboardAsset = "style";
+    document.head.appendChild(stylesheet);
+
+    // Evita il ripristino della dashboard React dalla back-forward cache.
+    // La persistenza/localStorage della Formazione resta intatta.
+    window.addEventListener("pageshow", function (event) {
+      if (event.persisted) window.location.reload();
+    }, { once: true });
+  })();
+</script>
 </head>
 <body>
 <div class="app-chrome">
@@ -82,7 +101,17 @@
       })();
     </script>
   </header>
-  <div class="sticky-app-chrome__controls">
+  <nav class="league-tabs" aria-label="Sezioni della lega">
+    <div class="league-tabs__inner" role="tablist">
+      <button class="league-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="formationView" data-league-tab="formation">Formazione</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="giornateView" data-league-tab="giornate" tabindex="-1">Giornate</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="listoneView" data-league-tab="listone" tabindex="-1">Listone</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="roseView" data-league-tab="rose" tabindex="-1">Rose</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="classificaView" data-league-tab="classifica" tabindex="-1">Classifica</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="calendarioView" data-league-tab="calendario" tabindex="-1">Calendario</button>
+    </div>
+  </nav>
+  <div id="formationControls" class="sticky-app-chrome__controls">
     <div class="controls">
           <select id="managerSelect"><option>Caricamento…</option></select>
           <button id="toggleRosterBtn" class="toggle-roster-btn">Rosa</button>
@@ -100,7 +129,7 @@
   </div>
 </div>
 
-<main class="container">
+<main id="formationView" class="container" data-league-view="formation" role="tabpanel">
   <div class="content-wrapper">
     
 
@@ -213,6 +242,38 @@
   </div>
 </main>
 
+<main id="listoneView" class="league-dashboard-view" data-league-view="listone" role="tabpanel" hidden>
+  <div id="league-dashboard-root" class="league-react-root" aria-live="polite"></div>
+</main>
+
+<main id="roseView" class="league-dashboard-view" data-league-view="rose" role="tabpanel" hidden>
+  <div id="league-rose-root" class="league-react-root" aria-live="polite"></div>
+</main>
+
+<main id="classificaView" class="container league-dashboard-view" data-league-view="classifica" role="tabpanel" hidden>
+  <section class="league-placeholder">
+    <p class="league-placeholder__eyebrow">CLASSIFICA</p>
+    <h2>Classifica della lega</h2>
+    <p>Caricherà il CSV separato configurato per la lega corrente.</p>
+  </section>
+</main>
+
+<main id="calendarioView" class="container league-dashboard-view" data-league-view="calendario" role="tabpanel" hidden>
+  <section class="league-placeholder">
+    <p class="league-placeholder__eyebrow">CALENDARIO</p>
+    <h2>Calendario della lega</h2>
+    <p>Mostrerà giornata reale e giornata fanta senza mescolare FP e PD.</p>
+  </section>
+</main>
+
+<main id="giornateView" class="container league-dashboard-view" data-league-view="giornate" role="tabpanel" hidden>
+  <section class="league-placeholder">
+    <p class="league-placeholder__eyebrow">GIORNATE</p>
+    <h2>Giornate della lega</h2>
+    <p>Qui compariranno soltanto le giornate con un CSV pubblico collegato.</p>
+  </section>
+</main>
+
 <!-- Output Modal -->
 <div id="outputModal" class="modal" aria-hidden="true">
   <div class="box output-modal-box">
@@ -319,6 +380,14 @@
 <script src="js/output.js"></script>
 <script src="js/story.js"></script>
 <script src="js/app-events.js"></script>
+<script src="js/league-dashboard.js"></script>
+<script type="module" id="lineup-dashboard-module-loader">
+  const token = window.__LINEUP_DASHBOARD_RELOAD_TOKEN__
+    || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+
+  import(`/assets/dashboard/dashboard.js?v=${encodeURIComponent(token)}`)
+    .catch((error) => console.error("Dashboard React load error", error));
+</script>
 <script src="js/persistence.js"></script>
 <script src="js/fixtures.js"></script>
 <script src="js/app.js"></script>

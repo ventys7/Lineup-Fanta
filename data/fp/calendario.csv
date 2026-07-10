@@ -1,0 +1,5 @@
+real_round_number,fantasy_matchday_number,status,is_split,home_team,away_team,home_goals,away_goals,note
+3,1,calcolata,false,Squadra FP A,Squadra FP B,2,1,
+3,1,calcolata,false,Squadra FP C,Squadra FP D,1,1,
+4,2,da_calcolare,false,Squadra FP A,Squadra FP C,,,
+4,2,da_calcolare,false,Squadra FP B,Squadra FP D,,,

@@ -1,0 +1,5 @@
+position,team,points,played,wins,draws,losses,goals_for,goals_against,goal_difference,notes
+1,Squadra FP A,10,4,3,1,0,9,4,5,
+2,Squadra FP B,7,4,2,1,1,7,5,2,
+3,Squadra FP C,3,4,1,0,3,4,8,-4,
+4,Squadra FP D,2,4,0,2,2,3,6,-3,
