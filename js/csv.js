@@ -79,6 +79,10 @@ window.LineupLeagueData = Object.freeze({
 
   getState() {
     return { ...leagueCsvState };
+  },
+
+  refresh() {
+    return loadCSV({ silent: true });
   }
 });
 
@@ -198,6 +202,14 @@ function parseNumericCell(value) {
   return Number.isFinite(number) ? number : 0;
 }
 
+function parseOptionalNumericCell(value) {
+  const raw = String(value ?? "").trim();
+  if (!raw || !/^[+-]?\d+(?:[.,]\d+)?$/.test(raw)) return null;
+
+  const number = Number(raw.replace(",", "."));
+  return Number.isFinite(number) ? number : null;
+}
+
 function parseActive(value) {
   const normalized = normalizeCsvToken(value);
   if (!normalized) return true;
@@ -257,6 +269,7 @@ function normalizeLeagueAsset(columns, headerMap, sourceIndex) {
     quotation: parseNumericCell(quotationRaw),
     purchasePrice: parseNumericCell(purchasePriceRaw),
     ownerTag,
+    managerCredits: null,
     type,
     active,
     isFreeAgent,
@@ -290,7 +303,24 @@ function findCsvHeader(lines) {
   return null;
 }
 
-function parseLeagueAssets(csvText) {
+function parseManagerCredits(lines, delimiter) {
+  const creditsByManager = new Map();
+
+  // Il foglio Listone espone nome e crediti nelle colonne O/P, da riga 8 in poi.
+  for (let rowIndex = 7; rowIndex < lines.length; rowIndex += 1) {
+    const columns = splitCSVLine(lines[rowIndex], delimiter);
+    const managerName = String(columns[14] ?? "").trim();
+    const credits = parseOptionalNumericCell(columns[15]);
+    const managerKey = normalizeCsvToken(managerName);
+
+    if (!managerKey || credits === null) continue;
+    creditsByManager.set(managerKey, credits);
+  }
+
+  return creditsByManager;
+}
+
+function parseLeagueCsv(csvText) {
   const lines = String(csvText ?? "").split(/\r?\n/);
 
   if (!lines.some((line) => line.trim().length > 0)) {
@@ -317,13 +347,22 @@ function parseLeagueAssets(csvText) {
     sourceOffset = firstMeaningfulIndex + 1;
   }
 
-  return dataRows
+  const creditsByManager = parseManagerCredits(lines, delimiter);
+  const assets = dataRows
     .map((line, index) => normalizeLeagueAsset(
       splitCSVLine(line, delimiter),
       headerMap,
       index + sourceOffset
     ))
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((asset) => Object.freeze({
+      ...asset,
+      managerCredits: asset.ownerTag
+        ? creditsByManager.get(normalizeCsvToken(asset.ownerTag)) ?? null
+        : null
+    }));
+
+  return { assets, creditsByManager };
 }
 
 function buildFormationDb(assets) {
@@ -405,47 +444,75 @@ function getCsvRequestUrl() {
   return url.toString();
 }
 
-async function loadCSV() {
-  try {
-    db = {};
-    leagueAssets = [];
-    updateLeagueCsvState("loading");
+let leagueCsvRequest = null;
 
-    const res = await fetch(getCsvRequestUrl(), { cache: "no-store" });
-    if (!res.ok) throw new Error(`CSV request failed (${res.status})`);
+async function loadCSV(options = {}) {
+  const silent = Boolean(options.silent);
 
-    const txt = await res.text();
-    if (/^\s*<!doctype html/i.test(txt)) throw new Error("Risposta CSV non valida");
+  if (leagueCsvRequest) return leagueCsvRequest;
 
-    leagueAssets = parseLeagueAssets(txt);
-    db = buildFormationDb(leagueAssets);
-    updateLeagueCsvState("ready");
-    dispatchLeagueAssetsReady();
+  leagueCsvRequest = (async () => {
+    try {
+      const keepReadyState = silent && leagueCsvState.status === "ready";
+      if (!keepReadyState) updateLeagueCsvState("loading");
 
-    populateManagers();
+      const res = await fetch(getCsvRequestUrl(), {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, max-age=0",
+          "Pragma": "no-cache"
+        }
+      });
+      if (!res.ok) throw new Error(`CSV request failed (${res.status})`);
 
-    const restoredDraft = window.LineupPersistence?.restoreAfterCsv?.();
+      const txt = await res.text();
+      if (/^\s*<!doctype html/i.test(txt)) throw new Error("Risposta CSV non valida");
 
-    if (!restoredDraft) {
-      renderFormation();
-      if (isMobile && typeof renderMobileSlots === "function") {
-        renderMobileSlots();
+      const { assets: nextAssets } = parseLeagueCsv(txt);
+      const nextDb = buildFormationDb(nextAssets);
+
+      leagueAssets = nextAssets;
+      db = nextDb;
+      updateLeagueCsvState("ready");
+      dispatchLeagueAssetsReady();
+
+      populateManagers();
+
+      const restoredDraft = window.LineupPersistence?.restoreAfterCsv?.();
+
+      if (!restoredDraft) {
+        renderFormation();
+        if (isMobile && typeof renderMobileSlots === "function") {
+          renderMobileSlots();
+        }
+        if (typeof updateSwitchUI === "function") {
+          setTimeout(() => updateSwitchUI(), 100);
+        }
       }
-      if (typeof updateSwitchUI === "function") {
-        setTimeout(() => updateSwitchUI(), 100);
+    } catch (err) {
+      console.error("CSV load error", err);
+
+      if (silent && leagueAssets.length > 0) {
+        console.warn("Aggiornamento live non riuscito: mantengo gli ultimi dati validi.");
+        return;
       }
+
+      updateLeagueCsvState("error", err);
+      dispatchLeagueAssetsReady();
+      document.getElementById("managerSelect").innerHTML = "<option>Errore caricamento</option>";
+      if (!silent) showToast("Errore caricamento CSV", "error");
+      throw err;
+    } finally {
+      leagueCsvRequest = null;
     }
-  } catch (err) {
-    updateLeagueCsvState("error", err);
-    dispatchLeagueAssetsReady();
-    console.error("CSV load error", err);
-    document.getElementById("managerSelect").innerHTML = "<option>Errore caricamento</option>";
-    showToast("Errore caricamento CSV", "error");
-  }
+  })();
+
+  return leagueCsvRequest;
 }
 
 function populateManagers() {
   const sel = document.getElementById("managerSelect");
+  const previousValue = sel.value;
   sel.innerHTML = "<option value=''>Seleziona squadra...</option>";
   const names = Object.keys(db).sort((a, b) => a.localeCompare(b, "it"));
   names.forEach((name) => {
@@ -454,5 +521,44 @@ function populateManagers() {
     option.textContent = name;
     sel.appendChild(option);
   });
-  sel.addEventListener("change", () => loadTeam());
+
+  if (previousValue && names.includes(previousValue)) {
+    sel.value = previousValue;
+  }
+
+  sel.onchange = () => loadTeam();
 }
+
+(function setupLiveCsvRefresh() {
+  const watchedSections = new Set(["formation", "listone", "rose"]);
+  let lastRefreshAt = 0;
+
+  function currentSection() {
+    return document.documentElement.dataset.leagueSection || "formation";
+  }
+
+  function refreshIfNeeded(force = false) {
+    if (!watchedSections.has(currentSection())) return;
+
+    const now = Date.now();
+    if (!force && now - lastRefreshAt < 15_000) return;
+    lastRefreshAt = now;
+
+    loadCSV({ silent: true }).catch((error) => {
+      console.warn("Aggiornamento live CSV non riuscito", error);
+    });
+  }
+
+  window.addEventListener("lineup:league-section-change", (event) => {
+    if (watchedSections.has(event.detail?.section)) refreshIfNeeded(true);
+  });
+
+  window.addEventListener("focus", () => refreshIfNeeded());
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refreshIfNeeded();
+  });
+
+  window.setInterval(() => {
+    if (!document.hidden) refreshIfNeeded(true);
+  }, 30_000);
+})();

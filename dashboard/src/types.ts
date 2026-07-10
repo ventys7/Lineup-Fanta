@@ -9,6 +9,7 @@ export type DashboardAsset = {
   quotation: number;
   purchasePrice: number;
   ownerTag: string;
+  managerCredits: number | null;
   type: string;
   active: boolean;
   isFreeAgent: boolean;

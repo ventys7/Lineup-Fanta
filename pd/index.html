@@ -95,6 +95,18 @@
   <header>
     <img id="leagueLogo" class="logo" alt="" hidden>
     <h1 id="leagueTitle"></h1>
+    <button
+      id="leagueMenuToggle"
+      class="league-menu-toggle"
+      type="button"
+      aria-label="Apri il menu delle sezioni"
+      aria-expanded="false"
+      aria-controls="leagueSectionMenu"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
     <script>
       (function () {
         const league = window.LINEUP_LEAGUES?.[document.documentElement.dataset.league];
@@ -108,14 +120,13 @@
       })();
     </script>
   </header>
-  <nav class="league-tabs" aria-label="Sezioni della lega">
+  <nav id="leagueSectionMenu" class="league-tabs" aria-label="Sezioni della lega">
     <div class="league-tabs__inner" role="tablist">
       <button class="league-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="formationView" data-league-tab="formation">Formazione</button>
-      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="giornateView" data-league-tab="giornate" tabindex="-1">Giornate</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="calendarioView" data-league-tab="calendario" tabindex="-1">Calendario</button>
       <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="listoneView" data-league-tab="listone" tabindex="-1">Listone</button>
       <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="roseView" data-league-tab="rose" tabindex="-1">Rose</button>
       <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="classificaView" data-league-tab="classifica" tabindex="-1">Classifica</button>
-      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="calendarioView" data-league-tab="calendario" tabindex="-1">Calendario</button>
     </div>
   </nav>
   <div id="formationControls" class="sticky-app-chrome__controls">
@@ -263,14 +274,6 @@
 
 <main id="calendarioView" class="league-dashboard-view" data-league-view="calendario" role="tabpanel" hidden>
   <div id="league-calendar-root" class="league-react-root" aria-live="polite"></div>
-</main>
-
-<main id="giornateView" class="container league-dashboard-view" data-league-view="giornate" role="tabpanel" hidden>
-  <section class="league-placeholder">
-    <p class="league-placeholder__eyebrow">GIORNATE</p>
-    <h2>Giornate della lega</h2>
-    <p>Qui compariranno soltanto le giornate con un CSV pubblico collegato.</p>
-  </section>
 </main>
 
 <!-- Output Modal -->

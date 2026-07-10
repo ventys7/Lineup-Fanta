@@ -10,14 +10,16 @@ export type StoreSnapshot = {
   assets: DashboardAsset[];
 };
 
-type RawLeagueAsset = Omit<DashboardAsset, "purchasePrice"> & {
+type RawLeagueAsset = Omit<DashboardAsset, "purchasePrice" | "managerCredits"> & {
   purchasePrice?: number;
+  managerCredits?: number | null;
 };
 
 function normalizeAssets(assets: RawLeagueAsset[]): DashboardAsset[] {
   return assets.map((asset) => ({
     ...asset,
-    purchasePrice: asset.purchasePrice ?? 0
+    purchasePrice: asset.purchasePrice ?? 0,
+    managerCredits: asset.managerCredits ?? null
   }));
 }
 

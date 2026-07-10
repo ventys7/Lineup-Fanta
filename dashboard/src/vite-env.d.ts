@@ -9,6 +9,7 @@ type LeagueAsset = {
   quotation: number;
   purchasePrice?: number;
   ownerTag: string;
+  managerCredits?: number | null;
   type: string;
   active: boolean;
   isFreeAgent: boolean;
@@ -32,6 +33,7 @@ type LineupLeague = {
     calendarCompetitionLabel?: string;
     standingsCsvUrl?: string;
     standingsFallbackUrl?: string;
+    matchdayLinksUrl?: string;
   };
 };
 

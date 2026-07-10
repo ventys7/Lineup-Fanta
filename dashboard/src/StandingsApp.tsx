@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { fetchFreshText, useSectionRefresh } from "./liveRefresh";
 import { Standings } from "./pages/Standings";
 import { parseStandingsCsv, type StandingsData } from "./standings";
 
@@ -12,20 +13,11 @@ export default function StandingsApp() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [data, setData] = useState<StandingsData>(EMPTY_DATA);
   const [error, setError] = useState("");
+  const hasLoadedData = useRef(false);
+  const refreshToken = useSectionRefresh("classifica");
 
   useEffect(() => {
     const controller = new AbortController();
-
-    async function fetchCsv(url: string): Promise<string> {
-      const separator = url.includes("?") ? "&" : "?";
-      const response = await fetch(
-        `${url}${separator}v=${Date.now()}`,
-        { cache: "no-store", signal: controller.signal }
-      );
-
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.text();
-    }
 
     async function loadStandings() {
       if (!standingsUrl) {
@@ -34,25 +26,38 @@ export default function StandingsApp() {
         return;
       }
 
-      setStatus("loading");
+      const initialLoad = !hasLoadedData.current;
+      if (initialLoad) setStatus("loading");
       setError("");
 
       try {
         let csvText: string;
 
         try {
-          csvText = await fetchCsv(standingsUrl);
+          csvText = await fetchFreshText(standingsUrl, controller.signal);
         } catch (primaryError) {
           if (!fallbackUrl || controller.signal.aborted) throw primaryError;
           console.warn("Standings primary source unavailable, using fallback", primaryError);
-          csvText = await fetchCsv(fallbackUrl);
+          csvText = await fetchFreshText(fallbackUrl, controller.signal);
         }
 
-        setData(parseStandingsCsv(csvText));
+        const parsed = parseStandingsCsv(csvText);
+        if (parsed.league.length === 0 && hasLoadedData.current) {
+          throw new Error("Aggiornamento vuoto della Classifica");
+        }
+
+        setData(parsed);
+        hasLoadedData.current = true;
         setStatus("ready");
       } catch (loadError) {
         if (controller.signal.aborted) return;
         console.error("Standings load error", loadError);
+
+        if (hasLoadedData.current) {
+          console.warn("Aggiornamento interno della Classifica non riuscito: mantengo gli ultimi dati validi.");
+          return;
+        }
+
         setError("La Classifica non è disponibile. Controlla la fonte configurata e riprova.");
         setStatus("error");
       }
@@ -60,7 +65,7 @@ export default function StandingsApp() {
 
     loadStandings();
     return () => controller.abort();
-  }, [standingsUrl, fallbackUrl]);
+  }, [standingsUrl, fallbackUrl, refreshToken]);
 
   const leagueName = useMemo(() => league?.label ?? league?.name ?? "Lega", [league]);
 

@@ -618,3 +618,135 @@ html[data-route="league"] .listone-sr-only {
     grid-column: auto;
   }
 }
+
+/* STEP 7A - Menu hamburger mobile al posto delle tab orizzontali. */
+.league-menu-toggle {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  html[data-route="league"] .app-chrome > header {
+    min-height: 62px;
+    padding-inline: 58px;
+  }
+
+  html[data-route="league"] .app-chrome > header h1 {
+    max-width: 100%;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  html[data-route="league"] .league-menu-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    z-index: 4;
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--primary-border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 5px 14px rgba(23, 67, 57, .10);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    transform: translateY(-50%);
+  }
+
+  html[data-route="league"] .league-menu-toggle:hover {
+    border-color: var(--primary-border);
+    background: var(--primary-bg);
+    transform: translateY(-50%);
+  }
+
+  html[data-route="league"] .league-menu-toggle:focus-visible {
+    outline: 3px solid var(--primary-border);
+    outline-offset: 2px;
+  }
+
+  html[data-route="league"] .league-menu-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--primary);
+    transition: transform .18s ease, opacity .18s ease;
+  }
+
+  html[data-route="league"] .league-menu-toggle[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  html[data-route="league"] .league-menu-toggle[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  html[data-route="league"] .league-menu-toggle[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  html[data-route="league"] .league-tabs {
+    position: absolute;
+    top: 56px;
+    right: 10px;
+    z-index: 20;
+    width: min(252px, calc(100vw - 20px));
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-7px) scale(.98);
+    transform-origin: top right;
+    transition: opacity .16s ease, transform .16s ease, visibility .16s ease;
+  }
+
+  html[data-route="league"] .league-tabs.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
+  html[data-route="league"] .league-tabs__inner {
+    display: grid;
+    width: 100%;
+    margin: 0;
+    padding: 7px;
+    gap: 4px;
+    overflow: visible;
+    border: 1px solid var(--primary-border);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, .99);
+    box-shadow: 0 16px 38px rgba(17, 35, 29, .18);
+    scroll-snap-type: none;
+  }
+
+  html[data-route="league"] .league-tab {
+    width: 100%;
+    min-height: 43px;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    font-size: .91rem;
+    font-weight: 750;
+    text-align: left;
+    scroll-snap-align: none;
+  }
+
+  html[data-route="league"] .league-tab:hover {
+    border-color: transparent;
+    background: var(--primary-bg);
+  }
+
+  html[data-route="league"] .league-tab.is-active {
+    border-color: transparent;
+    background: var(--primary);
+    color: #fff;
+  }
+}

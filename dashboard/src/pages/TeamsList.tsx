@@ -4,6 +4,7 @@ import { TeamCard } from "../components/teams/TeamCard";
 import type { TeamSquad, RoleKey } from "../components/teams/types";
 import type { DashboardAsset } from "../types";
 import { loadTeamProfiles, type TeamProfiles } from "../teamProfiles";
+import { useSectionRefresh } from "../liveRefresh";
 
 const ROLE_TARGETS: Record<RoleKey, number> = { P: 2, D: 8, C: 8, A: 6 };
 
@@ -15,6 +16,7 @@ type TeamsListProps = {
 
 export function TeamsList({ assets, leagueId, profilesUrl }: TeamsListProps) {
   const [profiles, setProfiles] = useState<TeamProfiles>({});
+  const refreshToken = useSectionRefresh("rose");
 
   useEffect(() => {
     let cancelled = false;
@@ -31,7 +33,7 @@ export function TeamsList({ assets, leagueId, profilesUrl }: TeamsListProps) {
     return () => {
       cancelled = true;
     };
-  }, [leagueId, profilesUrl]);
+  }, [leagueId, profilesUrl, refreshToken]);
 
   const teams = useMemo<TeamSquad[]>(() => {
     const grouped = new Map<string, DashboardAsset[]>();
@@ -52,10 +54,11 @@ export function TeamsList({ assets, leagueId, profilesUrl }: TeamsListProps) {
       });
       const isComplete = (Object.keys(ROLE_TARGETS) as RoleKey[]).every((role) => roleCounts[role] === ROLE_TARGETS[role]);
       const profile = profiles[managerName];
+      const csvCredits = players.find((player) => player.managerCredits !== null)?.managerCredits ?? null;
 
       return {
         managerName,
-        credits: profile?.credits ?? null,
+        credits: csvCredits ?? profile?.credits ?? null,
         logoUrl: profile?.logoUrl ?? "",
         players,
         isComplete,

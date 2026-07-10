@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="it" data-league-id="pd">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin link · Lineup Fanta</title>
+  <link rel="stylesheet" href="/css/admin-links.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="admin-header">
+      <div class="admin-header__copy">
+        <span>Finto pannello admin</span>
+        <h1 id="adminTitle">Admin link</h1>
+        <p id="adminSubtitle">Giornata attiva e documenti delle giornate.</p>
+      </div>
+      <a id="adminBack" class="admin-back" href="/pd/">Torna alla lega</a>
+    </header>
+
+    <section class="admin-card">
+      <header class="admin-card__header">
+        <div>
+          <h2>Calendario e documenti</h2>
+          <p>La giornata attiva viene aperta automaticamente a tutti. Può anche restare vuota.</p>
+        </div>
+        <div class="admin-active">
+          <label for="activeMatchday">Giornata attiva</label>
+          <select id="activeMatchday"><option>Caricamento…</option></select>
+        </div>
+      </header>
+
+      <div id="matchdayList" class="admin-list">
+        <div class="admin-loading">Caricamento del calendario…</div>
+      </div>
+
+      <footer class="admin-footer">
+        <div class="admin-password">
+          <label for="adminPassword">Password</label>
+          <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Password admin">
+        </div>
+        <button id="saveAdminLinks" class="admin-save" type="button">Salva e pubblica</button>
+      </footer>
+    </section>
+
+    <p id="adminStatus" class="admin-status" aria-live="polite"></p>
+    <p class="admin-note">Il salvataggio crea un commit su GitHub. Il nuovo valore sarà pubblico dopo il deploy Vercel.</p>
+  </main>
+  <script src="/js/admin-links.js" defer></script>
+</body>
+</html>
