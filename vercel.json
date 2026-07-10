@@ -128,5 +128,7 @@
       "source": "/pd",
       "destination": "/pd/index.html"
     }
-  ]
+  ],
+  "installCommand": "npm --prefix dashboard ci --include=dev --no-audit --no-fund",
+  "buildCommand": "npm run build"
 }
