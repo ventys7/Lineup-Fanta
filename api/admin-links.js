@@ -2,7 +2,6 @@ const crypto = require("node:crypto");
 const {
   deleteManagedLogo,
   isManagedLogoUrl,
-  isPreconditionError,
   normalizeLeagueId,
   normalizeRegistry,
   normalizeTeamsDocument,
@@ -274,12 +273,13 @@ async function saveAdminData(body, dependencies = {}) {
   });
 
   try {
+    // last-write-wins admin save:
+    // il pannello ha un solo amministratore e invia l'intero stato desiderato.
+    // Evitiamo falsi conflitti ETag tra Preview e Production sullo stesso store.
     const written = await runtime.writeRuntimeDocument(leagueId, {
       ...current.document,
       registry,
       teams: teamsUpdate.document
-    }, {
-      ifMatch: current.source === "blob" ? current.etag : null
     });
 
     await Promise.allSettled(
@@ -360,12 +360,6 @@ async function handler(req, res) {
     return res.status(200).json({ ok: true, ...result });
   } catch (error) {
     console.error("admin runtime storage update error", error);
-
-    if (isPreconditionError(error)) {
-      return res.status(409).json({
-        error: "I dati sono cambiati durante il salvataggio. Ricarica il pannello e riprova."
-      });
-    }
 
     const status = /non valid|non riconosciuta|Lega|Logo|logo|upload|immagine|Dimensioni/.test(
       String(error.message)

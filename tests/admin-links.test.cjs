@@ -88,6 +88,7 @@ test("admin save writes one runtime document and does not create a deploy", asyn
   assert.equal(writes[0].leagueId, "fp");
   assert.equal(writes[0].document.registry.activeFantasyMatchday, 3);
   assert.equal(writes[0].document.teams.teams.Paolo.credits, 120);
+  assert.equal(writes[0].options, undefined);
   assert.match(result.message, /Nessun deploy/);
   assert.deepEqual(deleted, []);
 });
