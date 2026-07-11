@@ -3,6 +3,7 @@ import type { PlayerRoleHint, RosterResolver } from "../../playerResolver";
 import type { BenchDisplaySlot } from "../benchLayout";
 import { PlayerIdentity } from "./PlayerIdentity";
 
+import { preferSnapshotIdentity } from "../snapshotIdentity";
 export function BenchPlayer({
   player,
   ownerName,
@@ -14,11 +15,11 @@ export function BenchPlayer({
   resolvePlayer: RosterResolver;
   slot: BenchDisplaySlot;
 }) {
-  const resolved = resolvePlayer(
+  const resolved = preferSnapshotIdentity(player.identity, player.name || player.raw, resolvePlayer(
     ownerName,
     player.name || player.raw,
     slot.roleHint
-  );
+  ));
 
   return (
     <li

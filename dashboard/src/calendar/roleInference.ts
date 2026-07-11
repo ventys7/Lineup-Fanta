@@ -20,7 +20,7 @@ export function inferStarterRoleHints(
     if (index === 0) return ["P"] as PlayerRoleHint[];
 
     const role = String(
-      resolvePlayer(team.team, player.name || player.raw).role ?? ""
+      player.identity?.role || resolvePlayer(team.team, player.name || player.raw).role || ""
     ).toUpperCase();
 
     return ["D", "C", "A"].includes(role)

@@ -1,7 +1,14 @@
+const { selectMatchup } = require("../lib/matchday-parser.cjs");
+const { readRuntimeDocument } = require("../lib/runtime-data.cjs");
 const {
-  parseMatchdayHtml,
-  selectMatchup
-} = require("../lib/matchday-parser.cjs");
+  effectiveParsed,
+  isSnapshotStale,
+  readCalendarSeasonHint,
+  readCurrentMatchdaySnapshot,
+  syncMatchdaySnapshot
+} = require("../lib/matchday-snapshot.cjs");
+
+const DEFAULT_MAX_AGE_MS = 2 * 60 * 1000;
 
 function setNoStore(res) {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
@@ -9,11 +16,13 @@ function setNoStore(res) {
   res.setHeader("Expires", "0");
 }
 
-const { readRuntimeDocument } = require("../lib/runtime-data.cjs");
+function snapshotMaxAgeMs() {
+  const configured = Number(process.env.MATCHDAY_SNAPSHOT_MAX_AGE_MS);
+  return Number.isFinite(configured) && configured >= 0 ? configured : DEFAULT_MAX_AGE_MS;
+}
 
 module.exports = async function handler(req, res) {
   setNoStore(res);
-
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     return res.status(405).json({ error: "Metodo non consentito" });
@@ -24,66 +33,68 @@ module.exports = async function handler(req, res) {
   const matchIndex = Number(req.query.match);
   const homeTeam = String(req.query.home ?? "").trim();
   const awayTeam = String(req.query.away ?? "").trim();
-
   if (!Number.isInteger(day) || day <= 0) {
     return res.status(400).json({ error: "Giornata non valida" });
   }
 
-  let leagueRegistry;
+  let sourceUrl = "";
   try {
     const runtime = await readRuntimeDocument(leagueId);
-    leagueRegistry = runtime.document.registry;
+    const rawEntry = runtime.document.registry.matchdays?.[String(day)];
+    sourceUrl = typeof rawEntry === "string" ? rawEntry.trim() : String(rawEntry?.url ?? "").trim();
   } catch (error) {
     console.error("matchday registry read error", error);
     return res.status(500).json({ error: "Registro giornate non disponibile" });
   }
-  const rawEntry = leagueRegistry.matchdays?.[String(day)];
-  const sourceUrl = typeof rawEntry === "string"
-    ? rawEntry.trim()
-    : String(rawEntry?.url ?? "").trim();
-
   if (!/^https?:\/\//i.test(sourceUrl)) {
     return res.status(404).json({ error: "Documento della giornata non configurato" });
   }
 
-  let parsed;
-
+  let snapshot = null;
+  let staleFallback = false;
+  let warning = null;
   try {
-    const separator = sourceUrl.includes("?") ? "&" : "?";
-    const response = await fetch(`${sourceUrl}${separator}v=${Date.now()}`, {
-      cache: "no-store",
-      headers: {
-        "Cache-Control": "no-cache, no-store, max-age=0",
-        "Pragma": "no-cache",
-        "User-Agent": "Lineup-Fanta/1.0 (+https://github.com/ventys7/Lineup-Fanta)"
+    snapshot = await readCurrentMatchdaySnapshot(leagueId, day);
+    if (!snapshot || isSnapshotStale(snapshot, snapshotMaxAgeMs())) {
+      try {
+        const calendarSeason = await readCalendarSeasonHint(leagueId, day);
+        const synced = await syncMatchdaySnapshot({
+          leagueId,
+          day,
+          sourceUrl,
+          seasonHint: calendarSeason || (snapshot?.sourceUrl === sourceUrl ? snapshot.season : "")
+        });
+        snapshot = synced.snapshot;
+      } catch (error) {
+        warning = String(error?.message ?? error ?? "");
+        if (!snapshot) throw error;
+        staleFallback = true;
+        console.error("matchday snapshot refresh fallback", error);
       }
-    });
-
-    if (!response.ok) throw new Error(`Google Docs HTTP ${response.status}`);
-    const html = await response.text();
-    parsed = parseMatchdayHtml(html, sourceUrl);
+    }
   } catch (error) {
-    console.error("matchday upstream parse error", error);
+    console.error("matchday snapshot unavailable", error);
     return res.status(502).json({
-      error: "Documento live non disponibile",
+      error: "Documento live non disponibile e nessuna fotografia valida presente",
       detail: String(error?.message ?? error ?? "")
     });
   }
 
-  const matchup = selectMatchup(parsed, {
-    homeTeam,
-    awayTeam,
-    matchIndex
-  });
-
+  const parsed = effectiveParsed(snapshot);
+  const matchup = selectMatchup(parsed, { homeTeam, awayTeam, matchIndex });
   if (!matchup) {
-    return res.status(404).json({ error: "Scontro non trovato nel documento" });
+    return res.status(404).json({ error: "Scontro non trovato nella fotografia della giornata" });
   }
-
   return res.status(200).json({
-    title: parsed.title || `Giornata Fanta ${day}`,
-    sourceUrl: parsed.sourceUrl || sourceUrl,
+    title: parsed.title || snapshot.title || `Giornata Fanta ${day}`,
+    sourceUrl: snapshot.sourceUrl || sourceUrl,
     fantasyMatchdayNumber: parsed.fantasyMatchdayNumber || day,
-    matchup
+    matchup,
+    snapshot: {
+      season: snapshot.season,
+      syncedAt: snapshot.syncedAt,
+      staleFallback,
+      warning
+    }
   });
 };

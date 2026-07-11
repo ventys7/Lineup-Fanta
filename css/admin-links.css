@@ -185,3 +185,38 @@ a { color: inherit; }
     font-size: 10.5px;
   }
 }
+
+/* Lineup Fanta matchday snapshot controls */
+.matchday-snapshot-controls {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.matchday-snapshot-status { color: var(--muted, #a9b0c0); font-size: .84rem; line-height: 1.4; }
+.matchday-snapshot-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.matchday-snapshot-controls.is-busy { opacity: .72; }
+.snapshot-warning { color: #ffbf69; }
+.snapshot-editor { width: min(1180px, calc(100vw - 28px)); max-height: calc(100vh - 28px); padding: 0; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; background: #141722; color: #fff; }
+.snapshot-editor::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(4px); }
+.snapshot-editor__shell { display: flex; flex-direction: column; max-height: calc(100vh - 30px); }
+.snapshot-editor__header, .snapshot-editor__footer { display: flex; align-items: center; gap: 12px; padding: 18px 20px; }
+.snapshot-editor__header { justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.1); }
+.snapshot-editor__header h2 { margin: 2px 0 0; }
+.snapshot-editor__close { border: 0; background: transparent; color: #fff; font-size: 2rem; cursor: pointer; }
+.snapshot-editor__help { margin: 0; padding: 14px 20px; color: #b7bdc9; }
+.snapshot-editor__table-wrap { overflow: auto; padding: 0 20px 10px; }
+.snapshot-editor__table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.snapshot-editor__table th, .snapshot-editor__table td { padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,.08); text-align: left; vertical-align: middle; }
+.snapshot-editor__table th { position: sticky; top: 0; background: #141722; z-index: 1; }
+.snapshot-editor__table input, .snapshot-editor__table select { width: 100%; min-width: 90px; }
+.snapshot-editor__footer { justify-content: flex-end; border-top: 1px solid rgba(255,255,255,.1); }
+.snapshot-editor__footer [data-editor-message] { margin-right: auto; color: #b7bdc9; }
+@media (max-width: 720px) {
+  .matchday-snapshot-controls { align-items: flex-start; flex-direction: column; }
+  .snapshot-editor__table { min-width: 820px; }
+}
