@@ -46,7 +46,9 @@ async function checkRequiredFiles() {
     "assets/dashboard/dashboard.js",
     "assets/dashboard/dashboard.css",
     "data/matchday-links.json",
-    "dashboard/src/main.tsx"
+    "dashboard/src/main.tsx",
+    "api/league-data.js",
+    "lib/runtime-data.cjs"
   ];
 
   const missing = [];
@@ -63,6 +65,7 @@ async function checkJson() {
     "data/matchday-links.json",
     "data/fp/teams.json",
     "data/pd/teams.json",
+    "package.json",
     "dashboard/package.json",
     "dashboard/tsconfig.json"
   ];
@@ -135,6 +138,23 @@ async function checkConfig() {
   if (!config.includes("calendarCsvUrl")) fail("calendarCsvUrl non trovato nella configurazione");
 }
 
+
+async function checkRuntimeStorage() {
+  const packageJson = JSON.parse(await read("package.json"));
+  if (packageJson.dependencies?.["@vercel/blob"]) {
+    ok(`@vercel/blob configurato (${packageJson.dependencies["@vercel/blob"]})`);
+  } else {
+    fail("Dipendenza @vercel/blob non configurata");
+  }
+
+  const devServer = await read("scripts/dev-server.mjs");
+  if (devServer.includes('/api/league-data')) {
+    ok("API dati dinamici registrata nel server locale");
+  } else {
+    fail("API /api/league-data non registrata nel server locale");
+  }
+}
+
 async function main() {
   console.log("Lineup-Fanta · diagnosi statica\n");
   await checkRequiredFiles();
@@ -142,6 +162,7 @@ async function main() {
   await checkHtmlScripts();
   await checkGeneratedAssets();
   await checkConfig();
+  await checkRuntimeStorage();
 
   console.log(`\nRisultato: ${errors.length} errori, ${warnings.length} avvisi.`);
   if (errors.length) process.exitCode = 1;

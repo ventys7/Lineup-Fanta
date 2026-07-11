@@ -2,3 +2,5 @@
 .vercel
 .lineup-backup-*
 dashboard/node_modules/
+node_modules/
+.lineup-runtime/

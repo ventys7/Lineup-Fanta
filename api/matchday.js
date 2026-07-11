@@ -1,5 +1,3 @@
-const fs = require("node:fs/promises");
-const path = require("node:path");
 const {
   parseMatchdayHtml,
   selectMatchup
@@ -11,28 +9,7 @@ function setNoStore(res) {
   res.setHeader("Expires", "0");
 }
 
-function isRecord(value) {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
-}
-
-function getLeagueRegistry(registry, leagueId) {
-  const value = registry?.[leagueId];
-  if (!isRecord(value)) return { activeFantasyMatchday: null, matchdays: {} };
-
-  const hasNewShape = Object.prototype.hasOwnProperty.call(value, "matchdays")
-    || Object.prototype.hasOwnProperty.call(value, "activeFantasyMatchday");
-
-  return {
-    activeFantasyMatchday: value.activeFantasyMatchday ?? null,
-    matchdays: hasNewShape && isRecord(value.matchdays) ? value.matchdays : value
-  };
-}
-
-async function readRegistry() {
-  const filePath = path.join(process.cwd(), "data", "matchday-links.json");
-  const text = await fs.readFile(filePath, "utf8");
-  return JSON.parse(text);
-}
+const { readRuntimeDocument } = require("../lib/runtime-data.cjs");
 
 module.exports = async function handler(req, res) {
   setNoStore(res);
@@ -52,15 +29,14 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "Giornata non valida" });
   }
 
-  let registry;
+  let leagueRegistry;
   try {
-    registry = await readRegistry();
+    const runtime = await readRuntimeDocument(leagueId);
+    leagueRegistry = runtime.document.registry;
   } catch (error) {
     console.error("matchday registry read error", error);
     return res.status(500).json({ error: "Registro giornate non disponibile" });
   }
-
-  const leagueRegistry = getLeagueRegistry(registry, leagueId);
   const rawEntry = leagueRegistry.matchdays?.[String(day)];
   const sourceUrl = typeof rawEntry === "string"
     ? rawEntry.trim()

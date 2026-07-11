@@ -491,15 +491,15 @@
     setStatus("Caricamento dati…");
 
     try {
-      const [calendarResponse, registryResponse, teamsResponse] = await Promise.all([
+      const [calendarResponse, runtimeResponse] = await Promise.all([
         fetchFresh(`/data/${leagueId}/calendario.csv`),
-        fetchFresh("/data/matchday-links.json"),
-        fetchFresh(`/data/${leagueId}/teams.json`)
+        fetchFresh(`/api/league-data?league=${encodeURIComponent(leagueId)}`)
       ]);
 
+      const runtimeData = await runtimeResponse.json();
       matchdays = calendarMatchdays(await calendarResponse.text());
-      registry = normalizeRegistry(await registryResponse.json());
-      teamsDocument = normalizeTeams(await teamsResponse.json());
+      registry = normalizeRegistry({ [leagueId]: runtimeData.registry });
+      teamsDocument = normalizeTeams(runtimeData.teams);
       renderMatchdays();
       renderTeams();
       initialSnapshot = snapshot();
@@ -551,7 +551,7 @@
     if (!updateDirtyState()) return;
     loading = true;
     elements.saveButton.disabled = true;
-    setStatus("Salvataggio su GitHub…");
+    setStatus("Salvataggio…");
 
     try {
       const state = collectState({ includeUploadData: true });

@@ -129,7 +129,7 @@
       "destination": "/pd/index.html"
     }
   ],
-  "installCommand": "npm --prefix dashboard ci --include=dev --no-audit --no-fund",
+  "installCommand": "npm install --include=dev --no-audit --no-fund --registry=https://registry.npmjs.org/ && npm --prefix dashboard ci --include=dev --no-audit --no-fund --registry=https://registry.npmjs.org/",
   "buildCommand": "npm run build",
   "outputDirectory": "."
 }

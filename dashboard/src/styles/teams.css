@@ -335,14 +335,15 @@
 }
 
 .lf-team-card__avatar.has-logo {
-  padding: 4px;
+  padding: 0;
+  overflow: hidden;
 }
 
 .lf-team-card__avatar img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .lf-team-card__copy {

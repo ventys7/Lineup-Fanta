@@ -14,82 +14,111 @@ test("admin session token is signed and expires after 30 minutes", () => {
   );
 });
 
-test("team logo update preserves credits and rejects unknown teams", () => {
+test("team logo update preserves credits and uploads an immutable URL", async () => {
   const current = {
     version: 1,
     teams: {
-      Paolo: { credits: 120, logoUrl: "" },
-      Edis: { credits: 90, logoUrl: "https://old.example/logo.png" }
+      Paolo: { credits: 120, logoUrl: "https://old.example/logo.png" },
+      Edis: { credits: 90, logoUrl: "" }
     }
   };
 
-  const updated = __test.normalizeTeamsDocument(current, {
-    Paolo: "https://cdn.example/paolo.png",
-    Edis: ""
-  });
-
-  assert.equal(updated.teams.Paolo.credits, 120);
-  assert.equal(updated.teams.Paolo.logoUrl, "https://cdn.example/paolo.png");
-  assert.equal(updated.teams.Edis.credits, 90);
-  assert.equal(updated.teams.Edis.logoUrl, "");
-  assert.throws(
-    () => __test.normalizeTeamsDocument(current, { Sconosciuta: "https://x.test/a.png" }),
-    /non riconosciuta/
-  );
-});
-
-test("uploaded team logo becomes a deterministic repository asset", () => {
-  const png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
-  const current = {
-    version: 1,
-    teams: {
-      Paolo: { credits: 120, logoUrl: "https://old.example/logo.png" }
-    }
-  };
-
-  const updated = __test.prepareTeamsUpdate(
-    current,
-    { Paolo: "https://ignored.example/logo.png" },
-    {
+  const result = await __test.buildTeamsUpdate({
+    leagueId: "fp",
+    currentTeams: current,
+    rawLogos: { Paolo: "https://ignored.example/logo.png", Edis: "" },
+    rawUploads: {
       Paolo: {
         mimeType: "image/png",
-        dataBase64: png,
-        width: 1,
-        height: 1
+        dataBase64: Buffer.from("png").toString("base64"),
+        width: 32,
+        height: 32
       }
     },
-    "fp"
-  );
-
-  const assetPath = __test.teamLogoAssetPath("fp", "Paolo");
-  assert.equal(updated.document.teams.Paolo.credits, 120);
-  assert.equal(updated.document.teams.Paolo.logoUrl, `/${assetPath}`);
-  assert.equal(updated.logoUrls.Paolo, `/${assetPath}`);
-  assert.deepEqual(updated.files[assetPath], {
-    content: png,
-    encoding: "base64"
+    uploadLogo: async () => ({
+      url: "https://store.public.blob.vercel-storage.com/lineup-fanta/team-logos/fp/paolo-random.png"
+    })
   });
+
+  assert.equal(result.document.teams.Paolo.credits, 120);
+  assert.match(result.document.teams.Paolo.logoUrl, /blob\.vercel-storage\.com/);
+  assert.equal(result.document.teams.Edis.credits, 90);
+  assert.equal(result.logoUrls.Edis, "");
 });
 
-test("logo uploads reject invalid formats and unknown teams", () => {
+test("admin save writes one runtime document and does not create a deploy", async () => {
+  const writes = [];
+  const deleted = [];
+  const runtime = {
+    readRuntimeDocument: async () => ({
+      source: "repository",
+      etag: null,
+      document: {
+        version: 1,
+        leagueId: "fp",
+        updatedAt: null,
+        registry: { activeFantasyMatchday: null, matchdays: {} },
+        teams: { version: 1, teams: { Paolo: { credits: 120, logoUrl: "" } } }
+      }
+    }),
+    uploadTeamLogo: async () => ({
+      url: "https://store.public.blob.vercel-storage.com/lineup-fanta/team-logos/fp/paolo-random.png"
+    }),
+    writeRuntimeDocument: async (leagueId, document, options) => {
+      writes.push({ leagueId, document, options });
+      return {
+        source: "blob",
+        document: { ...document, updatedAt: "2026-07-11T00:00:00.000Z" }
+      };
+    },
+    deleteManagedLogo: async (url) => deleted.push(url)
+  };
+
+  const result = await __test.saveAdminData({
+    leagueId: "fp",
+    registry: {
+      activeFantasyMatchday: 3,
+      matchdays: { 3: { url: "https://docs.google.com/document/d/e/test/pub" } }
+    },
+    logos: { Paolo: "" },
+    logoUploads: {}
+  }, { runtime });
+
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].leagueId, "fp");
+  assert.equal(writes[0].document.registry.activeFantasyMatchday, 3);
+  assert.equal(writes[0].document.teams.teams.Paolo.credits, 120);
+  assert.match(result.message, /Nessun deploy/);
+  assert.deepEqual(deleted, []);
+});
+
+test("unknown fantasy teams and invalid uploads are rejected", async () => {
   const current = {
     version: 1,
     teams: { Paolo: { credits: 120, logoUrl: "" } }
   };
 
-  assert.throws(
-    () => __test.prepareTeamsUpdate(current, { Paolo: "" }, {
-      Paolo: { mimeType: "image/svg+xml", dataBase64: "PHN2Zz4=", width: 1, height: 1 }
-    }, "fp"),
-    /PNG/
-  );
-
-  assert.throws(
-    () => __test.prepareTeamsUpdate(current, { Paolo: "" }, {
-      Sconosciuta: { mimeType: "image/png", dataBase64: "AAAA", width: 1, height: 1 }
-    }, "fp"),
+  await assert.rejects(
+    __test.buildTeamsUpdate({
+      leagueId: "fp",
+      currentTeams: current,
+      rawLogos: { Sconosciuta: "https://example.com/logo.png" },
+      rawUploads: {},
+      uploadLogo: async () => ({ url: "https://example.com/upload.png" })
+    }),
     /non riconosciuta/
   );
 
-  assert.equal(__test.normalizeLogoUrl("/assets/team-logos/fp/paolo.png"), "/assets/team-logos/fp/paolo.png");
+  await assert.rejects(
+    __test.buildTeamsUpdate({
+      leagueId: "fp",
+      currentTeams: current,
+      rawLogos: { Paolo: "" },
+      rawUploads: {
+        Paolo: { mimeType: "image/svg+xml", dataBase64: "PHN2Zz4=", width: 1, height: 1 }
+      },
+      uploadLogo: async () => ({ url: "https://example.com/upload.png" })
+    }),
+    /PNG/
+  );
 });

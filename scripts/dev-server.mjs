@@ -14,6 +14,7 @@ const apiHandlers = new Map();
 for (const [route, relative] of [
   ["/api/calendar", "api/calendar.js"],
   ["/api/matchday", "api/matchday.js"],
+  ["/api/league-data", "api/league-data.js"],
   ["/api/admin-links", "api/admin-links.js"]
 ]) {
   const absolute = path.join(root, relative);

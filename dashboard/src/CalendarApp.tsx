@@ -24,7 +24,8 @@ export default function CalendarApp() {
   const calendarUrl = league?.leagueData?.calendarCsvUrl ?? "";
   const calendarDocUrl = league?.leagueData?.calendarDocUrl ?? "";
   const expectedMatches = league?.leagueData?.calendarExpectedMatches ?? 4;
-  const linksUrl = league?.leagueData?.matchdayLinksUrl ?? "/data/matchday-links.json";
+  const linksUrl = league?.leagueData?.matchdayLinksUrl
+    ?? `/api/league-data?league=${encodeURIComponent(leagueId)}&resource=matchdays`;
   const competitionLabel = league?.leagueData?.calendarCompetitionLabel
     ?? (leagueId === "pd" ? "Liga" : "Premier League");
 

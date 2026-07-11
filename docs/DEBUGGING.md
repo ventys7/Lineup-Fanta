@@ -119,3 +119,34 @@ Il resolver prova:
 4. nome esatto, iniziale+cognome e acronimi noti.
 
 Attivare `?debug=1` per vedere i tentativi e il punteggio di risoluzione.
+
+## Dati dinamici e Vercel Blob
+
+Il pannello amministrativo non modifica più GitHub. I dati variabili sono letti tramite:
+
+```text
+/api/league-data?league=fp
+/api/league-data?league=pd
+```
+
+Su Vercel vengono salvati nello store Blob collegato al relativo ambiente:
+
+```text
+lineup-fanta/config/fp.json
+lineup-fanta/config/pd.json
+lineup-fanta/team-logos/fp/*
+lineup-fanta/team-logos/pd/*
+```
+
+In locale, quando non sono presenti credenziali Blob, il server usa `.lineup-runtime/`.
+Questa cartella è ignorata da Git e consente di provare salvataggi e upload senza toccare
+la Preview. I file statici dentro `data/` restano il fallback iniziale e vengono usati
+quando la configurazione dinamica non esiste ancora.
+
+Per verificare la provenienza dei dati aprire nel browser:
+
+```text
+/api/league-data?league=fp
+```
+
+Il campo `source` può valere `blob`, `local` o `repository`.
