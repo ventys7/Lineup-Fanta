@@ -4,48 +4,79 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Admin link · Lineup Fanta</title>
+  <title>Amministrazione · Lineup Fanta</title>
   <link rel="stylesheet" href="/css/admin-links.css">
 </head>
 <body>
   <main class="admin-shell">
     <header class="admin-header">
       <div class="admin-header__copy">
-        <span>Finto pannello admin</span>
-        <h1 id="adminTitle">Admin link</h1>
-        <p id="adminSubtitle">Giornata attiva e documenti delle giornate.</p>
+        <h1 id="adminTitle">Amministrazione</h1>
       </div>
-      <a id="adminBack" class="admin-back" href="/fp/">Torna alla lega</a>
+      <div class="admin-header__actions">
+        <button id="adminLogout" class="admin-button admin-button--quiet" type="button" hidden>Esci</button>
+        <a id="adminBack" class="admin-button" href="/fp/">Torna alla lega</a>
+      </div>
     </header>
 
-    <section class="admin-card">
-      <header class="admin-card__header">
-        <div>
-          <h2>Calendario e documenti</h2>
-          <p>La giornata attiva viene aperta automaticamente a tutti. Può anche restare vuota.</p>
-        </div>
-        <div class="admin-active">
-          <label for="activeMatchday">Giornata attiva</label>
-          <select id="activeMatchday"><option>Caricamento…</option></select>
-        </div>
-      </header>
-
-      <div id="matchdayList" class="admin-list">
-        <div class="admin-loading">Caricamento del calendario…</div>
+    <section id="adminLogin" class="admin-auth" hidden>
+      <div class="admin-auth__card">
+        <div class="admin-auth__mark">PL</div>
+        <h2>Accesso amministratore</h2>
+        <p>La sessione resta attiva per 30 minuti. La password non viene salvata nel browser.</p>
+        <form id="adminLoginForm" class="admin-login-form">
+          <label class="admin-field" for="adminPassword">
+            <span>Password</span>
+            <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Password admin" required>
+          </label>
+          <button id="adminLoginButton" class="admin-save" type="submit">Accedi</button>
+        </form>
       </div>
+    </section>
 
-      <footer class="admin-footer">
-        <div class="admin-password">
-          <label for="adminPassword">Password</label>
-          <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Password admin">
+    <section id="adminWorkspace" hidden>
+      <nav class="admin-tabs" aria-label="Sezioni amministrazione">
+        <button class="is-active" type="button" data-admin-tab="links" aria-selected="true">Link giornate</button>
+        <button type="button" data-admin-tab="logos" aria-selected="false">Loghi fantasquadre</button>
+      </nav>
+
+      <section class="admin-card" data-admin-panel="links">
+        <header class="admin-card__header admin-calendar-header">
+          <h2>Calendario</h2>
+          <label class="admin-field admin-active" for="activeMatchday">
+            <span>Giornata attiva</span>
+            <select id="activeMatchday"><option>Caricamento…</option></select>
+          </label>
+        </header>
+        <div id="matchdayList" class="admin-list">
+          <div class="admin-loading">Caricamento del calendario…</div>
         </div>
-        <button id="saveAdminLinks" class="admin-save" type="button">Salva e pubblica</button>
-      </footer>
+      </section>
+
+      <section class="admin-card" data-admin-panel="logos" hidden>
+        <header class="admin-card__header">
+          <div>
+            <h2>Loghi delle fantasquadre</h2>
+            <p>Inserisci un URL oppure carica un’immagine dal telefono o dal computer.</p>
+          </div>
+        </header>
+        <div id="teamLogoList" class="admin-list">
+          <div class="admin-loading">Caricamento delle fantasquadre…</div>
+        </div>
+      </section>
+
+      <p class="admin-note">Il salvataggio crea un unico commit su GitHub e avvia un nuovo deploy Vercel.</p>
     </section>
 
     <p id="adminStatus" class="admin-status" aria-live="polite"></p>
-    <p class="admin-note">Il salvataggio crea un commit su GitHub. Il nuovo valore sarà pubblico dopo il deploy Vercel.</p>
   </main>
+
+  <footer id="adminSavebar" class="admin-savebar" hidden>
+    <div class="admin-savebar__inner">
+      <span id="dirtyIndicator" class="admin-dirty">Tutto salvato</span>
+      <button id="saveAdminData" class="admin-save" type="button" disabled>Salva modifiche</button>
+    </div>
+  </footer>
   <script src="/js/admin-links.js" defer></script>
 </body>
 </html>
