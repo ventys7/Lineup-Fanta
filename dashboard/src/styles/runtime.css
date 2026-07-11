@@ -1,0 +1,25 @@
+.lf-runtime-error {
+  display: grid;
+  gap: 10px;
+  max-width: 720px;
+  margin: 24px auto;
+  padding: 18px;
+}
+
+.lf-runtime-error p {
+  margin: 0;
+}
+
+.lf-runtime-error code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.lf-runtime-error button {
+  width: fit-content;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}

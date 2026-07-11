@@ -99,6 +99,24 @@
           "value": "no-store, max-age=0, must-revalidate"
         }
       ]
+    },
+    {
+      "source": "/assets/dashboard/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/data/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0, must-revalidate"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -110,5 +128,8 @@
       "source": "/pd",
       "destination": "/pd/index.html"
     }
-  ]
+  ],
+  "installCommand": "npm install --include=dev --no-audit --no-fund --registry=https://registry.npmjs.org/ && npm --prefix dashboard ci --include=dev --no-audit --no-fund --registry=https://registry.npmjs.org/",
+  "buildCommand": "npm run build",
+  "outputDirectory": "."
 }

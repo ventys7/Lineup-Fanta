@@ -1,0 +1,205 @@
+.lf-match-detail-sticky {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+}
+
+.lf-match-detail-bench {
+  grid-template-rows: repeat(4, 72px);
+  grid-auto-rows: 72px;
+  align-content: start;
+  align-items: stretch;
+}
+
+.lf-match-detail-bench li {
+  width: 100%;
+  height: 72px;
+  min-height: 72px;
+  max-height: 72px;
+  padding: 8px 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+
+.lf-match-detail-bench li > .lf-match-detail-player__identity {
+  display: grid;
+  grid-template-rows: 24px 14px;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.lf-match-detail-bench .lf-match-detail-player__headline {
+  width: 100%;
+  min-width: 0;
+  height: 24px;
+  flex-wrap: nowrap;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lf-match-detail-bench .lf-match-detail-player__name {
+  width: auto;
+  max-width: 100%;
+  flex: 0 1 auto;
+  overflow: hidden;
+  font-size: 12.5px;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lf-match-detail-bench .lf-match-detail-player__team {
+  width: 100%;
+  height: 14px;
+  overflow: hidden;
+  font-size: 9.5px;
+  line-height: 14px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lf-match-detail-bench small.is-switch,
+.lf-match-detail-bench small.is-captain {
+  flex: 0 0 auto;
+}
+
+@media (min-width: 768px) {
+  .lf-match-detail-grid {
+    align-items: stretch;
+  }
+
+  .lf-match-detail-team {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: 100%;
+  }
+
+  .lf-match-detail-section--bench {
+    align-self: end;
+    width: 100%;
+  }
+
+  .lf-match-detail-result {
+    min-height: 54px;
+    gap: 10px;
+  }
+
+  .lf-match-detail-result b {
+    min-width: 40px;
+    font-size: 40px;
+  }
+
+  .lf-match-detail-result span {
+    font-size: 25px;
+  }
+
+  .lf-match-detail-team > header h3 {
+    font-size: 20px;
+    line-height: 1.12;
+  }
+
+  .lf-match-detail-team > header small {
+    font-size: 9.5px;
+  }
+
+  .lf-match-detail-total span,
+  .lf-match-detail-total small {
+    font-size: 8px !important;
+  }
+
+  .lf-match-detail-total strong {
+    font-size: 24px;
+  }
+
+  .lf-match-detail-section h4 {
+    font-size: 10px;
+  }
+
+  .lf-match-detail-player__name {
+    font-size: 15px;
+  }
+
+  .lf-match-detail-player__team {
+    font-size: 10.5px;
+  }
+
+  .lf-match-detail-role {
+    min-width: 23px;
+    height: 22px;
+    font-size: 9px;
+  }
+
+  .lf-match-detail-player__main > b,
+  .lf-match-detail-replacement > b {
+    font-size: 13px;
+  }
+
+  .lf-match-detail-replacement__label {
+    font-size: 8.5px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .lf-match-detail-modal__body {
+    position: relative;
+  }
+
+  .lf-match-detail-sticky {
+    position: sticky;
+    top: -8px;
+    z-index: 50;
+    isolation: isolate;
+    margin: -8px -8px 8px;
+    padding: 8px 8px 7px;
+    overflow: hidden;
+    border-bottom: 1px solid #dfe7e3;
+    background: #fff;
+    box-shadow: 0 7px 14px rgba(17, 35, 29, .08);
+  }
+
+  .lf-match-detail-sticky::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: #fff;
+    content: "";
+  }
+
+  .lf-match-detail-result {
+    position: static;
+    min-height: 39px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .lf-match-detail-mobile-tabs {
+    position: static;
+    margin: 4px 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .lf-match-detail-grid {
+    position: relative;
+    z-index: 1;
+  }
+
+  .lf-match-detail-team {
+    display: block;
+  }
+}

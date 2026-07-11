@@ -70,12 +70,43 @@
 <link rel="stylesheet" href="css/formation-clean.css">
 <link rel="stylesheet" href="css/fixtures-card.css">
 <link rel="stylesheet" href="css/sticky-story-mobile.css">
+<link rel="stylesheet" href="css/league-dashboard.css">
+<script id="lineup-dashboard-style-loader">
+  (function () {
+    const token = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    window.__LINEUP_DASHBOARD_RELOAD_TOKEN__ = token;
+
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = `/assets/dashboard/dashboard.css?v=${encodeURIComponent(token)}`;
+    stylesheet.dataset.lineupDashboardAsset = "style";
+    document.head.appendChild(stylesheet);
+
+    // Evita il ripristino della dashboard React dalla back-forward cache.
+    // La persistenza/localStorage della Formazione resta intatta.
+    window.addEventListener("pageshow", function (event) {
+      if (event.persisted) window.location.reload();
+    }, { once: true });
+  })();
+</script>
 </head>
 <body>
 <div class="app-chrome">
   <header>
     <img id="leagueLogo" class="logo" alt="" hidden>
     <h1 id="leagueTitle"></h1>
+    <button
+      id="leagueMenuToggle"
+      class="league-menu-toggle"
+      type="button"
+      aria-label="Apri il menu delle sezioni"
+      aria-expanded="false"
+      aria-controls="leagueSectionMenu"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
     <script>
       (function () {
         const league = window.LINEUP_LEAGUES?.[document.documentElement.dataset.league];
@@ -89,7 +120,16 @@
       })();
     </script>
   </header>
-  <div class="sticky-app-chrome__controls">
+  <nav id="leagueSectionMenu" class="league-tabs" aria-label="Sezioni della lega">
+    <div class="league-tabs__inner" role="tablist">
+      <button class="league-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="formationView" data-league-tab="formation">Formazione</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="calendarioView" data-league-tab="calendario" tabindex="-1">Calendario</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="listoneView" data-league-tab="listone" tabindex="-1">Listone</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="roseView" data-league-tab="rose" tabindex="-1">Rose</button>
+      <button class="league-tab" type="button" role="tab" aria-selected="false" aria-controls="classificaView" data-league-tab="classifica" tabindex="-1">Classifica</button>
+    </div>
+  </nav>
+  <div id="formationControls" class="sticky-app-chrome__controls">
     <div class="controls">
           <select id="managerSelect"><option>Caricamento…</option></select>
           <button id="toggleRosterBtn" class="toggle-roster-btn">Rosa</button>
@@ -107,7 +147,7 @@
   </div>
 </div>
 
-<main class="container">
+<main id="formationView" class="container" data-league-view="formation" role="tabpanel">
   <div class="content-wrapper">
     
 
@@ -220,6 +260,22 @@
   </div>
 </main>
 
+<main id="listoneView" class="league-dashboard-view" data-league-view="listone" role="tabpanel" hidden>
+  <div id="league-dashboard-root" class="league-react-root" aria-live="polite"></div>
+</main>
+
+<main id="roseView" class="league-dashboard-view" data-league-view="rose" role="tabpanel" hidden>
+  <div id="league-rose-root" class="league-react-root" aria-live="polite"></div>
+</main>
+
+<main id="classificaView" class="league-dashboard-view" data-league-view="classifica" role="tabpanel" hidden>
+  <div id="league-standings-root" class="league-react-root" aria-live="polite"></div>
+</main>
+
+<main id="calendarioView" class="league-dashboard-view" data-league-view="calendario" role="tabpanel" hidden>
+  <div id="league-calendar-root" class="league-react-root" aria-live="polite"></div>
+</main>
+
 <!-- Output Modal -->
 <div id="outputModal" class="modal" aria-hidden="true">
   <div class="box output-modal-box">
@@ -306,6 +362,10 @@
 <div id="toastContainer" aria-hidden="true"></div>
 
 <script src="js/router.js"></script>
+<script src="js/debug.js"></script>
+<script src="js/formation-constants.js"></script>
+<script src="js/csv-parser.js"></script>
+<script src="js/csv-formation-db.js"></script>
 <script src="js/csv.js"></script>
 <script src="js/state.js"></script>
 <script src="js/gk-blocks.js"></script>
@@ -326,6 +386,14 @@
 <script src="js/output.js"></script>
 <script src="js/story.js"></script>
 <script src="js/app-events.js"></script>
+<script src="js/league-dashboard.js"></script>
+<script type="module" id="lineup-dashboard-module-loader">
+  const token = window.__LINEUP_DASHBOARD_RELOAD_TOKEN__
+    || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+
+  import(`/assets/dashboard/dashboard.js?v=${encodeURIComponent(token)}`)
+    .catch((error) => console.error("Dashboard React load error", error));
+</script>
 <script src="js/persistence.js"></script>
 <script src="js/fixtures.js"></script>
 <script src="js/app.js"></script>

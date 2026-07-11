@@ -13,6 +13,10 @@ for file in js/*.js; do
   node --check "$file"
 done
 
+if [[ -f assets/dashboard/dashboard.js ]]; then
+  node --check assets/dashboard/dashboard.js
+fi
+
 python3 - <<'PYCHECK'
 from pathlib import Path
 import json
@@ -20,11 +24,21 @@ import re
 
 html = Path("index.html").read_text(encoding="utf-8")
 missing = []
-for path in re.findall(r'(?:src|href)="((?:js|css)/[^"?#]+)"', html):
+for path in re.findall(r'(?:src|href)="((?:(?:js|css|assets/dashboard)/)[^"?#]+)"', html):
     if not Path(path).is_file():
         missing.append(path)
 if missing:
     raise SystemExit("Riferimenti locali mancanti: " + ", ".join(missing))
+
+for required in (
+    "dashboard/package.json",
+    "dashboard/src/main.tsx",
+    "dashboard/src/App.tsx",
+    "assets/dashboard/dashboard.js",
+    "assets/dashboard/dashboard.css",
+):
+    if not Path(required).is_file():
+        raise SystemExit("Dashboard React incompleta: " + required)
 
 json.loads(Path("vercel.json").read_text(encoding="utf-8"))
 PYCHECK

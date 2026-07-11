@@ -1,0 +1,677 @@
+.lf-mobile-filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.lf-mobile-filter {
+  display: grid;
+  grid-template-columns: minmax(86px, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 6px 10px 6px 12px;
+  border: 1px solid #dbe3df;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.lf-mobile-filter__label {
+  color: #75827d;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lf-mobile-filter__control {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  color: #34443e;
+}
+
+.lf-mobile-filter__control select {
+  width: 100%;
+  min-width: 0;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.lf-teams-heading {
+  padding: 24px 24px 18px;
+  text-align: center;
+}
+
+.lf-teams-heading h1 {
+  display: flex;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #17221e;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 900;
+}
+
+.lf-teams-heading h1 svg { color: var(--primary); }
+.lf-teams-heading p { margin: 6px 0 0; color: #71807a; font-size: 13px; }
+
+.lf-teams-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: 0 22px 24px;
+}
+
+.lf-team-card {
+  overflow: hidden;
+  border: 1px solid #e1e8e5;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(22, 44, 35, .055);
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.lf-team-card:hover {
+  border-color: var(--primary-border);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(22, 44, 35, .075);
+}
+
+.lf-team-card__header {
+  padding: 18px;
+  border-bottom: 1px solid #e8eeeb;
+  background: linear-gradient(110deg, var(--primary-bg), rgba(255,255,255,.96) 55%);
+}
+
+.lf-team-card__identity {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.lf-team-card__avatar {
+  display: flex;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid var(--primary-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 7px 18px rgba(22, 44, 35, .08);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.lf-team-card__copy { min-width: 0; }
+.lf-team-card__copy h2 { margin: 0; overflow: hidden; color: #17221e; font-size: 19px; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
+.lf-team-card__copy p { margin: 3px 0 0; color: #73817c; font-size: 12px; }
+.lf-team-card__copy strong { color: #35443f; }
+
+.lf-team-card__meta {
+  display: flex;
+  margin-top: 15px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lf-team-card__spent { display: flex; flex-direction: column; gap: 3px; }
+.lf-team-card__spent > span { color: #82908a; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.lf-team-card__spent > strong { display: flex; align-items: center; gap: 5px; color: var(--primary); font-size: 17px; }
+
+.lf-team-status {
+  display: inline-flex;
+  min-height: 27px;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.lf-team-status--complete { border-color: rgba(22, 163, 74, .25); background: rgba(34, 197, 94, .1); color: #15803d; }
+.lf-team-status--incomplete { border-color: rgba(217, 119, 6, .25); background: rgba(245, 158, 11, .11); color: #b45309; }
+
+.lf-team-role-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e9efec;
+  background: #f8faf9;
+}
+
+.lf-team-role-filters button {
+  min-height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #6b7974;
+  font-size: 11px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.lf-team-role-filters button:hover { background: #eef3f1; }
+.lf-team-role-filters button.is-active { border-color: var(--primary-border); background: var(--primary-bg); color: var(--primary); }
+.lf-team-role-filters button.is-complete { color: #15803d; }
+.lf-team-role-filters button.is-active.is-complete { color: #15803d; }
+
+.lf-team-roster {
+  max-height: 480px;
+  overflow-y: auto;
+  background: #fff;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd6d1 transparent;
+}
+
+.lf-squad-section + .lf-squad-section { border-top: 1px solid #edf1ef; }
+.lf-squad-section { padding: 11px 12px; }
+.lf-squad-section__title { padding: 0 3px 7px; color: #88958f; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.lf-squad-empty { padding: 3px; color: #a0aaa6; font-size: 12px; font-style: italic; }
+.lf-squad-list { display: grid; gap: 2px; }
+.lf-squad-item-wrap { min-width: 0; }
+
+.lf-squad-item {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 7px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.lf-squad-item--clickable { cursor: pointer; }
+.lf-squad-item:hover { background: #f6f9f7; }
+.lf-squad-item__left { display: flex; min-width: 0; flex: 1; align-items: center; gap: 9px; }
+
+.lf-squad-avatar {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.lf-squad-avatar--p { border-color: rgba(234,179,8,.28); background: rgba(250,204,21,.13); color: #8a6300; }
+.lf-squad-avatar--d { border-color: rgba(59,130,246,.25); background: rgba(59,130,246,.1); color: #1d4ed8; }
+.lf-squad-avatar--c { border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.1); color: #15803d; }
+.lf-squad-avatar--a { border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.09); color: #b91c1c; }
+
+.lf-squad-item__copy { min-width: 0; }
+.lf-squad-item__name { display: flex; min-width: 0; align-items: center; gap: 5px; overflow: hidden; color: #314039; font-size: 12px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.lf-squad-item__name svg { flex: 0 0 auto; color: #87948f; transition: transform 160ms ease; }
+.lf-chevron-open { transform: rotate(180deg); }
+.lf-squad-item__team { margin-top: 1px; overflow: hidden; color: #8a9692; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+
+.lf-squad-values { display: flex; flex: 0 0 auto; align-items: center; gap: 10px; }
+.lf-squad-values > span { display: flex; min-width: 25px; flex-direction: column; align-items: flex-end; line-height: 1.05; }
+.lf-squad-values small { color: #9aa5a1; font-size: 8px; font-weight: 900; }
+.lf-squad-values strong { color: #34433d; font-size: 12px; }
+.lf-squad-values .lf-squad-price { color: var(--primary); }
+
+.lf-squad-goalkeepers { margin: 2px 0 5px 22px; padding: 3px 0 3px 10px; border-left: 2px solid var(--primary-border); }
+.lf-squad-goalkeeper { display: flex; min-height: 29px; align-items: center; gap: 7px; color: #687671; font-size: 11px; }
+.lf-squad-goalkeeper__avatar { display: flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 999px; background: rgba(250,204,21,.14); color: #8a6300; font-size: 8px; font-weight: 900; }
+
+.lf-teams-empty { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; padding: 30px; color: #8b9893; text-align: center; }
+.lf-teams-empty h2 { margin: 10px 0 0; color: #34433d; font-size: 18px; }
+.lf-teams-empty p { margin: 5px 0 0; font-size: 13px; }
+
+@media (max-width: 900px) {
+  .lf-teams-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+  .league-react-root { font-size: 14px; }
+  .lf-dashboard-card { border-radius: 14px; }
+  .lf-search { min-height: 42px; border-radius: 11px; font-size: 13px; }
+  .lf-action-button, .lf-reset-button { min-height: 42px; border-radius: 11px; }
+  .lf-list-table { border-radius: 12px; }
+  .lf-player-avatar--mobile { width: 40px; height: 40px; flex-basis: 40px; font-size: 10px; }
+  .lf-role-badge { min-height: 23px; padding: 2px 8px; font-size: 10px; }
+  .lf-mobile-reset { margin-top: 8px; font-size: 11px; }
+  .lf-teams-heading { padding: 18px 14px 13px; }
+  .lf-teams-heading h1 { gap: 8px; font-size: 20px; }
+  .lf-teams-heading h1 svg { width: 22px; height: 22px; }
+  .lf-teams-heading p { font-size: 11px; }
+  .lf-teams-grid { gap: 12px; padding: 0 10px 14px; }
+  .lf-team-card { border-radius: 14px; }
+  .lf-team-card__header { padding: 14px; }
+  .lf-team-card__avatar { width: 48px; height: 48px; flex-basis: 48px; font-size: 18px; }
+  .lf-team-card__copy h2 { font-size: 16px; }
+  .lf-team-card__copy p { font-size: 11px; }
+  .lf-team-card__meta { margin-top: 12px; }
+  .lf-team-card__spent > strong { font-size: 15px; }
+  .lf-team-status { min-height: 24px; padding: 3px 7px; font-size: 9px; }
+  .lf-team-role-filters { gap: 4px; padding: 8px; }
+  .lf-team-role-filters button { min-height: 29px; padding: 0 3px; font-size: 10px; }
+  .lf-team-roster { max-height: 430px; }
+  .lf-squad-section { padding: 9px 8px; }
+  .lf-squad-item { min-height: 40px; padding: 4px 5px; }
+  .lf-squad-avatar { width: 29px; height: 29px; flex-basis: 29px; }
+  .lf-squad-item__name { font-size: 11px; }
+  .lf-squad-item__team { font-size: 9px; }
+  .lf-squad-values { gap: 7px; }
+  .lf-squad-values strong { font-size: 11px; }
+}
+
+.lf-team-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.lf-team-card__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 116px;
+  flex: 0 0 auto;
+  align-items: stretch;
+  gap: 8px;
+  padding: 10px;
+  border-bottom: 0;
+}
+
+.lf-team-card__identity,
+.lf-team-card__meta {
+  box-sizing: border-box;
+  min-width: 0;
+  border: 1px solid rgba(31, 45, 40, .10);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 4px 12px rgba(22, 44, 35, .04);
+}
+
+.lf-team-card__identity {
+  display: flex;
+  min-height: 56px;
+  padding: 6px 8px;
+  align-items: center;
+  gap: 8px;
+}
+
+.lf-team-card__avatar {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+  border: 2px solid var(--primary-border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.lf-team-card__avatar.has-logo {
+  padding: 0;
+  overflow: hidden;
+}
+
+.lf-team-card__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lf-team-card__copy {
+  min-width: 0;
+}
+
+.lf-team-card__eyebrow {
+  display: block;
+  margin-bottom: 1px;
+  color: #82908a;
+  font-size: 7.5px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.lf-team-card__copy h2 {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: #17221e;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lf-team-card__meta {
+  display: flex;
+  min-width: 116px;
+  min-height: 56px;
+  margin: 0;
+  padding: 5px 6px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 4px;
+}
+
+.lf-team-card__credits {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  text-align: center;
+}
+
+.lf-team-card__credits > span {
+  color: #82908a;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.lf-team-card__credits > strong {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--primary);
+  font-size: 12.5px;
+  line-height: 1;
+  text-align: center;
+}
+
+.lf-team-status {
+  box-sizing: border-box;
+  display: inline-flex;
+  width: 100%;
+  min-height: 19px;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 2px 4px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 6.8px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lf-team-role-filters {
+  position: static;
+  z-index: 2;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: auto;
+  height: auto !important;
+  max-height: none !important;
+  flex: 0 0 auto;
+  gap: 4px;
+  margin: 0 10px;
+  padding: 6px;
+  overflow: visible !important;
+  border: 1px solid #e1e8e5;
+  border-bottom: 0;
+  border-radius: 11px 11px 0 0;
+  background: #f8faf9;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.lf-team-role-filters button {
+  min-width: 0;
+  min-height: 27px;
+  padding: 0 3px;
+  overflow: hidden;
+  font-size: 9px;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lf-team-roster-frame {
+  display: block !important;
+  min-width: 0;
+  min-height: 70px;
+  flex: 0 1 auto;
+  margin: 0 10px 10px;
+  overflow: hidden;
+  border: 1px solid #e1e8e5;
+  border-radius: 0 0 11px 11px;
+  background: #fff;
+  box-shadow: inset 0 1px 0 rgba(31, 45, 40, .025);
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.lf-team-roster {
+  display: block !important;
+  min-height: 68px;
+  max-height: 480px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #fff;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd6d1 transparent;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 767px) {
+  .lf-team-card {
+    touch-action: pan-y;
+  }
+
+  .lf-team-card__header {
+    grid-template-columns: minmax(0, 1fr) 98px;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .lf-team-card__identity {
+    width: auto;
+    min-height: 49px;
+    padding: 5px 6px;
+    gap: 6px;
+  }
+
+  .lf-team-card__avatar {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  .lf-team-card__avatar.has-logo {
+    padding: 3px;
+  }
+
+  .lf-team-card__eyebrow {
+    font-size: 6.5px;
+  }
+
+  .lf-team-card__copy h2 {
+    font-size: 12px;
+    line-height: 1.05;
+  }
+
+  .lf-team-card__meta {
+    width: auto;
+    min-width: 98px;
+    min-height: 49px;
+    padding: 4px 5px;
+    gap: 3px;
+  }
+
+  .lf-team-card__credits > span {
+    font-size: 6.5px;
+  }
+
+  .lf-team-card__credits > strong {
+    gap: 2px;
+    font-size: 11px;
+  }
+
+  .lf-team-card__credits > strong svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .lf-team-status {
+    min-height: 17px;
+    gap: 2px;
+    padding: 2px 3px;
+    font-size: 6px;
+    letter-spacing: -.01em;
+  }
+
+  .lf-team-status svg {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+  }
+
+  .lf-team-role-filters {
+    margin: 0 8px;
+    padding: 5px;
+    gap: 3px;
+  }
+
+  .lf-team-role-filters button {
+    min-height: 25px;
+    padding: 0 2px;
+    font-size: 8.5px;
+  }
+
+  .lf-team-roster-frame {
+    min-height: 62px;
+    margin: 0 8px 8px;
+    overflow: hidden;
+  }
+
+  .lf-team-roster {
+    min-height: 60px;
+    max-height: min(42vh, 340px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: auto;
+    touch-action: pan-y;
+    scrollbar-width: thin;
+  }
+
+  .lf-squad-section,
+  .lf-squad-list,
+  .lf-squad-item-wrap,
+  .lf-squad-item,
+  .lf-squad-item--clickable {
+    touch-action: pan-y;
+  }
+
+  .lf-squad-item--clickable {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@media (hover: none) {
+  .lf-team-card:hover {
+    transform: none;
+  }
+
+  .lf-squad-item:hover {
+    background: transparent;
+  }
+}
+
+@media (min-width: 768px) {
+  .lf-team-card__header {
+    grid-template-columns: minmax(0, 1fr) 108px;
+    gap: 7px;
+    padding: 8px 10px 6px;
+  }
+
+  .lf-team-card__identity {
+    min-height: 50px;
+    padding: 5px 7px;
+    gap: 7px;
+  }
+
+  .lf-team-card__avatar {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+    border-radius: 9px;
+    font-size: 14px;
+  }
+
+  .lf-team-card__copy h2 {
+    font-size: 13px;
+  }
+
+  .lf-team-card__meta {
+    min-width: 108px;
+    min-height: 50px;
+    padding: 4px 5px;
+    gap: 3px;
+  }
+
+  .lf-team-card__credits > strong {
+    font-size: 11.5px;
+  }
+
+  .lf-team-status {
+    min-height: 17px;
+    padding: 2px 3px;
+    font-size: 6.2px;
+  }
+
+  .lf-team-role-filters {
+    margin-top: 3px;
+  }
+}
+
+.lf-teams-grid {
+  padding-top: 22px;
+}
+
+@media (max-width: 767px) {
+  .lf-teams-grid {
+    padding-top: 10px;
+  }
+}
