@@ -11,6 +11,14 @@ const {
   writeRuntimeDocument
 } = require("../lib/runtime-data.cjs");
 
+const {
+  readCalendarSeasonHint,
+  readCurrentMatchdaySnapshot,
+  saveMatchdayOverrides,
+  snapshotStatus,
+  syncMatchdaySnapshot
+} = require("../lib/matchday-snapshot.cjs");
+
 const SESSION_COOKIE = "lineup_admin_session";
 const SESSION_TTL_SECONDS = 30 * 60;
 const MAX_LOGO_UPLOAD_BYTES = 600 * 1024;
@@ -351,6 +359,39 @@ async function handler(req, res) {
     return res.status(401).json({ error: "Sessione scaduta", authenticated: false });
   }
 
+  if (action === "snapshot-status") {
+    try {
+      const day = Number(body.day);
+      const snapshot = await readCurrentMatchdaySnapshot(body.leagueId, day);
+      return res.status(200).json({ ok: true, status: snapshotStatus(snapshot) });
+    } catch (error) {
+      return res.status(400).json({ error: error.message || "Fotografia non disponibile" });
+    }
+  }
+  if (action === "snapshot-sync") {
+    try {
+      const seasonHint = await readCalendarSeasonHint(body.leagueId, body.day);
+      const synced = await syncMatchdaySnapshot({
+        leagueId: body.leagueId,
+        day: body.day,
+        sourceUrl: body.sourceUrl,
+        seasonHint
+      });
+      return res.status(200).json({ ok: true, changed: synced.changed, storage: synced.storage, status: snapshotStatus(synced.snapshot) });
+    } catch (error) {
+      console.error("matchday snapshot sync error", error);
+      return res.status(400).json({ error: error.message || "Sincronizzazione non riuscita" });
+    }
+  }
+  if (action === "snapshot-overrides") {
+    try {
+      const saved = await saveMatchdayOverrides({ leagueId: body.leagueId, day: body.day, overrides: body.overrides });
+      return res.status(200).json({ ok: true, changed: saved.changed, storage: saved.storage, status: snapshotStatus(saved.snapshot) });
+    } catch (error) {
+      console.error("matchday snapshot overrides error", error);
+      return res.status(400).json({ error: error.message || "Correzioni non salvate" });
+    }
+  }
   if (action !== "save") {
     return res.status(400).json({ error: "Azione non valida" });
   }

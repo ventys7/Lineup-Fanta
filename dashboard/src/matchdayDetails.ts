@@ -4,10 +4,22 @@ import { normalizeSearchText, stripEmojiText } from "./shared/text";
 
 export type SwitchType = "base" | "plus" | null;
 
+export type MatchdayIdentity = {
+  matched: boolean;
+  displayName: string;
+  role: string;
+  realTeam: string;
+  assetCode: string;
+  confidence?: number;
+  source?: string;
+};
+
 export type MatchdayReplacement = {
   name: string;
   vote: number | null;
   displayVote: string | null;
+  snapshotKey?: string;
+  identity?: MatchdayIdentity;
 };
 
 export type MatchdayPlayer = {
@@ -20,6 +32,8 @@ export type MatchdayPlayer = {
   switchPlayer: boolean;
   switchType: SwitchType;
   replacement?: MatchdayReplacement;
+  snapshotKey?: string;
+  identity?: MatchdayIdentity;
 };
 
 export type MatchdayTeam = {
@@ -56,6 +70,20 @@ function normalizeTeamName(value: string): string {
   return normalizeSearchText(value);
 }
 
+function parseIdentity(value: unknown, fallbackName: string): MatchdayIdentity | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const source = value as Partial<MatchdayIdentity>;
+  return {
+    matched: Boolean(source.matched),
+    displayName: stripEmojiText(source.displayName ?? fallbackName),
+    role: String(source.role ?? "").trim().toUpperCase(),
+    realTeam: stripEmojiText(source.realTeam ?? ""),
+    assetCode: String(source.assetCode ?? "").trim(),
+    confidence: typeof source.confidence === "number" ? source.confidence : undefined,
+    source: typeof source.source === "string" ? source.source : undefined
+  };
+}
+
 function parseLegacyPlayer(value: unknown): MatchdayPlayer {
   if (typeof value === "string") {
     const raw = stripEmojiText(value);
@@ -90,7 +118,7 @@ function parseLegacyPlayer(value: unknown): MatchdayPlayer {
     ? {
       name: stripEmojiText(source.replacement.name),
       vote: source.replacement.vote ?? null,
-      displayVote: source.replacement.displayVote ?? null
+      displayVote: source.replacement.displayVote ?? null, snapshotKey: source.replacement.snapshotKey, identity: parseIdentity(source.replacement.identity, source.replacement.name)
     }
     : undefined;
 
@@ -102,7 +130,7 @@ function parseLegacyPlayer(value: unknown): MatchdayPlayer {
     status: source.status ?? null,
     captain: Boolean(source.captain),
     switchPlayer: Boolean(switchType),
-    switchType,
+    switchType, snapshotKey: source.snapshotKey, identity: parseIdentity(source.identity, source.name ?? source.raw ?? ""),
     ...(replacement ? { replacement } : {})
   };
 }

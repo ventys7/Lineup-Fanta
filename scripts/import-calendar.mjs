@@ -82,13 +82,33 @@ async function main() {
     throw new Error("Nessuna giornata riconosciuta nel documento pubblicato.");
   }
 
+  const seasons = [...new Set(matchdays.map((matchday) => matchday.season).filter(Boolean))];
+  if (seasons.length === 0) {
+    throw new Error(
+      "Stagione non riconosciuta nel Calendario. Inserisci una dicitura come 26-27 nel titolo o nelle intestazioni delle giornate."
+    );
+  }
+  if (seasons.length > 1) {
+    throw new Error(`Il Calendario contiene più stagioni: ${seasons.join(", ")}`);
+  }
+  const season = seasons[0];
   const outputPath = path.join(ROOT, csvUrl.replace(/^\//, ""));
+  const metadataPath = outputPath.replace(/\.csv$/i, ".meta.json");
+  const metadata = {
+    version: 1,
+    season,
+    generatedAt: new Date().toISOString(),
+    matchdays: Object.fromEntries(
+      matchdays.map((matchday) => [String(matchday.fantasyMatchdayNumber), matchday.season || season])
+    )
+  };
   await writeAtomically(outputPath, toCalendarCsv(matchdays));
+  await writeAtomically(metadataPath, `${JSON.stringify(metadata, null, 2)}\n`);
 
   const complete = matchdays.filter((matchday) => matchday.status === "calcolata").length;
   console.log(
     `✓ ${leagueId.toUpperCase()}: ${matchdays.length} giornate importate, `
-    + `${complete} calcolate, file ${path.relative(ROOT, outputPath)}`
+    + `${complete} calcolate, stagione ${season}, file ${path.relative(ROOT, outputPath)}`
   );
 }
 

@@ -2,6 +2,7 @@ import type { MatchdayPlayer } from "../../matchdayDetails";
 import type { PlayerRoleHint, RosterResolver } from "../../playerResolver";
 import { PlayerIdentity } from "./PlayerIdentity";
 
+import { preferSnapshotIdentity } from "../snapshotIdentity";
 export function PlayerRow({
   player,
   ownerName,
@@ -13,9 +14,9 @@ export function PlayerRow({
   resolvePlayer: RosterResolver;
   roleHint?: PlayerRoleHint;
 }) {
-  const resolved = resolvePlayer(ownerName, player.name || player.raw, roleHint);
+  const resolved = preferSnapshotIdentity(player.identity, player.name || player.raw, resolvePlayer(ownerName, player.name || player.raw, roleHint));
   const replacementResolved = player.replacement
-    ? resolvePlayer(ownerName, player.replacement.name, roleHint)
+    ? preferSnapshotIdentity(player.replacement.identity, player.replacement.name, resolvePlayer(ownerName, player.replacement.name, roleHint))
     : null;
   const switchClass = player.switchType ? ` is-switch-${player.switchType}` : "";
 
