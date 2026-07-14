@@ -157,9 +157,10 @@ html[data-route="league"] .formation-shirt {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto auto auto;
   grid-template-areas:
     "role"
+    "photo"
     "name"
     "team";
   justify-items: center;
@@ -243,7 +244,7 @@ html[data-route="league"] .formation-shirt__role {
   place-items: center;
   width: 23px;
   height: 20px;
-  margin-bottom: 14px;
+  margin-bottom: 7px;
   border-radius: 999px;
   border: 0;
   color: #15382e;
@@ -252,6 +253,24 @@ html[data-route="league"] .formation-shirt__role {
   font-weight: 900;
   line-height: 1;
 }
+
+html[data-route="league"] .formation-shirt__photo {
+  grid-area: photo;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 6px;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,.75);
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  box-shadow: 0 3px 8px rgba(5,28,21,.18);
+}
+
+html[data-route="league"] .formation-shirt__photo[hidden] { display: none; }
+html[data-route="league"] .formation-shirt__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+html[data-route="league"] .formation-shirt__photo img.is-crest { padding: 5px; object-fit: contain; object-position: center; background: rgba(255,255,255,.94); }
 
 html[data-route="league"] .formation-shirt__name,
 html[data-route="league"] .formation-shirt__team {
@@ -369,6 +388,15 @@ html[data-route="league"] #mobileBenchSlots .formation-shirt--empty {
   color: #83938d;
   background: rgba(88, 104, 98, .14);
   border-color: rgba(128, 145, 138, .32);
+  box-shadow: none;
+}
+
+html[data-route="league"] #benchSlots .formation-shirt__photo,
+html[data-route="league"] #mobileBenchSlots .formation-shirt__photo {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 4px;
+  border-width: 1px;
   box-shadow: none;
 }
 
@@ -962,6 +990,13 @@ html[data-route="league"] .output-select-all-btn:disabled {
     margin-bottom: 9px;
     font-size: .56rem;
   }
+  html[data-route="league"] #mobileStartersSlots .formation-shirt__photo {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 3px;
+    border-width: 1px;
+    box-shadow: none;
+  }
   html[data-route="league"] #mobileStartersSlots .formation-shirt__name {
     font-size: clamp(.66rem, 2.35vw, .80rem);
     line-height: 1.06;
@@ -991,6 +1026,11 @@ html[data-route="league"] .output-select-all-btn:disabled {
     height: 16px;
     margin-bottom: 7px;
     font-size: .5rem;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt__photo {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 2px;
   }
   html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt__name {
     font-size: clamp(.54rem, 1.98vw, .66rem);

@@ -4,3 +4,5 @@
 dashboard/node_modules/
 node_modules/
 .lineup-runtime/
+.env.local
+.env.*.local

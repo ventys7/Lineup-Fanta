@@ -5,14 +5,14 @@ function splitGoalkeepers(name: string) {
   return name.split(/\s+-\s+/).map((part) => part.trim()).filter(Boolean);
 }
 
-export function GoalkeeperBlock({ asset, expanded, onToggle }: { asset: DashboardAsset; expanded: boolean; onToggle: () => void }) {
+export function GoalkeeperBlock({ asset, expanded, onToggle, crestUrl }: { asset: DashboardAsset; expanded: boolean; onToggle: () => void; crestUrl?: string }) {
   const players = splitGoalkeepers(asset.displayName);
 
   return (
     <div>
       <button type="button" onClick={onToggle} className="tw-hidden tw-w-full tw-grid-cols-12 tw-gap-4 tw-px-6 tw-py-4 tw-text-left tw-transition hover:tw-bg-slate-50 md:tw-grid">
         <div className="tw-col-span-4 tw-flex tw-min-w-0 tw-items-center tw-gap-3">
-          <div className="lf-player-avatar"><ShieldIcon size={22} /></div>
+          <div className={`lf-player-avatar ${crestUrl ? "has-photo lf-player-avatar--crest" : ""}`}>{crestUrl ? <img src={crestUrl} alt="" loading="lazy" /> : <ShieldIcon size={22} />}</div>
           <div className="tw-min-w-0">
             <div className="tw-truncate tw-font-semibold tw-text-slate-900">Blocco {asset.realTeam || asset.displayName}</div>
             <div className="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-text-slate-500">
@@ -28,7 +28,7 @@ export function GoalkeeperBlock({ asset, expanded, onToggle }: { asset: Dashboar
       </button>
 
       <button type="button" onClick={onToggle} className="tw-flex tw-w-full tw-items-start tw-gap-3 tw-p-3 tw-text-left tw-transition hover:tw-bg-slate-50 md:tw-hidden">
-        <div className="lf-player-avatar lf-player-avatar--mobile"><ShieldIcon size={22} /></div>
+        <div className={`lf-player-avatar lf-player-avatar--mobile ${crestUrl ? "has-photo lf-player-avatar--crest" : ""}`}>{crestUrl ? <img src={crestUrl} alt="" loading="lazy" /> : <ShieldIcon size={22} />}</div>
         <div className="tw-min-w-0 tw-flex-1">
           <div className="tw-flex tw-items-center tw-gap-2"><span className="lf-role-badge lf-role-badge--p">P</span><strong className="tw-truncate tw-text-slate-900">Blocco {asset.realTeam || asset.displayName}</strong></div>
           <div className="tw-mt-1 tw-flex tw-items-center tw-gap-1 tw-text-xs tw-text-slate-500">{players.length} portieri <ChevronDownIcon size={14} className={`tw-transition ${expanded ? "tw-rotate-180" : ""}`} /></div>

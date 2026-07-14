@@ -4,6 +4,9 @@ window.LineupFixtures = (function () {
   const API_BASE = `${KICKOFF_ORIGIN}/api/lineup`;
   const CARD_ID = "kickoffFixturesCard";
   const MOBILE_QUERY = window.matchMedia("(max-width: 767px)");
+  const KICKOFF_LEAGUE_IDS = Object.freeze({ fp: "47", pd: "87" });
+  const CLUB_CACHE_VERSION = 2;
+  const CLUB_CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
 
   let refreshTimer = null;
   let activePayload = null;
@@ -22,8 +25,93 @@ window.LineupFixtures = (function () {
   function crestUrl(teamId) {
     const normalizedId = String(teamId || "").trim();
     return /^\d+$/.test(normalizedId)
-      ? `${KICKOFF_ORIGIN}/api/crest/${normalizedId}?fresh=1`
+      ? `${KICKOFF_ORIGIN}/api/crest/${normalizedId}`
       : null;
+  }
+
+
+  function normalizeClubKey(value) {
+    return window.LineupClubKeys?.key(value) || String(value || "").trim().toLowerCase();
+  }
+
+  function clubCacheKey() {
+    return `lineup-fanta-kickoff-clubs-v${CLUB_CACHE_VERSION}:${getLeague()?.id || ""}`;
+  }
+
+  function readClubCache() {
+    try {
+      const value = JSON.parse(localStorage.getItem(clubCacheKey()) || "null");
+      if (!value?.clubs) return null;
+      return value;
+    } catch { return null; }
+  }
+
+  function writeClubCache(clubs) {
+    try { localStorage.setItem(clubCacheKey(), JSON.stringify({ savedAt: Date.now(), clubs })); } catch {}
+  }
+
+  function teamIdentity(raw, fallbackName = "", fallbackId = "") {
+    const object = raw && typeof raw === "object" ? raw : null;
+    const name = String(object?.shortName || object?.name || object?.title || fallbackName || "").trim();
+    const id = String(object?.id || object?.teamId || fallbackId || "").trim();
+    return name && /^\d+$/.test(id) ? { name, id } : null;
+  }
+
+  function collectClubCrests(payload) {
+    const clubs = {};
+    const add = (team) => {
+      if (!team) return;
+      const key = normalizeClubKey(team.name);
+      const url = crestUrl(team.id);
+      if (key && url) clubs[key] = { name: team.name, teamId: String(team.id), crestUrl: url };
+    };
+
+    const fixtures = [
+      ...(Array.isArray(payload?.fixtures) ? payload.fixtures : []),
+      ...(Array.isArray(payload?.events) ? payload.events : []),
+      ...(Array.isArray(payload?.deadline?.matches) ? payload.deadline.matches : [])
+    ];
+
+    fixtures.forEach((fixture) => {
+      add(teamIdentity(fixture.homeTeam || fixture.home, fixture.homeName || fixture.home, fixture.homeTeamId || fixture.homeId));
+      add(teamIdentity(fixture.awayTeam || fixture.away, fixture.awayName || fixture.away, fixture.awayTeamId || fixture.awayId));
+    });
+    return clubs;
+  }
+
+  function publishClubCrests(payloadOrClubs) {
+    const clubs = payloadOrClubs && !Array.isArray(payloadOrClubs) && Object.values(payloadOrClubs).some((value) => value?.crestUrl)
+      ? payloadOrClubs
+      : collectClubCrests(payloadOrClubs);
+    if (!Object.keys(clubs).length) return false;
+    window.LineupKickoffClubs = { ...(window.LineupKickoffClubs || {}), ...clubs };
+    writeClubCache(window.LineupKickoffClubs);
+    window.dispatchEvent(new CustomEvent("lineup:kickoff-clubs-ready", { detail: { clubs: window.LineupKickoffClubs } }));
+    return true;
+  }
+
+  async function ensureClubCrests(lineupPayload) {
+    const cached = readClubCache();
+    if (cached?.clubs) publishClubCrests(cached.clubs);
+    const fromLineup = collectClubCrests(lineupPayload);
+    if (Object.keys(fromLineup).length >= 16) {
+      publishClubCrests(fromLineup);
+      return;
+    }
+    if (cached?.clubs && Date.now() - Number(cached.savedAt || 0) < CLUB_CACHE_MAX_AGE && Object.keys(cached.clubs).length >= 16) return;
+
+    const providerLeagueId = KICKOFF_LEAGUE_IDS[getLeague()?.id];
+    if (!providerLeagueId) return;
+    try {
+      const response = await fetch(`${KICKOFF_ORIGIN}/api/league/${providerLeagueId}`, {
+        method: "GET",
+        mode: "cors",
+        cache: "default",
+        headers: { Accept: "application/json" }
+      });
+      if (!response.ok) return;
+      publishClubCrests(await response.json());
+    } catch {}
   }
 
   function formatDate(iso) {
@@ -296,6 +384,8 @@ window.LineupFixtures = (function () {
 
     const endpoint = getEndpoint();
     if (!endpoint) return;
+    const cachedClubs = readClubCache();
+    if (cachedClubs?.clubs) publishClubCrests(cachedClubs.clubs);
 
     try {
       const response = await fetch(endpoint, {
@@ -306,7 +396,9 @@ window.LineupFixtures = (function () {
       });
 
       if (!response.ok) return;
-      render(await response.json());
+      const payload = await response.json();
+      void ensureClubCrests(payload);
+      render(payload);
     } catch (error) {
       // Contextual only: formation building must keep working if Kick-off is unavailable.
       console.info("Kick-off fixtures unavailable", error?.message || error);

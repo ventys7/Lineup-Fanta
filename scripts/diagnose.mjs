@@ -27,7 +27,20 @@ async function checkRequiredFiles() {
     "assets/dashboard/dashboard.css",
     "data/fp/teams.json",
     "data/pd/teams.json",
-    "dashboard/src/main.tsx"
+    "dashboard/src/main.tsx",
+    "fp/admin-links/index.html",
+    "pd/admin-links/index.html",
+    "js/admin-links.js",
+    "css/admin-links.css",
+    "js/club-keys.js",
+    "js/player-media.js",
+    "api/settings.js",
+    "api/admin.js",
+    "api/team-logo.js",
+    "api/discipline.js",
+    "api/player-media.js",
+    "lib/storage.cjs",
+    "data/settings.json"
   ];
   const missing = [];
   for (const file of required) if (!(await exists(file))) missing.push(file);
@@ -36,7 +49,7 @@ async function checkRequiredFiles() {
 }
 
 async function checkJson() {
-  for (const file of ["data/fp/teams.json", "data/pd/teams.json", "package.json", "dashboard/package.json", "dashboard/tsconfig.json"]) {
+  for (const file of ["data/fp/teams.json", "data/pd/teams.json", "data/settings.json", "package.json", "dashboard/package.json", "dashboard/tsconfig.json", "vercel.json"]) {
     try { JSON.parse(await read(file)); ok(`${file} valido`); }
     catch (error) { fail(`${file} non è JSON valido: ${error.message}`); }
   }
@@ -77,15 +90,22 @@ async function checkConfig() {
 }
 
 async function checkRemovedSystems() {
-  const removed = ["api", "lib", "data/matchday-links.json", "js/admin-matchday-snapshots.js", "dashboard/src/CalendarApp.tsx"];
+  const removed = [
+    "data/matchday-links.json",
+    "js/admin-matchday-snapshots.js",
+    "dashboard/src/CalendarApp.tsx",
+    "api/calendar.js",
+    "api/matchday.js",
+    "api/lineup-submissions.js"
+  ];
   const leftovers = [];
   for (const item of removed) if (await exists(item)) leftovers.push(item);
-  if (leftovers.length) fail(`Sistemi rimossi ancora presenti: ${leftovers.join(", ")}`);
-  else ok("Gestione giornate, Docs e API rimosse");
+  if (leftovers.length) fail(`Vecchi sistemi giornata ancora presenti: ${leftovers.join(", ")}`);
+  else ok("Nessuna dipendenza dal vecchio sistema giornate");
 }
 
 async function main() {
-  console.log("Lineup-Fanta · diagnosi versione essenziale\n");
+  console.log("Lineup-Fanta · diagnosi essenziale con admin e media\n");
   await checkRequiredFiles();
   await checkJson();
   await checkLeaguePages();

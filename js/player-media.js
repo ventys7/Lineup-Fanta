@@ -1,0 +1,185 @@
+(function exposePlayerMedia(global) {
+  "use strict";
+
+  const CACHE_VERSION = 7;
+  const memory = new Map();
+  const networkRequests = new Map();
+  const revalidated = new Set();
+  let assets = [];
+  let currentLeague = "";
+  let kickoffClubs = global.LineupKickoffClubs || {};
+
+  function normalize(value) {
+    return global.LineupClubKeys?.normalize(value) || String(value || "").toLowerCase().trim();
+  }
+
+  function clubKey(value) {
+    return global.LineupClubKeys?.key(value) || normalize(value);
+  }
+
+  function playerKey(name, team) {
+    return `${normalize(name)}|${clubKey(team)}`;
+  }
+
+  function cacheKey(leagueId) {
+    return `lineup-fanta-player-media-v${CACHE_VERSION}:${leagueId}`;
+  }
+
+  function readCache(leagueId) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(cacheKey(leagueId)) || "null");
+      if (!parsed || parsed.version !== CACHE_VERSION || !parsed.payload) return null;
+      return parsed;
+    } catch { return null; }
+  }
+
+  function writeCache(leagueId, payload) {
+    try {
+      localStorage.setItem(cacheKey(leagueId), JSON.stringify({ version: CACHE_VERSION, savedAt: Date.now(), payload }));
+    } catch {}
+  }
+
+  function publish(leagueId, payload) {
+    if (!leagueId || !payload) return;
+    memory.set(leagueId, payload);
+    writeCache(leagueId, payload);
+    global.dispatchEvent(new CustomEvent("lineup:player-media-ready", { detail: { leagueId, payload } }));
+  }
+
+  async function fetchManifest(leagueId, force = false) {
+    if (!force && revalidated.has(leagueId)) return memory.get(leagueId) || readCache(leagueId)?.payload || { players: {} };
+    if (!force && networkRequests.has(leagueId)) return networkRequests.get(leagueId);
+    const request = fetch(`/api/player-media?league=${encodeURIComponent(leagueId)}`, {
+      cache: force ? "reload" : "default",
+      headers: { Accept: "application/json" }
+    }).then(async (response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const payload = await response.json();
+      publish(leagueId, payload);
+      revalidated.add(leagueId);
+      return payload;
+    }).finally(() => networkRequests.delete(leagueId));
+    networkRequests.set(leagueId, request);
+    return request;
+  }
+
+  async function requestManifest(leagueId, { force = false } = {}) {
+    const cached = readCache(leagueId);
+    if (cached && !force) {
+      publish(leagueId, cached.payload);
+      // Render immediately from localStorage, then refresh the small JSON once
+      // in the background. Player images keep their immutable cache URLs.
+      void fetchManifest(leagueId, false).catch(() => {});
+      return cached.payload;
+    }
+    return fetchManifest(leagueId, force);
+  }
+
+  function unknownAssets(payload, list) {
+    const players = payload?.players || {};
+    const unknown = [];
+    list.forEach((asset) => {
+      if (!asset?.displayName || !asset?.realTeam) return;
+      if (asset.type === "goalkeeper_block") {
+        asset.displayName.split(/\s+-\s+/).map((part) => part.trim()).filter(Boolean).forEach((name) => {
+          const entry = players[playerKey(name, asset.realTeam)];
+          if (!entry || entry.status !== "resolved" || !entry.photoUrl) unknown.push(`${name}|${asset.realTeam}`);
+        });
+        return;
+      }
+      const entry = players[playerKey(asset.displayName, asset.realTeam)];
+      if (!entry || entry.status !== "resolved" || !entry.photoUrl) unknown.push(`${asset.displayName}|${asset.realTeam}`);
+    });
+    return unknown;
+  }
+
+  async function discoverNew(leagueId, list, payload) {
+    const unknown = unknownAssets(payload, list);
+    if (!unknown.length) return payload;
+    const fingerprint = unknown.sort().join("\n");
+    const sessionKey = `lineup-fanta-media-discovery:${leagueId}:${fingerprint}`;
+    if (sessionStorage.getItem(sessionKey)) return payload;
+    sessionStorage.setItem(sessionKey, String(Date.now()));
+    try {
+      let next = payload;
+      let remaining = 1;
+      let rounds = 0;
+      while (remaining > 0 && rounds < 4) {
+        const response = await fetch("/api/player-media", {
+          method: "POST",
+          cache: "no-store",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ action: "discover", leagueId })
+        });
+        if (!response.ok) break;
+        next = await response.json();
+        publish(leagueId, next);
+        remaining = Number(next.remaining || 0);
+        rounds += 1;
+        if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, 250));
+      }
+      return next;
+    } catch { return payload; }
+  }
+
+  async function load(leagueId, list) {
+    currentLeague = String(leagueId || "").toLowerCase();
+    assets = Array.isArray(list) ? list : [];
+    if (!currentLeague || !assets.length) return;
+    try {
+      const payload = await requestManifest(currentLeague);
+      await discoverNew(currentLeague, assets, payload);
+    } catch {
+      const cached = readCache(currentLeague);
+      if (cached?.payload) publish(currentLeague, cached.payload);
+    }
+  }
+
+  function payloadFor(leagueId = currentLeague) {
+    return memory.get(leagueId) || readCache(leagueId)?.payload || { players: {} };
+  }
+
+  function player(name, team, leagueId = currentLeague) {
+    return payloadFor(leagueId)?.players?.[playerKey(name, team)] || null;
+  }
+
+  function photo(name, team, leagueId = currentLeague) {
+    return player(name, team, leagueId)?.photoUrl || "";
+  }
+
+  function crest(team) {
+    const target = clubKey(team);
+    if (!target) return "";
+    if (kickoffClubs[target]?.crestUrl) return kickoffClubs[target].crestUrl;
+
+    const targetTokens = new Set(target.split(" ").filter((token) => token.length > 2 && token !== "real"));
+    let best = null;
+    let bestScore = 0;
+    Object.entries(kickoffClubs).forEach(([key, value]) => {
+      const candidate = clubKey(key || value?.name);
+      if (!candidate) return;
+      if (candidate === target || candidate.includes(target) || target.includes(candidate)) {
+        best = value;
+        bestScore = 100;
+        return;
+      }
+      const candidateTokens = new Set(candidate.split(" ").filter((token) => token.length > 2 && token !== "real"));
+      const common = [...targetTokens].filter((token) => candidateTokens.has(token)).length;
+      const score = common * 10 - Math.abs(targetTokens.size - candidateTokens.size);
+      if (score > bestScore) { bestScore = score; best = value; }
+    });
+    return bestScore >= 9 ? (best?.crestUrl || "") : "";
+  }
+
+  global.LineupPlayerMedia = Object.freeze({ clubKey, load, payload: payloadFor, photo, player, playerKey, crest });
+
+  document.addEventListener("lineup:league-assets-ready", (event) => {
+    const detail = event.detail || {};
+    if (detail.state?.status === "ready") load(detail.leagueId, detail.assets);
+  });
+
+  global.addEventListener("lineup:kickoff-clubs-ready", (event) => {
+    kickoffClubs = event.detail?.clubs || {};
+    global.dispatchEvent(new CustomEvent("lineup:player-media-ready", { detail: { leagueId: currentLeague, payload: payloadFor() } }));
+  });
+})(window);

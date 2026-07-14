@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "leagues": {
+    "fp": {
+      "listoneCsvUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vR1qCSKkMUZ6W_-_OG8qjTYEQTwF4aPqgtg3XjOGqphRHRDlnFynozJsC0t6WeFjY8XCXjr-R1ZVaww/pub?gid=556989324&single=true&output=csv",
+      "standingsCsvUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSE2UP5Dh4Syl3yW__nqfh6OAG7CpR4ZzBCZxDK3d9SmQeHX6YbdtsYCSsOfYh0F7RzjYV49LQKVFNe/pub?gid=0&single=true&output=csv",
+      "disciplineDocUrl": "https://docs.google.com/document/d/e/2PACX-1vSw6-UW_wayVgqpQI5Ex4BzgK5ood_zyaI27dAg8vUF9_C1wk86Eb6rgC9m3NB1-I2TCvTf_OJNCzOl/pub"
+    },
+    "pd": {
+      "listoneCsvUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSlE8BNQI1bOPsOlg2aO7TTHr0RpJD9rCj_EP3QRpsBho6D3s_ZCtmMibhbjx0Ehc5jexbagbf_t9j0/pub?gid=1583604307&single=true&output=csv",
+      "standingsCsvUrl": "",
+      "disciplineDocUrl": ""
+    }
+  }
+}

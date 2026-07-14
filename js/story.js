@@ -113,6 +113,67 @@ window.LineupStory = (function () {
     return usedSize;
   }
 
+
+  function photoKey(player) {
+    if (!player?.n || !player?.t || player.isTeamLabel) return "";
+    return window.LineupPlayerMedia?.playerKey?.(player.n, player.t) || `${String(player.n).toLowerCase()}|${String(player.t).toLowerCase()}`;
+  }
+
+  function loadPhoto(url) {
+    return new Promise((resolve) => {
+      if (!url) return resolve(null);
+      const image = new Image();
+      const timer = window.setTimeout(() => resolve(null), 5000);
+      image.crossOrigin = "anonymous";
+      image.decoding = "async";
+      image.onload = () => { window.clearTimeout(timer); resolve(image); };
+      image.onerror = () => { window.clearTimeout(timer); resolve(null); };
+      image.src = url;
+    });
+  }
+
+  async function preloadPhotos(model) {
+    const leagueId = window.LINEUP_FANTA?.league?.id || "";
+    const players = [];
+    model.definitions.starter.forEach((definition) => {
+      const player = model.slots.starter[definition.id]?.player;
+      if (photoKey(player)) players.push(player);
+    });
+    model.definitions.bench.forEach((definition) => {
+      const player = window.FormationModel.getBenchDisplayEntry(model, definition)?.player;
+      if (photoKey(player)) players.push(player);
+    });
+
+    const unique = new Map(players.map((player) => [photoKey(player), player]));
+    const photos = new Map();
+    await Promise.all([...unique.entries()].map(async ([key, player]) => {
+      const url = window.LineupPlayerMedia?.photo?.(player.n, player.t, leagueId) || "";
+      const image = await loadPhoto(url);
+      if (image) photos.set(key, image);
+    }));
+    return photos;
+  }
+
+  function playerPhoto(photos, player) {
+    const key = photoKey(player);
+    return key ? photos.get(key) || null : null;
+  }
+
+  function drawCoverImage(ctx, image, x, y, size, radius = size / 2) {
+    if (!image) return;
+    const sourceWidth = image.naturalWidth || image.width;
+    const sourceHeight = image.naturalHeight || image.height;
+    if (!sourceWidth || !sourceHeight) return;
+    const sourceSize = Math.min(sourceWidth, sourceHeight);
+    const sourceX = (sourceWidth - sourceSize) / 2;
+    const sourceY = Math.max(0, (sourceHeight - sourceSize) * 0.22);
+    ctx.save();
+    roundRect(ctx, x, y, size, size, radius);
+    ctx.clip();
+    ctx.drawImage(image, sourceX, sourceY, sourceSize, sourceSize, x, y, size, size);
+    ctx.restore();
+  }
+
   function drawPitch(ctx) {
     const gradient = ctx.createLinearGradient(PITCH.x, PITCH.y, PITCH.x, PITCH.y + PITCH.height);
     gradient.addColorStop(0, "#397a65");
@@ -150,7 +211,7 @@ window.LineupStory = (function () {
     ctx.restore();
   }
 
-  function drawShirt(ctx, { x, y, width, height, player, role }) {
+  function drawShirt(ctx, { x, y, width, height, player, role, photo = null }) {
     const selected = Boolean(player && !player.isTeamLabel);
     const roleStyle = ROLE_COLORS[role] || ROLE_COLORS.C;
 
@@ -175,8 +236,14 @@ window.LineupStory = (function () {
     fillRounded(ctx, x - 12, y + 20, 24, 45, 11, ctx.fillStyle);
     fillRounded(ctx, x + width - 12, y + 20, 24, 45, 11, ctx.fillStyle);
 
-    fillRounded(ctx, x + width / 2 - 19, y + 14, 38, 32, 16, roleStyle.fill);
-    centeredText(ctx, role, x + width / 2, y + 30, { size: 18, weight: 900, color: roleStyle.ink });
+    const roleCenterX = photo ? x + width - 27 : x + width / 2;
+    fillRounded(ctx, roleCenterX - 19, y + 14, 38, 32, 16, roleStyle.fill);
+    centeredText(ctx, role, roleCenterX, y + 30, { size: 18, weight: 900, color: roleStyle.ink });
+
+    if (photo) {
+      fillRounded(ctx, x + 13, y + 12, 46, 46, 23, "rgba(255,255,255,.94)", "rgba(255,255,255,.85)", 2);
+      drawCoverImage(ctx, photo, x + 15, y + 14, 42);
+    }
 
     const name = selected ? player.n || "Giocatore" : "Scegli";
     const team = selected ? player.t || "" : "";
@@ -184,7 +251,8 @@ window.LineupStory = (function () {
     font(ctx, 850, nameSize);
     const nameLines = wrapWords(ctx, name, width - 20, 2);
     const lineHeight = nameSize * 1.08;
-    const nameStart = y + 69 - ((nameLines.length - 1) * lineHeight) / 2;
+    const baseNameY = photo ? y + 83 : y + 69;
+    const nameStart = baseNameY - ((nameLines.length - 1) * lineHeight) / 2;
 
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
@@ -195,17 +263,13 @@ window.LineupStory = (function () {
       const teamSize = fitFont(ctx, team, width - 20, 15, 11, 650);
       font(ctx, 650, teamSize);
       ctx.fillStyle = "rgba(255,255,255,.78)";
-
-      // Keep the team close to the final line of the player's name,
-      // whether the name uses one or two rows.
       const lastNameLineY = nameStart + (nameLines.length - 1) * lineHeight;
-      const teamY = lastNameLineY + 27;
-      ctx.fillText(team, x + width / 2, teamY);
+      ctx.fillText(team, x + width / 2, Math.min(y + height - 14, lastNameLineY + 27));
     }
     ctx.restore();
   }
 
-  function drawStarterRows(ctx, model) {
+  function drawStarterRows(ctx, model, photos) {
     const byRole = { P: [], D: [], C: [], A: [] };
     model.definitions.starter.forEach((definition) => {
       byRole[definition.role].push({
@@ -234,36 +298,43 @@ window.LineupStory = (function () {
       let x = PITCH.x + (PITCH.width - rowWidth) / 2;
 
       entries.forEach((entry) => {
-        drawShirt(ctx, { x, y, width, height, player: entry.player, role });
+        drawShirt(ctx, { x, y, width, height, player: entry.player, role, photo: playerPhoto(photos, entry.player) });
         x += width + gap;
       });
     });
   }
 
-  function drawBenchCard(ctx, { x, y, width, height, role, player }) {
-    const active = Boolean(player && !player.isTeamLabel);
+  function drawBenchCard(ctx, { x, y, width, height, role, player, photo = null }) {
+    const active = Boolean(player?.n);
     fillRounded(ctx, x, y, width, height, 13, active ? "rgba(255,255,255,.95)" : "rgba(209,225,218,.28)", "rgba(255,255,255,.22)", 1);
     fillRounded(ctx, x + 11, y + 11, 30, height - 22, 9, ROLE_COLORS[role]?.fill || "#b4c9c0");
     centeredText(ctx, role, x + 26, y + height / 2, { size: 15, weight: 900, color: ROLE_COLORS[role]?.ink || "#173d32" });
 
+    let textX = x + 52;
+    if (photo && !player?.isTeamLabel) {
+      fillRounded(ctx, x + 49, y + 8, height - 16, height - 16, (height - 16) / 2, "#edf3f0");
+      drawCoverImage(ctx, photo, x + 51, y + 10, height - 20);
+      textX = x + height + 38;
+    }
+
     const name = player?.n || "—";
-    const max = width - 62;
-    const size = fitFont(ctx, name, max, 18, 12, 800);
+    const max = width - (textX - x) - 12;
+    const size = fitFont(ctx, name, max, 18, 11, 800);
     font(ctx, 800, size);
     ctx.fillStyle = active ? "#173d32" : "rgba(23,61,50,.55)";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(name, x + 52, y + height / 2 - (player?.t ? 8 : 0));
+    ctx.fillText(name, textX, y + height / 2 - (player?.t && !player.isTeamLabel ? 8 : 0));
 
     if (player?.t && !player.isTeamLabel) {
       const teamSize = fitFont(ctx, player.t, max, 12, 9, 650);
       font(ctx, 650, teamSize);
       ctx.fillStyle = "#71877e";
-      ctx.fillText(player.t, x + 52, y + height / 2 + 12);
+      ctx.fillText(player.t, textX, y + height / 2 + 12);
     }
   }
 
-  function drawBench(ctx, model) {
+  function drawBench(ctx, model, photos) {
     const titleY = 1462;
     centeredText(ctx, "PANCHINA", WIDTH / 2, titleY, { size: 20, weight: 900, color: "rgba(237,255,246,.76)" });
 
@@ -274,7 +345,7 @@ window.LineupStory = (function () {
     const keeperGap = 18;
     const keeperX = (WIDTH - (keeperWidth * 2 + keeperGap)) / 2;
     keepers.forEach((player, index) => {
-      drawBenchCard(ctx, { x: keeperX + index * (keeperWidth + keeperGap), y: 1494, width: keeperWidth, height: keeperHeight, role: "P", player });
+      drawBenchCard(ctx, { x: keeperX + index * (keeperWidth + keeperGap), y: 1494, width: keeperWidth, height: keeperHeight, role: "P", player, photo: playerPhoto(photos, player) });
     });
 
     const columns = ["D", "C", "A"];
@@ -293,7 +364,8 @@ window.LineupStory = (function () {
           width: cardWidth,
           height: cardHeight,
           role,
-          player
+          player,
+          photo: playerPhoto(photos, player)
         });
       });
     });
@@ -365,7 +437,8 @@ window.LineupStory = (function () {
     });
   }
 
-  function renderCanvas(model) {
+  async function renderCanvas(model) {
+    const photos = await preloadPhotos(model);
     const canvas = document.createElement("canvas");
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
@@ -388,9 +461,9 @@ window.LineupStory = (function () {
 
     drawHeader(ctx, model);
     drawPitch(ctx);
-    drawStarterRows(ctx, model);
+    drawStarterRows(ctx, model, photos);
     drawSwitch(ctx, model.switchPair);
-    drawBench(ctx, model);
+    drawBench(ctx, model, photos);
     drawFooter(ctx);
 
     return canvas;
@@ -446,7 +519,7 @@ window.LineupStory = (function () {
 
     try {
       await new Promise((resolve) => requestAnimationFrame(resolve));
-      const canvas = renderCanvas(model);
+      const canvas = await renderCanvas(model);
       const blob = await canvasToBlob(canvas);
 
       if (currentUrl) URL.revokeObjectURL(currentUrl);

@@ -23,7 +23,20 @@ function showGkChoiceModal(blockName, { mode = "desktop" } = {}) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "gk-choice-btn";
-    button.textContent = player.n;
+    const photo = document.createElement("span");
+    photo.className = "gk-choice-btn__photo";
+    const photoUrl = window.LineupPlayerMedia?.photo(player.n, player.t);
+    if (photoUrl) {
+      const image = document.createElement("img");
+      image.src = photoUrl;
+      image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
+      photo.appendChild(image);
+    } else photo.textContent = "P";
+    const label = document.createElement("span");
+    label.textContent = player.n;
+    button.append(photo, label);
     button.addEventListener("click", () => {
       if (gkModalMode === "mobile") {
         confirmGkSelectionMobile(index);

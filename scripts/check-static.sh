@@ -9,7 +9,7 @@ if ! command -v node >/dev/null 2>&1; then
   exit 1
 fi
 
-for file in js/*.js; do
+for file in js/*.js api/*.js lib/*.cjs; do
   node --check "$file"
 done
 
@@ -41,6 +41,9 @@ for required in (
         raise SystemExit("Dashboard React incompleta: " + required)
 
 json.loads(Path("vercel.json").read_text(encoding="utf-8"))
+for required in ("fp/admin-links/index.html", "pd/admin-links/index.html", "css/admin-links.css", "js/admin-links.js", "js/club-keys.js", "js/player-media.js", "data/settings.json"):
+    if not Path(required).is_file():
+        raise SystemExit("Pannello/configurazione incompleti: " + required)
 PYCHECK
 
 node scripts/generate-route-pages.mjs --check

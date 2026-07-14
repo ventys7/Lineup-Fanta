@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="it" data-league="fp">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#7c3aed">
+  <title>Admin Links · PianginaCUP</title>
+  <link rel="stylesheet" href="/css/admin-links.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="admin-header">
+      <div><p>PIANGINACUP</p><h1>Admin Links</h1></div>
+      <a href="/fp/">Torna alla lega</a>
+    </header>
+    <section id="loginView" class="admin-card admin-login">
+      <h2>Accesso</h2>
+      <p>Usa la password configurata in <code>ADMIN_LINKS_PASSWORD_HASH</code>.</p>
+      <form id="loginForm"><label>Password<input id="adminPassword" type="password" autocomplete="current-password" required></label><button type="submit">Accedi</button></form>
+    </section>
+    <div id="adminView" hidden>
+      <div class="admin-actions"><button id="saveSettings" type="button">Salva collegamenti</button><button id="logoutButton" class="secondary" type="button">Esci</button></div>
+      <section id="leagueSettings" class="admin-card"></section>
+      <section class="admin-card">
+        <div class="admin-section-title"><div><p>ACCESSO MANAGER</p><h2>Codici stemma</h2></div><span>Ogni codice modifica soltanto la sua fantasquadra.</span></div>
+        <div id="logoCodes" class="code-grid"></div>
+      </section>
+      <section class="admin-card">
+        <div class="admin-section-title"><div><p>API-FOOTBALL</p><h2>Foto giocatori</h2></div><button id="mediaRefresh" class="secondary" type="button">Sincronizza foto</button></div>
+        <div id="mediaStatus" class="media-status">Caricamento stato…</div>
+        <div id="unresolvedPlayers" class="unresolved-grid"></div>
+      </section>
+    </div>
+    <p id="adminFeedback" class="admin-feedback" role="status" aria-live="polite"></p>
+  </main>
+  <script src="/js/admin-links.js"></script>
+</body>
+</html>

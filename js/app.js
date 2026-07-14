@@ -23,5 +23,12 @@ if (window.LINEUP_FANTA?.route === "league") {
   window.LineupFixtures?.setup?.();
   setupSwitchListeners();
   setupModalClickOutside();
+  window.addEventListener("lineup:player-media-ready", (event) => {
+    const leagueId = window.LINEUP_FANTA?.league?.id;
+    if (event.detail?.leagueId && event.detail.leagueId !== leagueId) return;
+    if (currentManager) renderRoster();
+    renderFormation();
+    if (isMobile && typeof renderMobileSlots === "function") renderMobileSlots();
+  });
   loadCSV();
 }

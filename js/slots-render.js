@@ -12,6 +12,9 @@ function createFormationSlotVisual(role, entry, { compact = false } = {}) {
   roleBadge.className = "formation-shirt__role";
   roleBadge.textContent = role;
 
+  const portrait = document.createElement("span");
+  portrait.className = "formation-shirt__photo";
+
   const name = document.createElement("span");
   name.className = "formation-shirt__name";
 
@@ -20,15 +23,32 @@ function createFormationSlotVisual(role, entry, { compact = false } = {}) {
 
   if (entry?.player) {
     shirt.classList.add("formation-shirt--selected");
-    name.textContent = entry.player.n || "Giocatore";
-    team.textContent = compact ? "" : (entry.player.t || "");
+    const player = entry.player;
+    const source = player.isTeamLabel
+      ? window.LineupPlayerMedia?.crest(player.n)
+      : window.LineupPlayerMedia?.photo(player.n, player.t);
+    if (source) {
+      const image = document.createElement("img");
+      image.src = source;
+      image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
+      if (player.isTeamLabel) image.className = "is-crest";
+      portrait.appendChild(image);
+      shirt.classList.add("formation-shirt--has-photo");
+    } else {
+      portrait.hidden = true;
+    }
+    name.textContent = player.n || "Giocatore";
+    team.textContent = compact ? "" : (player.t || "");
   } else {
     shirt.classList.add("formation-shirt--empty");
+    portrait.hidden = true;
     name.textContent = "Scegli";
     team.textContent = compact ? "" : "Tocca lo slot";
   }
 
-  shirt.append(roleBadge, name, team);
+  shirt.append(roleBadge, portrait, name, team);
   content.appendChild(shirt);
   return content;
 }

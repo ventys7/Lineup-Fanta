@@ -52,20 +52,25 @@ function normalizeProfiles(document: unknown): TeamProfiles {
 export async function loadTeamProfiles(leagueId: string, configuredUrl?: string): Promise<TeamProfiles> {
   if (!leagueId) return {};
 
-  const baseUrl = configuredUrl
-    || `/data/${encodeURIComponent(leagueId)}/teams.json`;
+  try {
+    const response = await fetch(`/api/settings?league=${encodeURIComponent(leagueId)}&_lf=${Date.now()}`, {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache, no-store, max-age=0", "Pragma": "no-cache" }
+    });
+    if (response.ok) {
+      const payload = await response.json();
+      return normalizeProfiles({ teams: payload.teams });
+    }
+  } catch {}
+
+  const baseUrl = configuredUrl || `/data/${encodeURIComponent(leagueId)}/teams.json`;
   const separator = baseUrl.includes("?") ? "&" : "?";
   const url = `${baseUrl}${separator}_lf=${Date.now()}`;
   const response = await fetch(url, {
     cache: "no-store",
-    headers: {
-      "Cache-Control": "no-cache, no-store, max-age=0",
-      "Pragma": "no-cache"
-    }
+    headers: { "Cache-Control": "no-cache, no-store, max-age=0", "Pragma": "no-cache" }
   });
-
   if (response.status === 404) return {};
   if (!response.ok) throw new Error(`Impossibile caricare i profili rose: HTTP ${response.status}`);
-
   return normalizeProfiles(await response.json());
 }

@@ -225,6 +225,13 @@
 .lf-squad-avatar--c { border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.1); color: #15803d; }
 .lf-squad-avatar--a { border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.09); color: #b91c1c; }
 
+.lf-squad-avatar.has-photo { overflow: hidden; padding: 0; background: #eef3f1; }
+.lf-squad-avatar.has-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.lf-squad-avatar.has-photo img.is-crest { padding: 5px; object-fit: contain; object-position: center; background: #fff; }
+.lf-squad-club-crest { width: 14px; height: 14px; flex: 0 0 14px; object-fit: contain; }
+.lf-squad-goalkeeper__avatar.has-photo { overflow: hidden; padding: 0; }
+.lf-squad-goalkeeper__avatar.has-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+
 .lf-squad-item__copy { min-width: 0; }
 .lf-squad-item__name { display: flex; min-width: 0; align-items: center; gap: 5px; overflow: hidden; color: #314039; font-size: 12px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
 .lf-squad-item__name svg { flex: 0 0 auto; color: #87948f; transition: transform 160ms ease; }
@@ -673,5 +680,171 @@
 @media (max-width: 767px) {
   .lf-teams-grid {
     padding-top: 10px;
+  }
+}
+
+.lf-team-card__avatar--editable { position: relative; padding: 0; border: 2px solid var(--primary-border); cursor: pointer; font: inherit; }
+.lf-team-card__avatar--editable:focus-visible { outline: 3px solid color-mix(in srgb, var(--primary) 25%, transparent); outline-offset: 3px; }
+.lf-team-card__avatar-edit { position: absolute; right: -4px; bottom: -3px; display: flex; width: 20px; height: 20px; align-items: center; justify-content: center; border: 2px solid #fff; border-radius: 999px; background: var(--primary); color: #fff; font-size: 9px; }
+.lf-logo-dialog { position: fixed; top: 50%; left: 50%; right: auto; bottom: auto; width: min(410px, calc(100% - 24px)); max-height: calc(100dvh - 24px); margin: 0; padding: 0; overflow: auto; border: 0; border-radius: 18px; box-shadow: 0 28px 80px rgba(20, 34, 28, .25); transform: translate(-50%, -50%); }
+.lf-logo-dialog:not([open]) { display: none; }
+.lf-logo-dialog::backdrop { background: rgba(19, 30, 26, .54); backdrop-filter: blur(3px); }
+.lf-logo-dialog__head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #e7ece9; }
+.lf-logo-dialog__head small { color: var(--primary); font-size: 9px; font-weight: 950; letter-spacing: .1em; }
+.lf-logo-dialog__head h3 { margin: 3px 0 0; color: #24322d; font-size: 18px; }
+.lf-logo-dialog__head button { width: 34px; height: 34px; border: 0; border-radius: 10px; background: #f2f5f3; color: #63716b; cursor: pointer; font-size: 20px; }
+.lf-logo-dialog__preview { display: flex; width: 118px; height: 118px; margin: 22px auto 16px; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--primary-border); border-radius: 999px; background: var(--primary-bg); color: var(--primary); font-size: 36px; font-weight: 950; }
+.lf-logo-dialog__preview img { width: 100%; height: 100%; object-fit: contain; }
+.lf-logo-file, .lf-logo-code { display: grid; gap: 6px; margin: 12px 20px; color: #65736d; font-size: 11px; font-weight: 900; }
+.lf-logo-file input, .lf-logo-code input { min-height: 42px; padding: 9px 11px; border: 1px solid #dce5e1; border-radius: 10px; background: #fafcfb; }
+.lf-logo-dialog__status { margin: 8px 20px 0; color: #bc3535; font-size: 11px; font-weight: 800; }
+.lf-logo-dialog__save { display: block; width: calc(100% - 40px); min-height: 44px; margin: 16px 20px 0; border: 0; border-radius: 11px; background: var(--primary); color: #fff; cursor: pointer; font-weight: 950; }
+.lf-logo-dialog__save:disabled { opacity: .55; }
+.lf-logo-dialog__help { margin: 10px 20px 20px; color: #87938e; font-size: 10px; text-align: center; }
+
+/* Media polish: the player face is independent from the club crest. */
+.lf-squad-item__team {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  margin-top: 4px;
+}
+.lf-squad-item__team span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lf-squad-club-crest {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  margin-right: 1px;
+}
+.lf-team-card__avatar.has-logo img,
+.lf-logo-dialog__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/* Player identity: face above, club identity on a separate readable line. */
+.lf-squad-item__copy { min-width: 0; padding-top: 1px; }
+.lf-squad-item__team {
+  gap: 8px;
+  margin-top: 6px;
+  min-height: 16px;
+  line-height: 16px;
+}
+.lf-squad-club-crest {
+  width: 16px;
+  height: 16px;
+  flex-basis: 16px;
+}
+@media (max-width: 767px) {
+  .lf-squad-item__team { gap: 7px; margin-top: 5px; min-height: 15px; line-height: 15px; }
+  .lf-squad-club-crest { width: 15px; height: 15px; flex-basis: 15px; }
+}
+
+/* Uploaded fantasy-team marks always occupy the circular frame. */
+.lf-team-card__avatar--editable,
+.lf-team-card__avatar--editable.has-logo {
+  overflow: hidden;
+  border-radius: 999px;
+}
+.lf-team-card__avatar--editable.has-logo img,
+.lf-logo-dialog__preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.035);
+}
+
+/* Rose: separazione netta tra faccia del calciatore e crest del club. */
+.lf-squad-item__team {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+.lf-squad-item__team span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lf-squad-item__team--block {
+  gap: 0;
+  color: #8a9692;
+}
+
+.lf-squad-club-crest {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  object-fit: contain;
+}
+
+.lf-squad-block-crest {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 5px;
+  border: 1px solid rgba(234, 179, 8, .28);
+  border-radius: 10px;
+  background: rgba(250, 204, 21, .12);
+  color: #8a6300;
+}
+
+.lf-squad-block-crest.has-crest {
+  border-color: #dfe7e3;
+  background: #fff;
+}
+
+.lf-squad-block-crest img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.lf-squad-goalkeepers {
+  margin: 4px 0 6px 17px;
+  padding: 5px 0 5px 14px;
+}
+
+.lf-squad-goalkeeper {
+  min-height: 34px;
+  gap: 9px;
+}
+
+.lf-squad-goalkeeper__avatar {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+}
+
+@media (max-width: 767px) {
+  .lf-squad-club-crest {
+    width: 15px;
+    height: 15px;
+    flex-basis: 15px;
+  }
+
+  .lf-squad-block-crest {
+    width: 31px;
+    height: 31px;
+    flex-basis: 31px;
+    padding: 4px;
   }
 }

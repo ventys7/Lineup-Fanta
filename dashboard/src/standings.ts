@@ -216,8 +216,8 @@ export function parseStandingsCsv(csvText: string): StandingsData {
 
         const penaltyTeam = String(row[penaltyNameIndex] ?? "").trim();
         const penalty = parseNumber(row[penaltyValueIndex]);
-        if (penaltyTeam && penalty !== null && penalty > 0) {
-          penaltyByTeam.set(normalizeTeamKey(penaltyTeam), penalty);
+        if (penaltyTeam && penalty !== null && penalty !== 0) {
+          penaltyByTeam.set(normalizeTeamKey(penaltyTeam), Math.abs(penalty));
         }
       }
     }
