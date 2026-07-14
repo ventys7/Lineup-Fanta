@@ -53,7 +53,7 @@ export async function loadTeamProfiles(leagueId: string, configuredUrl?: string)
   if (!leagueId) return {};
 
   const baseUrl = configuredUrl
-    || `/api/league-data?league=${encodeURIComponent(leagueId)}&resource=teams`;
+    || `/data/${encodeURIComponent(leagueId)}/teams.json`;
   const separator = baseUrl.includes("?") ? "&" : "?";
   const url = `${baseUrl}${separator}_lf=${Date.now()}`;
   const response = await fetch(url, {

@@ -225,7 +225,7 @@ window.LineupFixtures = (function () {
 
     const card = makeElement("section", "kickoff-fixtures-card");
     card.id = CARD_ID;
-    card.setAttribute("aria-label", "Calendario della giornata");
+    card.setAttribute("aria-label", "Partite della giornata");
 
     const header = makeElement("div", "kickoff-fixtures-card__header");
     const competition = makeElement(

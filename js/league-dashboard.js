@@ -102,5 +102,3 @@
 
   activateSection("formation");
 })();
-
-/* STEP 6B - Calendario al posto di Giornate. */

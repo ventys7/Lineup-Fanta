@@ -27,13 +27,8 @@ type LineupLeague = {
   csvUrl: string;
   leagueData?: {
     teamProfilesUrl?: string;
-    calendarCsvUrl?: string;
-    calendarDocUrl?: string;
-    calendarExpectedMatches?: number;
-    calendarCompetitionLabel?: string;
     standingsCsvUrl?: string;
     standingsFallbackUrl?: string;
-    matchdayLinksUrl?: string;
   };
 };
 

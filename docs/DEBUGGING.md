@@ -1,152 +1,23 @@
-# Debugging di Lineup-Fanta
+# Debug locale
 
-## Controllo completo
-
-Dalla root del progetto:
+La versione essenziale è statica e non richiede API locali.
 
 ```bash
-npm run verify
-```
-
-Il comando esegue, nell'ordine:
-
-1. diagnosi dei file e della configurazione;
-2. test automatici dei parser CSV, Calendario e giornata;
-3. typecheck TypeScript;
-4. build Vite;
-5. rigenerazione delle route statiche;
-6. controllo statico del progetto;
-7. controllo degli errori di whitespace Git.
-
-## Server locale corretto
-
-```bash
+npm ci
+npm --prefix dashboard ci
+npm run build
 npm run dev
 ```
 
-Usare questo server, non `python3 -m http.server`, perché espone anche le API locali `/api/calendar` e `/api/matchday`.
+Pagine:
 
-## Log dettagliati nel browser
+- `http://localhost:4173/fp/`
+- `http://localhost:4173/pd/`
 
-Aprire una pagina aggiungendo:
+Le fonti dati sono configurate in `js/config.js`:
 
-```text
-?debug=1
-```
+- `csvUrl` per Listone, Rose e lineup builder;
+- `standingsCsvUrl` e `standingsFallbackUrl` per la Classifica;
+- `teamProfilesUrl` per loghi e dati delle fantasquadre.
 
-Esempio:
-
-```text
-http://localhost:4173/fp/?debug=1
-```
-
-I messaggi hanno prefissi come:
-
-```text
-[Lineup:bootstrap]
-[Lineup:calendar]
-[Lineup:matchday-detail]
-[Lineup:resolver]
-```
-
-Per mantenere il debug attivo senza parametro URL:
-
-```js
-localStorage.setItem("lineup:debug", "1")
-```
-
-Per disattivarlo:
-
-```js
-localStorage.removeItem("lineup:debug")
-```
-
-## Dove cercare i problemi
-
-- Formazione vanilla: `js/`
-- Parsing CSV: `js/csv-parser.js`
-- Conversione CSV → database Formazione: `js/csv-formation-db.js`
-- Dashboard React: `dashboard/src/`
-- Calendario React: `dashboard/src/calendar/`
-- Resolver giocatori: `dashboard/src/playerResolver/`
-- Stili dettaglio partita: `dashboard/src/styles/match-detail/`
-- Parser server-side: `lib/`
-- API Vercel: `api/`
-- Server locale: `scripts/dev-server.mjs`
-
-## Regola sui file generati
-
-I sorgenti React/CSS sono dentro `dashboard/src/`. I file:
-
-```text
-assets/dashboard/dashboard.js
-assets/dashboard/dashboard.css
-```
-
-sono generati dalla build e devono essere aggiornati prima del commit:
-
-```bash
-npm run build
-```
-
-## Errori tipici
-
-### Calendario visibile ma dettaglio non disponibile
-
-Controllare:
-
-- `data/matchday-links.json`;
-- URL pubblicato del Google Doc;
-- console con `?debug=1`;
-- risposta di `/api/matchday?...`.
-
-### Crediti non aggiornati
-
-Controllare nel CSV:
-
-- nomi in colonna O;
-- crediti in colonna P;
-- dati dalla riga 8;
-- corrispondenza del nome con il `Tag` della rosa.
-
-### Giocatore non riconosciuto
-
-Il resolver prova:
-
-1. rosa corrente;
-2. Listone completo;
-3. ruolo atteso;
-4. nome esatto, iniziale+cognome e acronimi noti.
-
-Attivare `?debug=1` per vedere i tentativi e il punteggio di risoluzione.
-
-## Dati dinamici e Vercel Blob
-
-Il pannello amministrativo non modifica più GitHub. I dati variabili sono letti tramite:
-
-```text
-/api/league-data?league=fp
-/api/league-data?league=pd
-```
-
-Su Vercel vengono salvati nello store Blob collegato al relativo ambiente:
-
-```text
-lineup-fanta/config/fp.json
-lineup-fanta/config/pd.json
-lineup-fanta/team-logos/fp/*
-lineup-fanta/team-logos/pd/*
-```
-
-In locale, quando non sono presenti credenziali Blob, il server usa `.lineup-runtime/`.
-Questa cartella è ignorata da Git e consente di provare salvataggi e upload senza toccare
-la Preview. I file statici dentro `data/` restano il fallback iniziale e vengono usati
-quando la configurazione dinamica non esiste ancora.
-
-Per verificare la provenienza dei dati aprire nel browser:
-
-```text
-/api/league-data?league=fp
-```
-
-Il campo `source` può valere `blob`, `local` o `repository`.
+La card Kick-off usa direttamente `https://kick-off-tau.vercel.app/api/lineup`.

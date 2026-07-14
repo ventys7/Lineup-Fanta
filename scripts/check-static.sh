@@ -45,6 +45,12 @@ PYCHECK
 
 node scripts/generate-route-pages.mjs --check
 
+if grep -Eq 'league-calendar-root|/api/matchday|/api/calendar' assets/dashboard/dashboard.js; then
+  echo "Errore: il bundle contiene ancora dipendenze del vecchio Calendario." >&2
+  exit 1
+fi
+
+
 for asset in \
   assets/identity/fp-logo.png \
   assets/identity/pd-logo.png \
@@ -68,5 +74,7 @@ if find . -maxdepth 1 -type d -name '.lineup-backup-*' -print -quit | grep -q .;
   exit 1
 fi
 
-git diff --check
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  git diff --check
+fi
 printf '✓ Controllo statico superato.\n'
