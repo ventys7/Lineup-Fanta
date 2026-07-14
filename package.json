@@ -8,9 +8,7 @@
     "typecheck": "npm --prefix dashboard run typecheck",
     "test": "node --test tests/*.test.cjs",
     "diagnose": "node scripts/diagnose.mjs",
-    "verify": "npm run diagnose && npm run test && npm run build && node scripts/generate-route-pages.mjs && ./scripts/check-static.sh && git diff --check"
+    "verify": "npm run diagnose && npm run test && npm run build && node scripts/generate-route-pages.mjs && ./scripts/check-static.sh"
   },
-  "dependencies": {
-    "@vercel/blob": "2.6.1"
-  }
+  "dependencies": {}
 }

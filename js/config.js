@@ -8,11 +8,7 @@ window.LINEUP_LEAGUES = Object.freeze({
     leagueData: Object.freeze({
       standingsCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSE2UP5Dh4Syl3yW__nqfh6OAG7CpR4ZzBCZxDK3d9SmQeHX6YbdtsYCSsOfYh0F7RzjYV49LQKVFNe/pub?gid=0&single=true&output=csv",
       standingsFallbackUrl: "/data/fp/classifica.csv",
-      calendarCsvUrl: "/data/fp/calendario.csv",
-      calendarDocUrl: "https://docs.google.com/document/d/e/2PACX-1vSwwHhS8hSRFVrlz0mwYgjzq7UG9aTEFuHd7Qh1RA4CmnXQ11bCs59I6VTsusSAxW_m88a99vyHNngH/pub",
-      calendarExpectedMatches: 4,
-      calendarCompetitionLabel: "Premier League",
-      matchdayLinksKey: "fp"
+      teamProfilesUrl: "/data/fp/teams.json"
     }),
     identity: Object.freeze({
       id: "fp",
@@ -38,12 +34,8 @@ window.LINEUP_LEAGUES = Object.freeze({
     csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSlE8BNQI1bOPsOlg2aO7TTHr0RpJD9rCj_EP3QRpsBho6D3s_ZCtmMibhbjx0Ehc5jexbagbf_t9j0/pub?gid=1583604307&single=true&output=csv",
     leagueData: Object.freeze({
       standingsCsvUrl: "",
-      standingsFallbackUrl: "",
-      calendarCsvUrl: "/data/pd/calendario.csv",
-      calendarDocUrl: "",
-      calendarExpectedMatches: 4,
-      calendarCompetitionLabel: "Liga",
-      matchdayLinksKey: "pd"
+      standingsFallbackUrl: "/data/pd/classifica.csv",
+      teamProfilesUrl: "/data/pd/teams.json"
     }),
     identity: Object.freeze({
       id: "pd",
