@@ -3,11 +3,14 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const {
+  assertPublishableManifest,
   chooseCandidate,
   clubKey,
-  collectApiFootballSquad,
-  collectApiFootballTeams,
+  collectBsdPlayers,
+  collectBsdTeams,
   isFullSyncDate,
+  isResolvedEntry,
+  keepExistingOrUnresolved,
   playerKey,
   playerPhotoUrl
 } = require("../lib/player-media.cjs");
@@ -22,43 +25,43 @@ test("media keys normalize club aliases without touching fantasy roles", () => {
   assert.equal(playerKey("João Pedro", "Chelsea"), "joao pedro|chelsea");
 });
 
-test("full image sync dates match the agreed calendar", () => {
-  assert.equal(isFullSyncDate(new Date("2026-08-15T04:00:00Z")), true);
-  assert.equal(isFullSyncDate(new Date("2026-11-15T04:00:00Z")), false);
-  assert.equal(isFullSyncDate(new Date("2027-02-03T04:00:00Z")), true);
+test("full image refresh is scheduled only twice per year", () => {
+  assert.equal(isFullSyncDate(new Date("2026-01-15T04:00:00Z")), true);
+  assert.equal(isFullSyncDate(new Date("2026-07-15T04:00:00Z")), true);
+  assert.equal(isFullSyncDate(new Date("2026-08-15T04:00:00Z")), false);
 });
 
-test("API-Football team payload is normalized into stable provider IDs", () => {
-  const teams = collectApiFootballTeams({
-    response: [
-      { team: { id: 42, name: "Arsenal", country: "England" } },
-      { team: { id: 541, name: "Real Madrid", country: "Spain" } },
-      { team: { id: 530, name: "Atletico Madrid", country: "Spain" } }
+test("BSD team payload is normalized into stable provider IDs", () => {
+  const teams = collectBsdTeams({
+    count: 3,
+    results: [
+      { id: 18, name: "Arsenal", country: "England" },
+      { id: 57, name: "Real Madrid", country: { name: "Spain" } },
+      { id: 58, name: "Atletico Madrid", country_name: "Spain" }
     ]
   });
-  assert.equal(teams.arsenal.id, "42");
-  assert.equal(teams["real madrid"].id, "541");
-  assert.equal(teams["atletico de madrid"].id, "530");
+  assert.equal(Object.values(teams).find((team) => team.key === "arsenal")?.id, "18");
+  assert.equal(Object.values(teams).find((team) => team.key === "real madrid")?.id, "57");
+  assert.equal(Object.values(teams).find((team) => team.key === "atletico de madrid")?.id, "58");
 });
 
-test("API-Football squad payload yields one face URL per player", () => {
-  const squad = collectApiFootballSquad({
-    response: [{
-      team: { id: 42, name: "Arsenal" },
-      players: [
-        { id: 2273, name: "Kepa", age: 31, number: 13, position: "Goalkeeper", photo: "https://media.api-sports.io/football/players/2273.png" },
-        { id: 157052, name: "R. Calafiori", age: 23, number: 33, position: "Defender", photo: "https://media.api-sports.io/football/players/157052.png" }
-      ]
-    }]
-  }, { id: "42", name: "Arsenal", key: "arsenal" });
+test("BSD player payload yields names and the standard portrait URL", () => {
+  const squad = collectBsdPlayers({
+    count: 2,
+    results: [
+      { id: 455, full_name: "Bukayo Saka", short_name: "B. Saka", position: "F" },
+      { id: 594, name: "Kylian Mbappé", position: "F" }
+    ]
+  }, { id: "18", name: "Arsenal", key: "arsenal" });
 
   assert.equal(squad.length, 2);
   assert.equal(squad[0].teamKey, "arsenal");
-  assert.equal(squad[1].photoUrl, playerPhotoUrl("157052"));
+  assert.deepEqual(squad[0].names, ["Bukayo Saka", "B. Saka"]);
+  assert.equal(squad[1].photoUrl, playerPhotoUrl("594"));
+  assert.equal(playerPhotoUrl("594"), "https://sports.bzzoiro.com/img/player/594/");
 });
 
-
-test("API-Football abbreviated names match the Listone only inside the same club", () => {
+test("BSD abbreviated names match the Listone only inside the same club", () => {
   const result = chooseCandidate(
     { displayName: "Riccardo Calafiori", realTeam: "Arsenal" },
     [
@@ -67,4 +70,63 @@ test("API-Football abbreviated names match the Listone only inside the same club
     ]
   );
   assert.equal(result.selected?.id, "157052");
+});
+
+test("a failed refresh preserves the previous verified Blob entry", () => {
+  const existing = {
+    key: "bukayo saka|arsenal",
+    listoneName: "Bukayo Saka",
+    realTeam: "Arsenal",
+    status: "resolved",
+    photoUrl: "https://example.public.blob.vercel-storage.com/player-faces/bsd/455/portrait.png",
+    cached: true,
+    storageVerified: true,
+    externalId: "455"
+  };
+  const next = keepExistingOrUnresolved(
+    { displayName: "Bukayo Saka", realTeam: "Arsenal" },
+    existing,
+    [],
+    "Foto BSD HTTP 503"
+  );
+  assert.equal(next.status, "resolved");
+  assert.equal(next.photoUrl, existing.photoUrl);
+  assert.equal(next.lastRefreshError, "Foto BSD HTTP 503");
+  assert.equal(isResolvedEntry(next), true);
+});
+
+test("publish validation rejects provider CDN URLs and accepts verified Blob URLs", () => {
+  const base = {
+    version: 6,
+    leagueId: "fp",
+    provider: "bsd",
+    sourceMode: "bsd-team-rosters",
+    refresh: { pending: false },
+    players: {}
+  };
+  assert.throws(() => assertPublishableManifest({
+    ...base,
+    players: {
+      bad: {
+        key: "bad",
+        listoneName: "Bad",
+        status: "resolved",
+        photoUrl: "https://sports.bzzoiro.com/img/player/455/",
+        storageVerified: true
+      }
+    }
+  }), /Foto non verificata|URL esterno vietato/);
+
+  assert.equal(assertPublishableManifest({
+    ...base,
+    players: {
+      good: {
+        key: "good",
+        listoneName: "Good",
+        status: "resolved",
+        photoUrl: "https://example.public.blob.vercel-storage.com/player-faces/bsd/455/portrait.png",
+        storageVerified: true
+      }
+    }
+  }), true);
 });

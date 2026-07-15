@@ -46,3 +46,5 @@ button:disabled { opacity: .55; cursor: wait; }
 .candidate-list img { width: 34px; height: 34px; flex: 0 0 34px; border-radius: 999px; object-fit: cover; object-position: center top; background: #edf2ef; }
 .candidate-list__identity { display: flex; min-width: 0; align-items: center; gap: 9px; }
 @media (max-width: 760px) { .code-grid { grid-template-columns: 1fr; } .admin-card { padding: 16px; border-radius: 14px; } .admin-section-title { align-items: flex-start; flex-direction: column; } .admin-header { align-items: flex-start; flex-direction: column; gap: 8px; } .unresolved-search, .unresolved-direct { flex-direction: column; } }
+.media-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+@media (max-width: 760px) { .media-actions { width: 100%; justify-content: stretch; } .media-actions button { flex: 1 1 150px; } }

@@ -1,7 +1,7 @@
 (function exposePlayerMedia(global) {
   "use strict";
 
-  const CACHE_VERSION = 7;
+  const CACHE_VERSION = 8;
   const memory = new Map();
   const networkRequests = new Map();
   const revalidated = new Set();
@@ -75,60 +75,12 @@
     return fetchManifest(leagueId, force);
   }
 
-  function unknownAssets(payload, list) {
-    const players = payload?.players || {};
-    const unknown = [];
-    list.forEach((asset) => {
-      if (!asset?.displayName || !asset?.realTeam) return;
-      if (asset.type === "goalkeeper_block") {
-        asset.displayName.split(/\s+-\s+/).map((part) => part.trim()).filter(Boolean).forEach((name) => {
-          const entry = players[playerKey(name, asset.realTeam)];
-          if (!entry || entry.status !== "resolved" || !entry.photoUrl) unknown.push(`${name}|${asset.realTeam}`);
-        });
-        return;
-      }
-      const entry = players[playerKey(asset.displayName, asset.realTeam)];
-      if (!entry || entry.status !== "resolved" || !entry.photoUrl) unknown.push(`${asset.displayName}|${asset.realTeam}`);
-    });
-    return unknown;
-  }
-
-  async function discoverNew(leagueId, list, payload) {
-    const unknown = unknownAssets(payload, list);
-    if (!unknown.length) return payload;
-    const fingerprint = unknown.sort().join("\n");
-    const sessionKey = `lineup-fanta-media-discovery:${leagueId}:${fingerprint}`;
-    if (sessionStorage.getItem(sessionKey)) return payload;
-    sessionStorage.setItem(sessionKey, String(Date.now()));
-    try {
-      let next = payload;
-      let remaining = 1;
-      let rounds = 0;
-      while (remaining > 0 && rounds < 4) {
-        const response = await fetch("/api/player-media", {
-          method: "POST",
-          cache: "no-store",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ action: "discover", leagueId })
-        });
-        if (!response.ok) break;
-        next = await response.json();
-        publish(leagueId, next);
-        remaining = Number(next.remaining || 0);
-        rounds += 1;
-        if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, 250));
-      }
-      return next;
-    } catch { return payload; }
-  }
-
   async function load(leagueId, list) {
     currentLeague = String(leagueId || "").toLowerCase();
     assets = Array.isArray(list) ? list : [];
     if (!currentLeague || !assets.length) return;
     try {
-      const payload = await requestManifest(currentLeague);
-      await discoverNew(currentLeague, assets, payload);
+      await requestManifest(currentLeague);
     } catch {
       const cached = readCache(currentLeague);
       if (cached?.payload) publish(currentLeague, cached.payload);

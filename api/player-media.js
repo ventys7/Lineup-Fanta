@@ -4,6 +4,7 @@ const { leagueId } = require("../lib/settings.cjs");
 const {
   linkManual,
   markFullSync,
+  mediaStatus,
   processFullSync,
   publicManifest,
   readManifest,
@@ -22,37 +23,35 @@ function privateNoStore(res) {
 module.exports = async function handler(req, res) {
   try {
     if (req.method === "GET") {
-      const wantsFresh = String(req.query?.fresh || "") === "1" && isAuthenticated(req);
-      if (wantsFresh) privateNoStore(res); else publicCache(res);
+      const authenticated = isAuthenticated(req);
+      const wantsFresh = String(req.query?.fresh || "") === "1" && authenticated;
+      if (wantsFresh) {
+        privateNoStore(res);
+        return res.status(200).json(await mediaStatus(req.query?.league));
+      }
+      publicCache(res);
       const id = leagueId(req.query?.league);
       return res.status(200).json(publicManifest(await readManifest(id)));
     }
 
     if (req.method !== "POST") return methodNotAllowed(res, ["GET", "POST"]);
     privateNoStore(res);
+    if (!isAuthenticated(req)) return res.status(401).json({ error: "Accesso admin richiesto" });
+
     const body = readBody(req);
     const id = leagueId(body.leagueId);
 
-    // Pubblico e idempotente: confronta soltanto i nuovi nomi del Listone con
-    // il catalogo locale. Non interroga API-Football e non consuma quota.
-    if (body.action === "discover") {
-      const synced = await syncMissing(id, { limit: 6, refreshTeams: false });
-      return res.status(200).json({ ...publicManifest(synced.manifest), remaining: synced.remaining });
-    }
-
-    if (!isAuthenticated(req)) return res.status(401).json({ error: "Accesso admin richiesto" });
-
     if (body.action === "sync-missing") {
-      const synced = await syncMissing(id, { limit: 12, refreshTeams: true });
+      const synced = await syncMissing(id, { limit: 10 });
       return res.status(200).json({ ...publicManifest(synced.manifest), remaining: synced.remaining, processed: synced.processed });
     }
     if (body.action === "full-sync") {
       await markFullSync(id);
-      const manifest = await processFullSync(id, 6);
+      const manifest = await processFullSync(id, 10);
       return res.status(200).json(publicManifest(manifest));
     }
-    if (body.action === "continue-full-sync") {
-      const manifest = await processFullSync(id, 6);
+    if (body.action === "continue-sync" || body.action === "continue-full-sync") {
+      const manifest = await processFullSync(id, 10);
       return res.status(200).json(publicManifest(manifest));
     }
     if (body.action === "search") {
@@ -62,8 +61,8 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ entry: await linkManual(id, body.key, body.candidate) });
     }
     if (body.action === "link-id") {
-      const match = String(body.externalId || "").match(/(?:player(?:s|id)?[\/=:-]*)?(\d{3,})/i);
-      if (!match) return res.status(400).json({ error: "ID API-Football non valido" });
+      const match = String(body.externalId || "").match(/(?:player(?:s|id)?[\/=:-]*)?(\d+)/i);
+      if (!match) return res.status(400).json({ error: "ID BSD non valido" });
       return res.status(200).json({ entry: await linkManual(id, body.key, { id: match[1] }) });
     }
     return res.status(400).json({ error: "Azione non riconosciuta" });

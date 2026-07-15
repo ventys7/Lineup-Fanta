@@ -22,7 +22,8 @@ Da ciascun pannello è possibile:
 - cambiare il CSV Classifica della sola lega;
 - cambiare il Docs pubblicato Richiami/Penalizzazioni;
 - generare o resettare i codici stemma delle fantasquadre;
-- avviare con un solo pulsante la sincronizzazione delle foto;
+- sincronizzare soltanto i nuovi giocatori del Listone;
+- avviare manualmente un aggiornamento completo delle foto;
 - correggere soltanto le associazioni rimaste ambigue.
 
 ## Richiami, penalizzazioni e Classifica
@@ -35,22 +36,32 @@ Le penalizzazioni del CSV Classifica restano visibili sia accanto alla fantasqua
 
 I dati fantacalcistici — ruolo, quotazione, proprietario e rosa — arrivano sempre dal CSV ufficiale.
 
-- Foto giocatori FP e PD: API-Football.
+- Foto giocatori FP e PD: BSD, usato esclusivamente dal backend come sorgente di acquisizione.
 - Crest FP e PD: manifest già esposto dalla card Kick-off.
 - Stemmi fantasquadre: modificabili dalla sezione Rose usando il codice della singola squadra, senza condividere la password admin.
 
-La prima sincronizzazione usa una richiesta rosa per club, non una richiesta per giocatore. Il catalogo viene poi confrontato localmente con il Listone. Le foto risolte vengono salvate nello storage del progetto con URL immutabili e sono riutilizzate da Listone, Rose, Formazione e output 9:16.
+Le pagine pubbliche leggono soltanto il manifest live e gli URL del Vercel Blob. Non interrogano BSD, non scaricano immagini e non modificano manifest.
 
-Il sistema mantiene un contatore condiviso FP/PD e si ferma prudenzialmente a 90 richieste API-Football giornaliere. Le immagini del CDN non aumentano questo contatore interno.
+La sincronizzazione segue un flusso atomico:
 
-Quando il Listone contiene un giocatore nuovo, la pagina pubblica prova prima il catalogo locale senza chiamare API-Football. Solo l'Admin Links può aggiornare le rose mancanti.
+1. legge il Listone della sola lega;
+2. recupera le rose BSD dei club interessati;
+3. costruisce catalogo e manifest temporanei separati;
+4. effettua il matching usando nome e club, senza usare il ruolo BSD;
+5. scarica e verifica le immagini;
+6. le salva in percorsi immutabili `player-faces/bsd/<player-id>/...`;
+7. pubblica `media/fp.json` o `media/pd.json` soltanto alla fine.
+
+Se una foto o una squadra non sono disponibili, le vecchie facce verificate restano nel manifest temporaneo. Un errore di sincronizzazione non sovrascrive il manifest live. FP e PD usano job, cataloghi e staging distinti.
+
+Il cron giornaliero controlla soltanto la presenza di nuovi giocatori. Un aggiornamento completo è pianificato il 15 gennaio e il 15 luglio, oltre al pulsante manuale dell'Admin Links.
 
 ## Avvio locale
 
 Creare `.env.local` nella root:
 
 ```env
-API_FOOTBALL_KEY=chiave_privata
+BSD_API_KEY=token_privato
 ```
 
 Il nome non deve avere il prefisso `VITE_`: la chiave deve restare server-side.
@@ -81,7 +92,7 @@ La porta può cambiare se `4173` è già occupata: usare sempre quella stampata 
 
 - `ADMIN_LINKS_PASSWORD_HASH`
 - `ADMIN_LINKS_SESSION_SECRET`
-- `API_FOOTBALL_KEY`
+- `BSD_API_KEY`
 - `BLOB_READ_WRITE_TOKEN`
 - `CRON_SECRET`, consigliata per proteggere la sincronizzazione pianificata
 - eventuali variabili già necessarie alla card Kick-off

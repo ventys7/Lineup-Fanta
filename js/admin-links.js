@@ -14,6 +14,7 @@
   const saveButton = document.getElementById("saveSettings");
   const logoutButton = document.getElementById("logoutButton");
   const mediaRefresh = document.getElementById("mediaRefresh");
+  const mediaRefreshAll = document.getElementById("mediaRefreshAll");
   const mediaStatus = document.getElementById("mediaStatus");
   const unresolvedPlayers = document.getElementById("unresolvedPlayers");
   let state = null;
@@ -124,17 +125,13 @@
     choice.type = "button";
     const identity = document.createElement("span");
     identity.className = "candidate-list__identity";
-    const image = document.createElement("img");
-    image.src = candidate.photoUrl || candidate.photoUrls?.[0] || `https://media.api-sports.io/football/players/${candidate.id}.png`;
-    image.alt = "";
-    image.loading = "lazy";
     const copy = document.createElement("span");
     const name = document.createElement("b");
     name.textContent = candidate.name;
     const team = document.createElement("span");
-    team.textContent = candidate.teamName || "Squadra non indicata";
+    team.textContent = `${candidate.teamName || "Squadra non indicata"} · ID ${candidate.id}`;
     copy.append(name, document.createElement("br"), team);
-    identity.append(image, copy);
+    identity.append(copy);
     const action = document.createElement("span");
     action.textContent = "Collega";
     choice.append(identity, action);
@@ -198,7 +195,7 @@
     const direct = document.createElement("div");
     direct.className = "unresolved-direct";
     const directInput = document.createElement("input");
-    directInput.placeholder = "ID giocatore API-Football";
+    directInput.placeholder = "ID giocatore BSD";
     const directButton = document.createElement("button");
     directButton.type = "button";
     directButton.textContent = "Collega ID";
@@ -253,33 +250,48 @@
 
   function refreshProgressText(manifest) {
     const refresh = manifest?.refresh || {};
-    const quota = Number.isFinite(Number(refresh.quotaUsed))
-      ? ` · API ${Number(refresh.quotaUsed)}/${Number(refresh.quotaLimit || 90)}`
-      : "";
-    if (!refresh.pending) return `${mediaSummaryText(manifest)}${quota}`;
+    if (!refresh.pending) {
+      const warnings = Array.isArray(refresh.warnings) && refresh.warnings.length ? ` · ${refresh.warnings.length} avvisi` : "";
+      return `${mediaSummaryText(manifest)}${warnings}`;
+    }
     if (refresh.phase === "teams") {
-      return `${mediaSummaryText(manifest)} · rose API-Football ${Number(refresh.teamCursor || 0)}/${Number(refresh.teamTotal || 0) || "…"}${quota}`;
+      return `${mediaSummaryText(manifest)} · rose BSD ${Number(refresh.teamCursor || 0)}/${Number(refresh.teamTotal || 0) || "…"}`;
     }
     if (refresh.phase === "players") {
-      return `${mediaSummaryText(manifest)} · facce ${Number(refresh.playerCursor || 0)}/${Number(refresh.playerTotal || 0) || "…"}${quota}`;
+      return `${mediaSummaryText(manifest)} · facce ${Number(refresh.playerCursor || 0)}/${Number(refresh.playerTotal || 0) || "…"}`;
     }
-    return `${mediaSummaryText(manifest)} · sincronizzazione in corso${quota}`;
+    return `${mediaSummaryText(manifest)} · sincronizzazione in corso`;
   }
 
-  async function syncMediaLoop() {
-    mediaRefresh.disabled = true;
-    message("Scarico le rose da API-Football e preparo le facce…");
+  function setMediaButtonsDisabled(disabled) {
+    mediaRefresh.disabled = disabled;
+    if (mediaRefreshAll) mediaRefreshAll.disabled = disabled;
+  }
+
+  async function syncMediaLoop(mode = "missing") {
+    const alreadyPending = Boolean(mediaManifest?.refresh?.pending);
+    if (mode === "full" && !alreadyPending) {
+      const confirmed = window.confirm("Aggiornare tutte le foto? Le facce attuali resteranno online finché il nuovo manifest non sarà completo.");
+      if (!confirmed) return;
+    }
+
+    setMediaButtonsDisabled(true);
+    message(alreadyPending
+      ? "Riprendo la sincronizzazione BSD…"
+      : mode === "full"
+        ? "Aggiorno tutte le rose BSD e preparo un manifest temporaneo…"
+        : "Cerco soltanto i nuovi giocatori del Listone…");
     try {
-      let result = mediaManifest?.refresh?.pending
-        ? await mediaApi({ action: "continue-full-sync" })
-        : await mediaApi({ action: "full-sync" });
+      let result = alreadyPending
+        ? await mediaApi({ action: "continue-sync" })
+        : await mediaApi({ action: mode === "full" ? "full-sync" : "sync-missing" });
       let loops = 0;
       renderUnresolved(result, { preserveExisting: true });
       mediaStatus.textContent = refreshProgressText(result);
 
-      while (result?.refresh?.pending && !result?.refresh?.error && loops < 160) {
-        await new Promise((resolve) => setTimeout(resolve, 120));
-        result = await mediaApi({ action: "continue-full-sync" });
+      while (result?.refresh?.pending && !result?.refresh?.error && loops < 180) {
+        await new Promise((resolve) => setTimeout(resolve, 140));
+        result = await mediaApi({ action: "continue-sync" });
         renderUnresolved(result, { preserveExisting: true });
         mediaStatus.textContent = refreshProgressText(result);
         loops += 1;
@@ -287,12 +299,17 @@
 
       const syncError = String(result?.refresh?.error || "");
       const incomplete = Boolean(result?.refresh?.pending);
+      const warnings = Array.isArray(result?.refresh?.warnings) ? result.refresh.warnings.length : 0;
       message(
-        syncError || (incomplete ? "Sincronizzazione interrotta prima della fine: premi di nuovo per riprendere." : "Foto giocatori sincronizzate."),
+        syncError || (incomplete
+          ? "Sincronizzazione interrotta prima della fine: premi di nuovo per riprenderla."
+          : warnings
+            ? `Manifest pubblicato senza perdere le foto precedenti. Restano ${warnings} avvisi da controllare.`
+            : "Foto giocatori sincronizzate e manifest pubblicato."),
         Boolean(syncError || incomplete)
       );
     } catch (error) { message(error.message, true); }
-    finally { mediaRefresh.disabled = false; }
+    finally { setMediaButtonsDisabled(false); }
   }
 
   function render(nextState) {
@@ -335,6 +352,7 @@
   });
 
   logoutButton.addEventListener("click", async () => render(await adminApi({ action: "logout" })));
-  mediaRefresh.addEventListener("click", syncMediaLoop);
+  mediaRefresh.addEventListener("click", () => syncMediaLoop("missing"));
+  if (mediaRefreshAll) mediaRefreshAll.addEventListener("click", () => syncMediaLoop("full"));
   loadState();
 })();
