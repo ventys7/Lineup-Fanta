@@ -30,7 +30,7 @@ Da ciascun pannello è possibile:
 
 La sezione disciplinare viene mostrata sotto la Classifica. Il parser pulisce l'HTML pubblicato da Google Docs ed estrae soltanto le voci reali, ignorando CSS, JavaScript e metadati interni.
 
-Le penalizzazioni del CSV Classifica restano visibili sia accanto alla fantasquadra sia nel riepilogo interno alla card.
+Le penalizzazioni del CSV Classifica restano visibili direttamente accanto al nome della fantasquadra, senza un secondo riepilogo duplicato sotto la tabella.
 
 ## Foto giocatori e crest
 

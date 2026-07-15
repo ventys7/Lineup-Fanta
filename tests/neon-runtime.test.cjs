@@ -23,11 +23,17 @@ test("active runtime stores logos and configuration in Neon without Blob write f
   assert.match(migration, /readJson/);
 });
 
-test("Vercel configuration exposes no media cron and gives migration enough runtime", () => {
+test("Vercel configuration is deterministic, hardened and exposes no media cron", () => {
   const config = JSON.parse(source("vercel.json"));
   assert.equal(config.crons, undefined);
   assert.equal(config.functions?.["api/admin.js"]?.maxDuration, 300);
   assert.equal(config.functions?.["api/player-media.js"]?.maxDuration, 300);
+  assert.match(config.installCommand, /^npm ci /);
+  const globalHeaders = config.headers?.find((entry) => entry.source === "/:path*")?.headers || [];
+  const headerMap = Object.fromEntries(globalHeaders.map((entry) => [entry.key, entry.value]));
+  assert.equal(headerMap["X-Content-Type-Options"], "nosniff");
+  assert.equal(headerMap["X-Frame-Options"], "DENY");
+  assert.equal(headerMap["Referrer-Policy"], "strict-origin-when-cross-origin");
 });
 
 test("team logo URLs are served by the Neon-backed API", () => {

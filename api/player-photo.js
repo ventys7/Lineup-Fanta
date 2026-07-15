@@ -3,6 +3,32 @@ const { methodNotAllowed } = require("../lib/http.cjs");
 const SOURCE = "https://sports.bzzoiro.com";
 const MAX_BYTES = 5 * 1024 * 1024;
 
+async function readLimitedBody(response) {
+  const declared = Number(response.headers.get("content-length") || 0);
+  if (Number.isFinite(declared) && declared > MAX_BYTES) throw new Error("Immagine BSD troppo pesante");
+  if (!response.body?.getReader) {
+    const bytes = Buffer.from(await response.arrayBuffer());
+    if (!bytes.length || bytes.length > MAX_BYTES) throw new Error("Immagine BSD non valida");
+    return bytes;
+  }
+  const reader = response.body.getReader();
+  const chunks = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const chunk = Buffer.from(value);
+    total += chunk.length;
+    if (total > MAX_BYTES) {
+      await reader.cancel().catch(() => {});
+      throw new Error("Immagine BSD troppo pesante");
+    }
+    chunks.push(chunk);
+  }
+  if (!total) throw new Error("Immagine BSD non valida");
+  return Buffer.concat(chunks, total);
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") return methodNotAllowed(res, ["GET"]);
   const id = String(req.query?.id || "").trim();
@@ -18,8 +44,7 @@ module.exports = async function handler(req, res) {
     if (!["image/png", "image/jpeg", "image/webp", "image/avif"].includes(mimeType)) {
       return res.status(502).json({ error: "BSD ha restituito un formato immagine non valido" });
     }
-    const bytes = Buffer.from(await response.arrayBuffer());
-    if (!bytes.length || bytes.length > MAX_BYTES) return res.status(502).json({ error: "Immagine BSD non valida" });
+    const bytes = await readLimitedBody(response);
     res.setHeader("Content-Type", mimeType);
     res.setHeader("Content-Length", String(bytes.length));
     res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=2592000, stale-while-revalidate=31536000");

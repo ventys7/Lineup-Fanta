@@ -39,6 +39,9 @@ async function checkRequiredFiles() {
     "api/team-logo.js",
     "api/discipline.js",
     "api/player-media.js",
+    "api/player-photo.js",
+    "lib/neon.cjs",
+    "lib/migrate-neon.cjs",
     "lib/storage.cjs",
     "data/settings.json"
   ];
