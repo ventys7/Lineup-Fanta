@@ -28,25 +28,50 @@ function getSwitchSuffix(model, playerIndex) {
   return model.switchPair.type === "plus" ? " (s+)" : " (s)";
 }
 
+function roleMarker(role) {
+  return role === "P" ? "🟨 P" : role === "D" ? "🟦 D" : role === "C" ? "🟩 C" : "🟥 A";
+}
+
+function outputPlayerLine(role, name, suffix = "") {
+  return `${roleMarker(role)}  ${name}${suffix}`;
+}
+
 function buildOutputText() {
   try {
     const model = buildLineupModel();
     if (!model) return "";
 
-    const lines = [model.manager, `Modulo: ${model.module}`, "", "TITOLARI"];
+    const lines = [
+      `⚽ FORMAZIONE · ${model.manager}`,
+      `Modulo ${model.module}`,
+      "━━━━━━━━━━━━━━━━━━━━",
+      "XI TITOLARE"
+    ];
 
     model.starters.forEach((entry) => {
-      lines.push(`- ${entry.player.n}${getSwitchSuffix(model, entry.index)}`);
+      lines.push(outputPlayerLine(
+        entry.player.r,
+        entry.player.n,
+        getSwitchSuffix(model, entry.index)
+      ));
     });
 
     lines.push("", "PANCHINA");
-    getGoalkeeperBenchLabels(model).forEach((label) => lines.push(`- ${label}`));
+    getGoalkeeperBenchLabels(model).forEach((label) => {
+      lines.push(outputPlayerLine("P", label));
+    });
+
     model.bench
       .filter((entry) => entry.player.r !== "P")
       .forEach((entry) => {
-        lines.push(`- ${entry.player.n}${getSwitchSuffix(model, entry.index)}`);
+        lines.push(outputPlayerLine(
+          entry.player.r,
+          entry.player.n,
+          getSwitchSuffix(model, entry.index)
+        ));
       });
 
+    lines.push("━━━━━━━━━━━━━━━━━━━━");
     return lines.join("\n");
   } catch (error) {
     console.error("buildOutputText error:", error);

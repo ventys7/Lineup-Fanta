@@ -239,8 +239,8 @@ window.LineupStory = (function () {
     fillRounded(ctx, x + width - 12, y + 20, 24, 45, 11, ctx.fillStyle);
 
     const centerX = x + width / 2;
-    fillRounded(ctx, centerX - 18, y + 10, 36, 25, 13, roleStyle.fill);
-    centeredText(ctx, role, centerX, y + 22.5, { size: 16, weight: 900, color: roleStyle.ink });
+    fillRounded(ctx, centerX - 16, y + 10, 32, 22, 11, roleStyle.fill);
+    centeredText(ctx, role, centerX, y + 21, { size: 14, weight: 900, color: roleStyle.ink });
 
     const portraitSize = 50;
     const portraitX = centerX - portraitSize / 2;
@@ -282,10 +282,12 @@ window.LineupStory = (function () {
     nameLines.forEach((line, index) => ctx.fillText(line, centerX, nameStart + index * lineHeight));
 
     if (team) {
+      const lastNameY = nameStart + (nameLines.length - 1) * lineHeight;
+      const teamY = Math.min(y + height - 11, lastNameY + lineHeight / 2 + 8);
       const teamSize = fitFont(ctx, team, width - 16, 13, 9, 650);
       font(ctx, 650, teamSize);
       ctx.fillStyle = "rgba(255,255,255,.78)";
-      ctx.fillText(team, centerX, y + height - 13);
+      ctx.fillText(team, centerX, teamY);
     }
     ctx.restore();
   }
@@ -330,11 +332,11 @@ window.LineupStory = (function () {
     const roleStyle = ROLE_COLORS[role] || ROLE_COLORS.C;
     fillRounded(ctx, x, y, width, height, 13, active ? "rgba(255,255,255,.95)" : "rgba(209,225,218,.28)", "rgba(255,255,255,.22)", 1);
 
-    fillRounded(ctx, x + 10, y + (height - 30) / 2, 34, 30, 15, roleStyle.fill);
-    centeredText(ctx, role, x + 27, y + height / 2, { size: 15, weight: 900, color: roleStyle.ink });
+    fillRounded(ctx, x + 11, y + (height - 26) / 2, 30, 26, 13, roleStyle.fill);
+    centeredText(ctx, role, x + 26, y + height / 2, { size: 13, weight: 900, color: roleStyle.ink });
 
     const portraitSize = height - 16;
-    const portraitX = x + 50;
+    const portraitX = x + 47;
     const portraitY = y + 8;
     fillRounded(ctx, portraitX, portraitY, portraitSize, portraitSize, portraitSize / 2, "#edf3f0");
     if (photo && !player?.isTeamLabel) {
@@ -355,13 +357,13 @@ window.LineupStory = (function () {
     ctx.fillStyle = active ? "#173d32" : "rgba(23,61,50,.55)";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(name, textX, y + height / 2 - (player?.t && !player.isTeamLabel ? 8 : 0));
+    ctx.fillText(name, textX, y + height / 2 - (player?.t && !player.isTeamLabel ? 6 : 0));
 
     if (player?.t && !player.isTeamLabel) {
       const teamSize = fitFont(ctx, player.t, max, 12, 8, 650);
       font(ctx, 650, teamSize);
       ctx.fillStyle = "#71877e";
-      ctx.fillText(player.t, textX, y + height / 2 + 12);
+      ctx.fillText(player.t, textX, y + height / 2 + 8);
     }
   }
 

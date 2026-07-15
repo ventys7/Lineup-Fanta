@@ -93,10 +93,6 @@ export function Standings({ data, leagueName, teamLogos = {} }: StandingsProps) 
     () => sortRows(data.league, sort),
     [data.league, sort]
   );
-  const penalizedTeams = useMemo(
-    () => data.league.filter((row) => row.penalty > 0),
-    [data.league]
-  );
 
   function cycleSort(key: SortKey) {
     setSort((current) => {
@@ -191,16 +187,6 @@ export function Standings({ data, leagueName, teamLogos = {} }: StandingsProps) 
               </tbody>
             </table>
           </div>
-          {penalizedTeams.length > 0 && (
-            <div className="lf-standings-penalty-note" aria-label="Annotazioni penalizzazioni">
-              <strong>Penalizzazioni</strong>
-              <div>
-                {penalizedTeams.map((row) => (
-                  <span key={row.team}>{row.team} <b>−{row.penalty}</b></span>
-                ))}
-              </div>
-            </div>
-          )}
           </>
         ) : (
           <div className="lf-standings-fantasy-wrap">

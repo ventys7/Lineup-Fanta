@@ -444,44 +444,7 @@
   white-space: nowrap;
 }
 
-/* Annotazioni delle penalizzazioni: badge nella riga e riepilogo dentro la card. */
-.lf-standings-penalty-note {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 16px 13px;
-  border-top: 1px solid #e8eeeb;
-  background: #fffafa;
-  color: #69756f;
-  font-size: 10px;
-}
-
-.lf-standings-penalty-note > strong {
-  flex: 0 0 auto;
-  color: #ad3434;
-  font-size: 9px;
-  font-weight: 950;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
-
-.lf-standings-penalty-note > div {
-  display: flex;
-  min-width: 0;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-}
-
-.lf-standings-penalty-note span {
-  white-space: nowrap;
-}
-
-.lf-standings-penalty-note b {
-  color: #b43232;
-  font-weight: 950;
-}
-
-/* Testi disciplinari leggibili: manager, motivazione e data su righe distinte. */
+/* Penalizzazioni mostrate soltanto accanto al nome della fantasquadra. */
 .lf-discipline-item-copy {
   display: grid;
   min-width: 0;
@@ -520,12 +483,6 @@
 }
 
 @media (max-width: 767px) {
-  .lf-standings-penalty-note {
-    align-items: flex-start;
-    gap: 7px;
-    padding: 10px 11px 12px;
-    flex-direction: column;
-  }
 
   .lf-discipline-list article {
     align-items: flex-start;
