@@ -54,6 +54,6 @@ test("public media responses and browser refreshes cannot keep manual Neon overr
 
 test("Nottingham Forest crest has a deterministic Kick-off fallback", () => {
   const browser = source("js/player-media.js");
-  assert.match(browser, /"nottm forest": "10203"/);
+  assert.match(browser, /"nottm forest": "351"/);
   assert.match(browser, /kick-off-tau\.vercel\.app/);
 });

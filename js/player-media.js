@@ -3,7 +3,7 @@
 
   const CACHE_VERSION = 12;
   const KICKOFF_CREST_ORIGIN = "https://kick-off-tau.vercel.app";
-  const KICKOFF_TEAM_ID_FALLBACKS = Object.freeze({ "nottm forest": "10203" });
+  const KICKOFF_TEAM_ID_FALLBACKS = Object.freeze({ "nottm forest": "351" });
   const memory = new Map();
   const networkRequests = new Map();
   const revalidated = new Set();
