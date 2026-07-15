@@ -11,7 +11,7 @@ function source(relativePath) {
 
 const REQUIRED_IDS = [
   "loginView", "adminView", "loginForm", "adminPassword", "leagueSettings", "logoCodes",
-  "adminFeedback", "saveSettings", "migrateNeon", "logoutButton", "mediaRefresh",
+  "adminFeedback", "saveSettings", "logoutButton", "mediaRefresh",
   "mediaStatus", "unresolvedTeams", "unresolvedPlayers"
 ];
 
@@ -22,6 +22,7 @@ test("FP and PD admin redesign preserve every functional hook", () => {
     assert.match(html, /admin-toolbar/);
     assert.match(html, /admin-dashboard-grid/);
     assert.match(html, /admin-card--media/);
+    assert.doesNotMatch(html, /Migra Blob|media-direct-note|ADMIN_LINKS_PASSWORD_HASH/);
   }
 });
 
@@ -30,5 +31,7 @@ test("admin panel remains responsive and accessible after the visual redesign", 
   assert.match(css, /:focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /@media \(max-width: 760px\)/);
+  assert.match(css, /admin-card--codes/);
+  assert.match(css, /overflow-wrap:\s*anywhere/);
   assert.match(css, /admin-feedback:empty/);
 });
