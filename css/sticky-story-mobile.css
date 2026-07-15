@@ -56,21 +56,4 @@ html[data-route="league"] .content-wrapper { min-width: 0; }
     border-radius: 12px;
   }
 
-  html[data-route="league"] .output-copy-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-  }
-
-  html[data-route="league"] .output-copy-btn {
-    min-width: 0;
-    min-height: 48px;
-    padding: 7px 5px;
-    overflow: visible;
-    white-space: normal;
-    overflow-wrap: normal;
-    word-break: normal;
-    font-size: clamp(.66rem, 3.2vw, .76rem);
-    line-height: 1.12;
-    text-align: center;
-  }
 }

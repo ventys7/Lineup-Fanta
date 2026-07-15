@@ -238,35 +238,54 @@ window.LineupStory = (function () {
     fillRounded(ctx, x - 12, y + 20, 24, 45, 11, ctx.fillStyle);
     fillRounded(ctx, x + width - 12, y + 20, 24, 45, 11, ctx.fillStyle);
 
-    const roleCenterX = photo ? x + width - 27 : x + width / 2;
-    fillRounded(ctx, roleCenterX - 19, y + 14, 38, 32, 16, roleStyle.fill);
-    centeredText(ctx, role, roleCenterX, y + 30, { size: 18, weight: 900, color: roleStyle.ink });
+    const centerX = x + width / 2;
+    fillRounded(ctx, centerX - 18, y + 10, 36, 25, 13, roleStyle.fill);
+    centeredText(ctx, role, centerX, y + 22.5, { size: 16, weight: 900, color: roleStyle.ink });
 
+    const portraitSize = 50;
+    const portraitX = centerX - portraitSize / 2;
+    const portraitY = y + 40;
+    fillRounded(
+      ctx,
+      portraitX - 2,
+      portraitY - 2,
+      portraitSize + 4,
+      portraitSize + 4,
+      (portraitSize + 4) / 2,
+      "rgba(255,255,255,.94)",
+      "rgba(255,255,255,.86)",
+      2
+    );
     if (photo) {
-      fillRounded(ctx, x + 13, y + 12, 46, 46, 23, "rgba(255,255,255,.94)", "rgba(255,255,255,.85)", 2);
-      drawCoverImage(ctx, photo, x + 15, y + 14, 42);
+      drawCoverImage(ctx, photo, portraitX, portraitY, portraitSize);
+    } else {
+      fillRounded(ctx, portraitX, portraitY, portraitSize, portraitSize, portraitSize / 2, "rgba(215,228,222,.58)");
+      centeredText(ctx, "—", centerX, portraitY + portraitSize / 2, {
+        size: 18,
+        weight: 850,
+        color: selected ? "rgba(23,61,50,.62)" : "rgba(255,255,255,.64)"
+      });
     }
 
     const name = selected ? player.n || "Giocatore" : "Scegli";
     const team = selected ? player.t || "" : "";
-    const nameSize = fitFont(ctx, name, width - 22, 23, 15, 850);
+    const nameSize = fitFont(ctx, name, width - 18, 19, 11, 850);
     font(ctx, 850, nameSize);
-    const nameLines = wrapWords(ctx, name, width - 20, 2);
-    const lineHeight = nameSize * 1.08;
-    const baseNameY = photo ? y + 83 : y + 69;
-    const nameStart = baseNameY - ((nameLines.length - 1) * lineHeight) / 2;
+    const nameLines = wrapWords(ctx, name, width - 16, 2);
+    const lineHeight = nameSize * 1.04;
+    const nameCenterY = y + 111;
+    const nameStart = nameCenterY - ((nameLines.length - 1) * lineHeight) / 2;
 
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    nameLines.forEach((line, index) => ctx.fillText(line, x + width / 2, nameStart + index * lineHeight));
+    nameLines.forEach((line, index) => ctx.fillText(line, centerX, nameStart + index * lineHeight));
 
     if (team) {
-      const teamSize = fitFont(ctx, team, width - 20, 15, 11, 650);
+      const teamSize = fitFont(ctx, team, width - 16, 13, 9, 650);
       font(ctx, 650, teamSize);
       ctx.fillStyle = "rgba(255,255,255,.78)";
-      const lastNameLineY = nameStart + (nameLines.length - 1) * lineHeight;
-      ctx.fillText(team, x + width / 2, Math.min(y + height - 14, lastNameLineY + 27));
+      ctx.fillText(team, centerX, y + height - 13);
     }
     ctx.restore();
   }
@@ -295,7 +314,7 @@ window.LineupStory = (function () {
       const maxWidth = 164;
       const available = PITCH.width - 122;
       const width = Math.min(maxWidth, Math.floor((available - gap * (entries.length - 1)) / entries.length));
-      const height = role === "P" ? 136 : 142;
+      const height = 158;
       const rowWidth = entries.length * width + (entries.length - 1) * gap;
       let x = PITCH.x + (PITCH.width - rowWidth) / 2;
 
@@ -308,20 +327,30 @@ window.LineupStory = (function () {
 
   function drawBenchCard(ctx, { x, y, width, height, role, player, photo = null }) {
     const active = Boolean(player?.n);
+    const roleStyle = ROLE_COLORS[role] || ROLE_COLORS.C;
     fillRounded(ctx, x, y, width, height, 13, active ? "rgba(255,255,255,.95)" : "rgba(209,225,218,.28)", "rgba(255,255,255,.22)", 1);
-    fillRounded(ctx, x + 11, y + 11, 30, height - 22, 9, ROLE_COLORS[role]?.fill || "#b4c9c0");
-    centeredText(ctx, role, x + 26, y + height / 2, { size: 15, weight: 900, color: ROLE_COLORS[role]?.ink || "#173d32" });
 
-    let textX = x + 52;
+    fillRounded(ctx, x + 10, y + (height - 30) / 2, 34, 30, 15, roleStyle.fill);
+    centeredText(ctx, role, x + 27, y + height / 2, { size: 15, weight: 900, color: roleStyle.ink });
+
+    const portraitSize = height - 16;
+    const portraitX = x + 50;
+    const portraitY = y + 8;
+    fillRounded(ctx, portraitX, portraitY, portraitSize, portraitSize, portraitSize / 2, "#edf3f0");
     if (photo && !player?.isTeamLabel) {
-      fillRounded(ctx, x + 49, y + 8, height - 16, height - 16, (height - 16) / 2, "#edf3f0");
-      drawCoverImage(ctx, photo, x + 51, y + 10, height - 20);
-      textX = x + height + 38;
+      drawCoverImage(ctx, photo, portraitX + 2, portraitY + 2, portraitSize - 4);
+    } else {
+      centeredText(ctx, "—", portraitX + portraitSize / 2, y + height / 2, {
+        size: 14,
+        weight: 800,
+        color: "rgba(23,61,50,.48)"
+      });
     }
 
+    const textX = portraitX + portraitSize + 10;
     const name = player?.n || "—";
     const max = width - (textX - x) - 12;
-    const size = fitFont(ctx, name, max, 18, 11, 800);
+    const size = fitFont(ctx, name, max, 17, 10, 800);
     font(ctx, 800, size);
     ctx.fillStyle = active ? "#173d32" : "rgba(23,61,50,.55)";
     ctx.textAlign = "left";
@@ -329,7 +358,7 @@ window.LineupStory = (function () {
     ctx.fillText(name, textX, y + height / 2 - (player?.t && !player.isTeamLabel ? 8 : 0));
 
     if (player?.t && !player.isTeamLabel) {
-      const teamSize = fitFont(ctx, player.t, max, 12, 9, 650);
+      const teamSize = fitFont(ctx, player.t, max, 12, 8, 650);
       font(ctx, 650, teamSize);
       ctx.fillStyle = "#71877e";
       ctx.fillText(player.t, textX, y + height / 2 + 12);
