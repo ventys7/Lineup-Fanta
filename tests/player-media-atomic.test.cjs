@@ -82,7 +82,7 @@ test("player media staging is atomic and failure-safe", async (t) => {
     mode = "success";
     await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
     await storage.writeJson("media/fp.json", {
-      version: 6,
+      version: 7,
       leagueId: "fp",
       provider: "bsd",
       sourceMode: "bsd-team-rosters",
@@ -96,7 +96,8 @@ test("player media staging is atomic and failure-safe", async (t) => {
           cached: true,
           storageVerified: true,
           provider: "bsd",
-          externalId: "455"
+          externalId: "455",
+          storageKey: "player-faces/bsd/455/old.png"
         }
       },
       refresh: { pending: false }
@@ -155,7 +156,7 @@ test("player media staging is atomic and failure-safe", async (t) => {
     mode = "team-failure";
     await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
     await storage.writeJson("media/fp.json", {
-      version: 6,
+      version: 7,
       leagueId: "fp",
       provider: "bsd",
       sourceMode: "bsd-team-rosters",
@@ -169,7 +170,8 @@ test("player media staging is atomic and failure-safe", async (t) => {
           cached: true,
           storageVerified: true,
           provider: "bsd",
-          externalId: "455"
+          externalId: "455",
+          storageKey: "player-faces/bsd/455/old.png"
         }
       },
       refresh: { pending: false }

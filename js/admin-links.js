@@ -112,11 +112,12 @@
 
   function mediaSummaryText(manifest) {
     const summary = manifest?.summary || {};
-    const parts = [
-      `${summary.resolved || 0} collegati`,
-      `${summary.unresolved || 0} da controllare`
-    ];
-    if (Number(manifest?.remaining || 0) > 0) parts.push(`${manifest.remaining} nuovi ancora da cercare`);
+    const bsd = Number(summary.bsdResolved || 0);
+    const legacy = Number(summary.legacyResolved || 0);
+    const unresolved = Number(summary.unresolved || 0);
+    const parts = [`BSD ${bsd}`];
+    if (legacy > 0) parts.push(`${legacy} vecchie da sostituire`);
+    parts.push(`${unresolved} senza foto BSD`);
     return parts.join(" · ");
   }
 

@@ -1,7 +1,7 @@
 (function exposePlayerMedia(global) {
   "use strict";
 
-  const CACHE_VERSION = 8;
+  const CACHE_VERSION = 9;
   const memory = new Map();
   const networkRequests = new Map();
   const revalidated = new Set();

@@ -8,11 +8,13 @@ const {
   clubKey,
   collectBsdPlayers,
   collectBsdTeams,
+  isCurrentBsdEntry,
   isFullSyncDate,
   isResolvedEntry,
   keepExistingOrUnresolved,
   playerKey,
-  playerPhotoUrl
+  playerPhotoUrl,
+  summary
 } = require("../lib/player-media.cjs");
 
 test("media keys normalize club aliases without touching fantasy roles", () => {
@@ -23,6 +25,33 @@ test("media keys normalize club aliases without touching fantasy roles", () => {
   assert.equal(clubKey("R. Sociedad"), "real sociedad");
   assert.equal(clubKey("Levante UD"), "levante");
   assert.equal(playerKey("João Pedro", "Chelsea"), "joao pedro|chelsea");
+});
+
+
+test("legacy Blob photos are visible but remain pending for BSD migration", () => {
+  const legacy = {
+    status: "resolved",
+    provider: "api-football",
+    photoUrl: "https://example.public.blob.vercel-storage.com/player-faces/api-football/1/portrait.png",
+    cached: true,
+    storageVerified: true,
+    storageKey: "player-faces/api-football/1/portrait.png"
+  };
+  const bsd = {
+    ...legacy,
+    provider: "bsd",
+    storageKey: "player-faces/bsd/455/portrait.png"
+  };
+  assert.equal(isResolvedEntry(legacy), true);
+  assert.equal(isCurrentBsdEntry(legacy), false);
+  assert.equal(isCurrentBsdEntry(bsd), true);
+  assert.deepEqual(summary({ players: { legacy, bsd, missing: { status: "unresolved" } } }), {
+    resolved: 2,
+    bsdResolved: 1,
+    legacyResolved: 1,
+    unresolved: 1,
+    refreshPending: false
+  });
 });
 
 test("full image refresh is scheduled only twice per year", () => {
@@ -97,7 +126,7 @@ test("a failed refresh preserves the previous verified Blob entry", () => {
 
 test("publish validation rejects provider CDN URLs and accepts verified Blob URLs", () => {
   const base = {
-    version: 6,
+    version: 7,
     leagueId: "fp",
     provider: "bsd",
     sourceMode: "bsd-team-rosters",
