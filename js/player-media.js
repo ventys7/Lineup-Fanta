@@ -1,7 +1,9 @@
 (function exposePlayerMedia(global) {
   "use strict";
 
-  const CACHE_VERSION = 11;
+  const CACHE_VERSION = 12;
+  const KICKOFF_CREST_ORIGIN = "https://kick-off-tau.vercel.app";
+  const KICKOFF_TEAM_ID_FALLBACKS = Object.freeze({ "nottm forest": "10203" });
   const memory = new Map();
   const networkRequests = new Map();
   const revalidated = new Set();
@@ -49,8 +51,8 @@
   async function fetchManifest(leagueId, force = false) {
     if (!force && revalidated.has(leagueId)) return memory.get(leagueId) || readCache(leagueId)?.payload || { players: {} };
     if (!force && networkRequests.has(leagueId)) return networkRequests.get(leagueId);
-    const request = fetch(`/api/player-media?league=${encodeURIComponent(leagueId)}`, {
-      cache: force ? "reload" : "default",
+    const request = fetch(`/api/player-media?league=${encodeURIComponent(leagueId)}&cv=${CACHE_VERSION}`, {
+      cache: "no-store",
       headers: { Accept: "application/json" }
     }).then(async (response) => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -126,7 +128,9 @@
       const score = common * 10 - Math.abs(targetTokens.size - candidateTokens.size);
       if (score > bestScore) { bestScore = score; best = value; }
     });
-    return bestScore >= 9 ? (best?.crestUrl || "") : "";
+    if (bestScore >= 9 && best?.crestUrl) return best.crestUrl;
+    const fallbackId = KICKOFF_TEAM_ID_FALLBACKS[target];
+    return fallbackId ? `${KICKOFF_CREST_ORIGIN}/api/crest/${fallbackId}` : "";
   }
 
   global.LineupPlayerMedia = Object.freeze({ clubKey, load, payload: payloadFor, photo, storyPhoto, player, playerKey, crest });

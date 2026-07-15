@@ -13,7 +13,9 @@ const {
 } = require("../lib/player-media.cjs");
 
 function publicCache(res) {
-  res.setHeader("Cache-Control", "public, max-age=300, s-maxage=21600, stale-while-revalidate=86400");
+  // Manual Neon overrides must be visible immediately on every public page.
+  // The manifest itself is already cached in Neon/server memory, so CDN caching only creates stale UI.
+  res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
 }
 
 function privateNoStore(res) {

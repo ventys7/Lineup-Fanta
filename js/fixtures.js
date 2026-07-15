@@ -5,7 +5,7 @@ window.LineupFixtures = (function () {
   const CARD_ID = "kickoffFixturesCard";
   const MOBILE_QUERY = window.matchMedia("(max-width: 767px)");
   const KICKOFF_LEAGUE_IDS = Object.freeze({ fp: "47", pd: "87" });
-  const CLUB_CACHE_VERSION = 2;
+  const CLUB_CACHE_VERSION = 3;
   const CLUB_CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
 
   let refreshTimer = null;
