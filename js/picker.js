@@ -1,5 +1,24 @@
 let currentPickerSlot = null;
 
+function createPickerPhoto(player) {
+  const portrait = document.createElement("span");
+  portrait.className = "picker-player__photo";
+  const url = player?.isTeamLabel
+    ? window.LineupPlayerMedia?.crest(player.n)
+    : window.LineupPlayerMedia?.photo(player?.n, player?.t);
+  if (url) {
+    const image = document.createElement("img");
+    image.src = url;
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    portrait.appendChild(image);
+  } else {
+    portrait.textContent = String(player?.n || "?").trim().charAt(0).toUpperCase() || "?";
+  }
+  return portrait;
+}
+
 function setupModalClickOutside() {
   const modals = [
     "slotPickerModal",
@@ -50,6 +69,8 @@ function showSlotPicker(role, currentPlayer) {
       </div>
       <span class="picker-remove-btn">✕</span>
     </div>`;
+    const currentRow = currentDiv.querySelector(".picker-player");
+    currentRow?.insertBefore(createPickerPhoto(currentPlayer), currentRow.firstChild);
     currentDiv.querySelector(".name").textContent = currentPlayer.n;
     currentDiv.querySelector(".team").textContent = currentPlayer.t || "";
     currentDiv.onclick = () => removeFromPicker();
@@ -82,7 +103,7 @@ function showSlotPicker(role, currentPlayer) {
     teamName.textContent = player.t || "";
     info.append(name, teamName);
 
-    option.append(badge, info);
+    option.append(createPickerPhoto(player), badge, info);
 
     if (isSelected) {
       const selectedIcon = document.createElement("span");

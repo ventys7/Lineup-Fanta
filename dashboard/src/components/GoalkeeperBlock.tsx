@@ -1,18 +1,27 @@
 import { ChevronDownIcon, ShieldIcon } from "../icons";
+import type { PlayerMediaEntry } from "../media";
 import type { DashboardAsset } from "../types";
 
 function splitGoalkeepers(name: string) {
   return name.split(/\s+-\s+/).map((part) => part.trim()).filter(Boolean);
 }
 
-export function GoalkeeperBlock({ asset, expanded, onToggle }: { asset: DashboardAsset; expanded: boolean; onToggle: () => void }) {
+type Props = {
+  asset: DashboardAsset;
+  expanded: boolean;
+  onToggle: () => void;
+  crestUrl?: string;
+  media: { player: (name: string, team: string) => PlayerMediaEntry | null };
+};
+
+export function GoalkeeperBlock({ asset, expanded, onToggle, crestUrl, media }: Props) {
   const players = splitGoalkeepers(asset.displayName);
 
   return (
     <div>
       <button type="button" onClick={onToggle} className="tw-hidden tw-w-full tw-grid-cols-12 tw-gap-4 tw-px-6 tw-py-4 tw-text-left tw-transition hover:tw-bg-slate-50 md:tw-grid">
         <div className="tw-col-span-4 tw-flex tw-min-w-0 tw-items-center tw-gap-3">
-          <div className="lf-player-avatar"><ShieldIcon size={22} /></div>
+          <div className={`lf-player-avatar ${crestUrl ? "has-photo lf-player-avatar--crest" : ""}`}>{crestUrl ? <img src={crestUrl} alt="" loading="lazy" decoding="async" /> : <ShieldIcon size={22} />}</div>
           <div className="tw-min-w-0">
             <div className="tw-truncate tw-font-semibold tw-text-slate-900">Blocco {asset.realTeam || asset.displayName}</div>
             <div className="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-text-slate-500">
@@ -28,7 +37,7 @@ export function GoalkeeperBlock({ asset, expanded, onToggle }: { asset: Dashboar
       </button>
 
       <button type="button" onClick={onToggle} className="tw-flex tw-w-full tw-items-start tw-gap-3 tw-p-3 tw-text-left tw-transition hover:tw-bg-slate-50 md:tw-hidden">
-        <div className="lf-player-avatar lf-player-avatar--mobile"><ShieldIcon size={22} /></div>
+        <div className={`lf-player-avatar lf-player-avatar--mobile ${crestUrl ? "has-photo lf-player-avatar--crest" : ""}`}>{crestUrl ? <img src={crestUrl} alt="" loading="lazy" decoding="async" /> : <ShieldIcon size={22} />}</div>
         <div className="tw-min-w-0 tw-flex-1">
           <div className="tw-flex tw-items-center tw-gap-2"><span className="lf-role-badge lf-role-badge--p">P</span><strong className="tw-truncate tw-text-slate-900">Blocco {asset.realTeam || asset.displayName}</strong></div>
           <div className="tw-mt-1 tw-flex tw-items-center tw-gap-1 tw-text-xs tw-text-slate-500">{players.length} portieri <ChevronDownIcon size={14} className={`tw-transition ${expanded ? "tw-rotate-180" : ""}`} /></div>
@@ -42,12 +51,17 @@ export function GoalkeeperBlock({ asset, expanded, onToggle }: { asset: Dashboar
 
       {expanded && (
         <div className="lf-block-expanded">
-          {players.map((player) => (
-            <div key={player} className="tw-flex tw-items-center tw-gap-3 tw-px-6 tw-py-3">
-              <div className="lf-mini-avatar">P</div>
-              <div className="tw-min-w-0"><div className="tw-truncate tw-font-medium tw-text-slate-800">{player}</div><div className="tw-text-xs tw-text-slate-500">{asset.realTeam || "Portiere"}</div></div>
-            </div>
-          ))}
+          {players.map((player) => {
+            const photo = media.player(player, asset.realTeam)?.photoUrl;
+            return (
+              <div key={player} className="tw-flex tw-items-center tw-gap-3 tw-px-6 tw-py-3">
+                <div className={`lf-mini-avatar ${photo ? "has-photo" : ""}`}>
+                  {photo ? <img src={photo} alt="" loading="lazy" decoding="async" /> : "P"}
+                </div>
+                <div className="tw-min-w-0"><div className="tw-truncate tw-font-medium tw-text-slate-800">{player}</div><div className="tw-text-xs tw-text-slate-500">{asset.realTeam || "Portiere"}</div></div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

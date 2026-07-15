@@ -1,31 +1,103 @@
 # Lineup-Fanta
 
-Web app essenziale per due leghe separate (`fp` e `pd`).
+Lineup-Fanta è il builder per le due leghe FP e PD, con Formazione, Listone, Rose, Classifica, card Kick-off e gestione essenziale delle fonti.
 
-## Funzioni mantenute
+## Sezioni pubbliche
 
-- Lineup builder con titolari, panchina, moduli, switch e blocchi portieri.
-- Card Kick-off con prossima deadline e partite del turno.
-- Listone.
-- Liste Rose.
-- Classifica.
-- Output WhatsApp, Docs e grafica 9:16.
+- `/fp/` — PianginaCUP / Fanta Premier
+- `/pd/` — Fanta Liga
 
-Non sono presenti Calendario fantacalcio, Docs delle giornate, invio ufficiale delle formazioni, PIN, voti, risultati o API runtime.
+Ogni lega mantiene il proprio Listone, le proprie Rose, la propria Classifica e la propria configurazione.
+
+## Pannelli Admin Links
+
+I pannelli sono separati ma utilizzano la stessa password configurata tramite `ADMIN_LINKS_PASSWORD_HASH`:
+
+- `/fp/admin-links/`
+- `/pd/admin-links/`
+
+Da ciascun pannello è possibile:
+
+- cambiare il CSV Listone/Rose della sola lega;
+- cambiare il CSV Classifica della sola lega;
+- cambiare il Docs pubblicato Richiami/Penalizzazioni;
+- generare o resettare i codici stemma delle fantasquadre;
+- ricalcolare i collegamenti tra Listone e rose BSD;
+- controllare e salvare su Neon le associazioni rimaste ambigue;
+- migrare una volta impostazioni, codici e stemmi legacy dal Blob a Neon.
+
+## Richiami, penalizzazioni e Classifica
+
+La sezione disciplinare viene mostrata sotto la Classifica. Il parser pulisce l'HTML pubblicato da Google Docs ed estrae soltanto le voci reali, ignorando CSS, JavaScript e metadati interni.
+
+Le penalizzazioni del CSV Classifica restano visibili direttamente accanto al nome della fantasquadra, senza un secondo riepilogo duplicato sotto la tabella.
+
+## Foto giocatori e crest
+
+I dati fantacalcistici — ruolo, quotazione, proprietario e rosa — arrivano sempre dal CSV ufficiale.
+
+- Foto giocatori FP e PD: BSD, usato esclusivamente dal backend come sorgente di acquisizione.
+- Crest FP e PD: manifest già esposto dalla card Kick-off.
+- Stemmi fantasquadre: salvati in Neon e modificabili dalla sezione Rose usando il codice della singola squadra, senza condividere la password admin.
+
+Le pagine pubbliche ricevono dal backend un manifest calcolato in memoria con URL BSD diretti del formato `https://sports.bzzoiro.com/img/player/<id>/`. Il browser usa lazy loading e scarica soltanto le facce visibili o vicine allo schermo.
+
+Il backend:
+
+1. legge il Listone della lega;
+2. recupera le rose BSD;
+3. identifica automaticamente la squadra corretta tramite seed e sovrapposizione dei nomi;
+4. abbina i giocatori usando nome e club, senza usare il ruolo BSD;
+5. restituisce gli URL diretti e conserva il risultato in Neon per sei ore;
+6. salva in Neon gli override manuali di giocatori e squadre.
+
+Le facce non vengono scaricate, caricate, elencate o verificate nel Vercel Blob. Non esistono job, staging o cron media attivi. Impostazioni runtime, profili delle fantasquadre, codici stemma, stemmi e override BSD sono salvati in Neon. Il Blob viene letto soltanto dalla procedura di migrazione legacy, che non effettua scritture.
 
 ## Avvio locale
+
+Creare `.env.local` nella root:
+
+```env
+BSD_API_KEY=token_privato
+DATABASE_URL=connessione_neon
+```
+
+Il nome non deve avere il prefisso `VITE_`: la chiave deve restare server-side.
+
+Poi:
 
 ```bash
 npm ci
 npm --prefix dashboard ci
-npm run build
-npm run dev
+npm run verify
+npm run dev:test
 ```
 
-Aprire `http://localhost:4173/fp/` oppure `http://localhost:4173/pd/`.
+La password locale di test è `prova123`.
+
+Indirizzi abituali:
+
+```text
+http://localhost:4173/fp/
+http://localhost:4173/pd/
+http://localhost:4173/fp/admin-links/
+http://localhost:4173/pd/admin-links/
+```
+
+La porta può cambiare se `4173` è già occupata: usare sempre quella stampata dal Terminale.
+
+## Variabili Vercel
+
+- `ADMIN_LINKS_PASSWORD_HASH`
+- `ADMIN_LINKS_SESSION_SECRET`
+- `BSD_API_KEY`
+- `DATABASE_URL` e le altre variabili Neon aggiunte automaticamente da Vercel
+- credenziali Blob solo durante la migrazione legacy, poi rimovibili
+- eventuali variabili già necessarie alla card Kick-off
 
 ## Verifica
 
 ```bash
 npm run verify
+git diff --check
 ```

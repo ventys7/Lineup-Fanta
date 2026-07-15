@@ -1,4 +1,3 @@
-const CSV_BASE_URL = window.LINEUP_FANTA?.league?.csvUrl || "";
 const csvLog = window.LineupDebug?.logger("csv") ?? console;
 const { parseLeagueCsv } = window.LineupCsvParser;
 const { buildFormationDb } = window.LineupFormationDb;
@@ -32,15 +31,17 @@ function dispatchLeagueAssetsReady() {
   }));
 }
 
-function getCsvRequestUrl() {
-  if (!CSV_BASE_URL) throw new Error("CSV non configurato");
-  const url = new URL(CSV_BASE_URL, window.location.href);
+async function getCsvRequestUrl() {
+  const runtime = await window.LineupRuntimeSettings?.get(window.LINEUP_FANTA?.leagueId);
+  const csvBaseUrl = runtime?.listoneCsvUrl || window.LINEUP_FANTA?.league?.csvUrl || "";
+  if (!csvBaseUrl) throw new Error("CSV non configurato");
+  const url = new URL(csvBaseUrl, window.location.href);
   url.searchParams.set("_lf", String(Date.now()));
   return url.toString();
 }
 
 async function requestCsv() {
-  const response = await fetch(getCsvRequestUrl(), {
+  const response = await fetch(await getCsvRequestUrl(), {
     cache: "no-store",
     headers: {
       "Cache-Control": "no-cache, no-store, max-age=0",

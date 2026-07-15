@@ -1,6 +1,4 @@
-/* OUTPUT - preview first; desktop copies explicitly, iOS selects text safely */
-
-const OUTPUT_PROMPT = "Seleziona un’anteprima per copiare";
+/* OUTPUT - one neutral format, rendered immediately and ready to copy */
 
 function buildLineupModel() {
   const model = window.FormationModel?.build();
@@ -19,32 +17,7 @@ function getGoalkeeperBenchLabels(model) {
   return Array.isArray(model?.goalkeeperBenchLabels) ? model.goalkeeperBenchLabels : [];
 }
 
-function buildWhatsAppOutput(model) {
-  const lines = [
-    `⚽ *${model.manager.toUpperCase()}*`,
-    `Modulo: ${model.module}`,
-    "",
-    "*TITOLARI*"
-  ];
-
-  model.starters.forEach((entry) => lines.push(`- ${entry.player.n}`));
-
-  lines.push("", "*PANCHINA*");
-  getGoalkeeperBenchLabels(model).forEach((label) => lines.push(`- ${label}`));
-  model.bench
-    .filter((entry) => entry.player.r !== "P")
-    .forEach((entry) => lines.push(`- ${entry.player.n}`));
-
-  if (model.switchPair) {
-    const switchLabel = model.switchPair.type === "plus" ? "SWITCH PLUS" : "SWITCH BASE";
-    lines.push("", `*${switchLabel}*`);
-    lines.push(`${model.switchPair.starter.n} ↔ ${model.switchPair.bench.n}`);
-  }
-
-  return lines.join("\n");
-}
-
-function getDocsSwitchSuffix(model, playerIndex) {
+function getSwitchSuffix(model, playerIndex) {
   if (!model.switchPair) return "";
 
   const isSelectedForSwitch =
@@ -55,82 +28,60 @@ function getDocsSwitchSuffix(model, playerIndex) {
   return model.switchPair.type === "plus" ? " (s+)" : " (s)";
 }
 
-function buildDocsOutput(model) {
-  const lines = [model.manager, `Modulo: ${model.module}`, "", "TITOLARI"];
-
-  model.starters.forEach((entry) => {
-    lines.push(`- ${entry.player.n}${getDocsSwitchSuffix(model, entry.index)}`);
-  });
-
-  lines.push("", "PANCHINA");
-  getGoalkeeperBenchLabels(model).forEach((label) => lines.push(`- ${label}`));
-  model.bench
-    .filter((entry) => entry.player.r !== "P")
-    .forEach((entry) => {
-      lines.push(`- ${entry.player.n}${getDocsSwitchSuffix(model, entry.index)}`);
-    });
-
-  return lines.join("\n");
+function roleMarker(role) {
+  return role === "P" ? "🟨 P" : role === "D" ? "🟦 D" : role === "C" ? "🟩 C" : "🟥 A";
 }
 
-function buildOutputText(format = "whatsapp") {
+function outputPlayerLine(role, name, suffix = "") {
+  return `${roleMarker(role)}  ${name}${suffix}`;
+}
+
+function buildOutputText() {
   try {
     const model = buildLineupModel();
     if (!model) return "";
-    return format === "docs" ? buildDocsOutput(model) : buildWhatsAppOutput(model);
+
+    const lines = [
+      `⚽ FORMAZIONE · ${model.manager}`,
+      `Modulo ${model.module}`,
+      "━━━━━━━━━━━━━━━━━━━━",
+      "XI TITOLARE"
+    ];
+
+    model.starters.forEach((entry) => {
+      lines.push(outputPlayerLine(
+        entry.player.r,
+        entry.player.n,
+        getSwitchSuffix(model, entry.index)
+      ));
+    });
+
+    lines.push("", "PANCHINA");
+    getGoalkeeperBenchLabels(model).forEach((label) => {
+      lines.push(outputPlayerLine("P", label));
+    });
+
+    model.bench
+      .filter((entry) => entry.player.r !== "P")
+      .forEach((entry) => {
+        lines.push(outputPlayerLine(
+          entry.player.r,
+          entry.player.n,
+          getSwitchSuffix(model, entry.index)
+        ));
+      });
+
+    lines.push("━━━━━━━━━━━━━━━━━━━━");
+    return lines.join("\n");
   } catch (error) {
     console.error("buildOutputText error:", error);
     return "Errore nella generazione del testo";
   }
 }
 
-let currentOutputFormat = null;
-let outputPreviewChosen = false;
-
-function isMobileOutput() {
-  return window.matchMedia?.("(max-width: 767px)").matches ?? false;
-}
-
-function getFormatLabel(format) {
-  return format === "docs" ? "Docs" : "WhatsApp";
-}
-
-function updateOutputActionState() {
-  const selectButton = document.getElementById("selectAllOutputBtn");
-  const copyButton = document.getElementById("copyPreviewBtn");
-  const modal = document.getElementById("outputModal");
-
-  [["copyWhatsAppBtn", "whatsapp"], ["copyDocsBtn", "docs"]].forEach(([id, format]) => {
-    const button = document.getElementById(id);
-    if (!button) return;
-    const selected = currentOutputFormat === format && outputPreviewChosen;
-    button.classList.toggle("is-preview-active", selected);
-    button.setAttribute("aria-pressed", String(selected));
-  });
-
-  if (selectButton) selectButton.disabled = !outputPreviewChosen;
-  if (copyButton) copyButton.disabled = !outputPreviewChosen;
-  if (modal) modal.dataset.previewReady = outputPreviewChosen ? "true" : "false";
-}
-
-function showOutputPrompt() {
+function renderOutput() {
   const textarea = document.getElementById("outputText");
-  if (textarea) {
-    textarea.value = OUTPUT_PROMPT;
-    textarea.classList.add("output-text--prompt");
-  }
-}
-
-function updateOutputPreview(format) {
-  currentOutputFormat = format;
-  outputPreviewChosen = true;
-
-  const textarea = document.getElementById("outputText");
-  if (textarea) {
-    textarea.value = buildOutputText(format);
-    textarea.classList.remove("output-text--prompt");
-  }
-  updateOutputActionState();
+  if (textarea) textarea.value = buildOutputText();
 }
 
 function toggleModal(show) {
@@ -152,14 +103,11 @@ function openModal() {
     return;
   }
 
-  currentOutputFormat = null;
-  outputPreviewChosen = false;
-  showOutputPrompt();
-  updateOutputActionState();
+  renderOutput();
   toggleModal(true);
 }
 
-async function copyText(text, format) {
+async function copyText(text) {
   if (!text) return;
 
   try {
@@ -169,11 +117,11 @@ async function copyText(text, format) {
       return;
     }
 
-    window.LineupPersistence?.markCopied(text, format);
-    showToast(`Formato ${getFormatLabel(format)} copiato!`, "success");
+    window.LineupPersistence?.markCopied(text, "unified");
+    showToast("Formazione copiata!", "success");
   } catch (error) {
     const copied = fallbackCopy(text);
-    if (copied) window.LineupPersistence?.markCopied(text, format);
+    if (copied) window.LineupPersistence?.markCopied(text, "unified");
   }
 }
 
@@ -201,38 +149,10 @@ function fallbackCopy(text) {
   return copied;
 }
 
-function blurAction(button) {
-  window.setTimeout(() => button?.blur(), 0);
-}
-
-function handleOutputAction(format, button) {
-  // Preview never copies. Only the dedicated Copy / Seleziona tutto controls do that.
-  updateOutputPreview(format);
-  blurAction(button);
-  return false;
-}
-
-function copyOutputPreview() {
-  if (!outputPreviewChosen || !currentOutputFormat) {
-    showToast(OUTPUT_PROMPT, "error");
-    return;
-  }
-  copyText(buildOutputText(currentOutputFormat), currentOutputFormat);
-}
-
-function selectAllOutput() {
-  if (!outputPreviewChosen || !currentOutputFormat) {
-    showToast(OUTPUT_PROMPT, "error");
-    return;
-  }
-
+function copyOutput() {
   const textarea = document.getElementById("outputText");
-  if (!textarea || !textarea.value) return;
-
-  textarea.focus({ preventScroll: true });
-  textarea.select();
-  textarea.setSelectionRange(0, textarea.value.length);
-  showToast("Testo selezionato", "success");
+  const text = textarea?.value || buildOutputText();
+  copyText(text);
 }
 
 function replaceAndBindOutputButton(id, handler) {
@@ -252,7 +172,4 @@ function replaceAndBindOutputButton(id, handler) {
 document.getElementById("openModalBtn")?.addEventListener("click", openModal);
 document.getElementById("fabCopy")?.addEventListener("click", openModal);
 document.getElementById("closeModalBtn")?.addEventListener("click", closeModal);
-replaceAndBindOutputButton("copyWhatsAppBtn", (event, button) => handleOutputAction("whatsapp", button));
-replaceAndBindOutputButton("copyDocsBtn", (event, button) => handleOutputAction("docs", button));
-replaceAndBindOutputButton("copyPreviewBtn", () => copyOutputPreview());
-replaceAndBindOutputButton("selectAllOutputBtn", () => selectAllOutput());
+replaceAndBindOutputButton("copyOutputBtn", () => copyOutput());

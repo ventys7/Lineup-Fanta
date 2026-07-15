@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDownIcon, ShieldIcon } from "../../icons";
+import type { PlayerMediaEntry } from "../../media";
 import type { DashboardAsset } from "../../types";
 import type { RoleKey } from "./types";
 
@@ -7,6 +8,10 @@ type Props = {
   players: DashboardAsset[];
   role: RoleKey;
   label: string;
+  media: {
+    player: (name: string, team: string) => PlayerMediaEntry | null;
+    crest: (team: string) => string;
+  };
 };
 
 function splitGoalkeepers(name: string) {
@@ -17,7 +22,18 @@ function initials(name: string) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "?";
 }
 
-export function SquadRoleSection({ players, role, label }: Props) {
+function PlayerAvatar({ name, team, role, media }: {
+  name: string; team: string; role: RoleKey; media: Props["media"];
+}) {
+  const photo = media.player(name, team)?.photoUrl;
+  return (
+    <div className={`lf-squad-avatar lf-squad-avatar--${role.toLowerCase()} ${photo ? "has-photo" : ""}`} aria-hidden="true">
+      {photo ? <img src={photo} alt="" loading="lazy" decoding="async" /> : initials(name)}
+    </div>
+  );
+}
+
+export function SquadRoleSection({ players, role, label, media }: Props) {
   const [expandedBlocks, setExpandedBlocks] = useState<Set<string>>(new Set());
   const rolePlayers = players.filter((player) => player.role === role).sort((a, b) => {
     const priceDiff = b.purchasePrice - a.purchasePrice;
@@ -45,20 +61,26 @@ export function SquadRoleSection({ players, role, label }: Props) {
             const isBlock = role === "P" && (player.type === "goalkeeper_block" || /\s+-\s+/.test(player.displayName));
             const expanded = expandedBlocks.has(player.assetCode);
             const goalkeepers = isBlock ? splitGoalkeepers(player.displayName) : [];
+            const crest = media.crest(player.realTeam);
 
             const rowContent = (
               <>
                 <div className="lf-squad-item__left">
-                  <div className={`lf-squad-avatar lf-squad-avatar--${role.toLowerCase()}`} aria-hidden="true">
-                    {isBlock ? <ShieldIcon size={17} /> : initials(player.displayName)}
-                  </div>
+                  {isBlock ? (
+                    <div className={`lf-squad-block-crest ${crest ? "has-crest" : ""}`} aria-hidden="true">
+                      {crest ? <img src={crest} alt="" loading="lazy" decoding="async" /> : <ShieldIcon size={17} />}
+                    </div>
+                  ) : <PlayerAvatar name={player.displayName} team={player.realTeam} role={role} media={media} />}
                   <div className="lf-squad-item__copy">
                     <div className="lf-squad-item__name">
                       {isBlock ? `Blocco ${player.realTeam || player.displayName}` : player.displayName}
                       {!player.active && " *"}
                       {isBlock && <ChevronDownIcon size={14} className={expanded ? "lf-chevron-open" : ""} />}
                     </div>
-                    <div className="lf-squad-item__team">{isBlock ? `${goalkeepers.length} portieri` : (player.realTeam || "—")}</div>
+                    <div className={`lf-squad-item__team ${isBlock ? "lf-squad-item__team--block" : ""}`}>
+                      {!isBlock && crest && <img className="lf-squad-club-crest" src={crest} alt="" loading="lazy" decoding="async" />}
+                      <span>{isBlock ? `${goalkeepers.length} portieri` : (player.realTeam || "—")}</span>
+                    </div>
                   </div>
                 </div>
                 <div className="lf-squad-values">
@@ -71,26 +93,24 @@ export function SquadRoleSection({ players, role, label }: Props) {
             return (
               <div key={player.assetCode} className="lf-squad-item-wrap">
                 {isBlock ? (
-                  <button
-                    type="button"
-                    className="lf-squad-item lf-squad-item--clickable"
-                    onClick={() => toggleBlock(player.assetCode)}
-                    aria-expanded={expanded}
-                  >
+                  <button type="button" className="lf-squad-item lf-squad-item--clickable" onClick={() => toggleBlock(player.assetCode)} aria-expanded={expanded}>
                     {rowContent}
                   </button>
-                ) : (
-                  <div className="lf-squad-item">{rowContent}</div>
-                )}
+                ) : <div className="lf-squad-item">{rowContent}</div>}
 
                 {isBlock && expanded && (
                   <div className="lf-squad-goalkeepers">
-                    {goalkeepers.map((goalkeeper) => (
-                      <div key={goalkeeper} className="lf-squad-goalkeeper">
-                        <div className="lf-squad-goalkeeper__avatar">P</div>
-                        <span>{goalkeeper}</span>
-                      </div>
-                    ))}
+                    {goalkeepers.map((goalkeeper) => {
+                      const photo = media.player(goalkeeper, player.realTeam)?.photoUrl;
+                      return (
+                        <div key={goalkeeper} className="lf-squad-goalkeeper">
+                          <div className={`lf-squad-goalkeeper__avatar ${photo ? "has-photo" : ""}`}>
+                            {photo ? <img src={photo} alt="" loading="lazy" decoding="async" /> : "P"}
+                          </div>
+                          <span>{goalkeeper}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>

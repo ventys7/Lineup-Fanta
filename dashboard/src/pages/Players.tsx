@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { ROLE_ORDER } from "../constants";
 import { SearchIcon, UserXIcon, XIcon } from "../icons";
 import type { DashboardAsset, SortDirection, SortKey } from "../types";
+import { usePlayerMedia } from "../media";
 import { GoalkeeperBlock } from "../components/GoalkeeperBlock";
 import { PlayerDesktopRow } from "../components/PlayerDesktopRow";
 import { PlayerFilters } from "../components/PlayerFilters";
@@ -17,6 +18,8 @@ function isGoalkeeperBlock(asset: DashboardAsset) {
 }
 
 export function Players({ assets }: { assets: DashboardAsset[] }) {
+  const leagueId = window.LINEUP_FANTA?.league?.id ?? "";
+  const media = usePlayerMedia(assets, leagueId);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("Tutti");
   const [teamFilter, setTeamFilter] = useState("Tutti");
@@ -135,13 +138,13 @@ export function Players({ assets }: { assets: DashboardAsset[] }) {
             <PlayerListHeader sortKey={sortKey} sortDirection={sortDirection} onSort={handleSort} />
             <div className="tw-hidden tw-divide-y tw-divide-slate-100 md:tw-block">
               {processedList.map((asset) => isGoalkeeperBlock(asset)
-                ? <GoalkeeperBlock key={asset.assetCode} asset={asset} expanded={expandedBlocks.has(asset.assetCode)} onToggle={() => toggleBlock(asset.assetCode)} />
-                : <PlayerDesktopRow key={asset.assetCode} player={asset} />)}
+                ? <GoalkeeperBlock key={asset.assetCode} asset={asset} expanded={expandedBlocks.has(asset.assetCode)} onToggle={() => toggleBlock(asset.assetCode)} crestUrl={media.crest(asset.realTeam)} media={media} />
+                : <PlayerDesktopRow key={asset.assetCode} player={asset} media={media.player(asset.displayName, asset.realTeam)} crestUrl={media.crest(asset.realTeam)} />)}
             </div>
             <div className="tw-divide-y tw-divide-slate-100 md:tw-hidden">
               {processedList.map((asset) => isGoalkeeperBlock(asset)
-                ? <GoalkeeperBlock key={asset.assetCode} asset={asset} expanded={expandedBlocks.has(asset.assetCode)} onToggle={() => toggleBlock(asset.assetCode)} />
-                : <PlayerMobileCard key={asset.assetCode} player={asset} />)}
+                ? <GoalkeeperBlock key={asset.assetCode} asset={asset} expanded={expandedBlocks.has(asset.assetCode)} onToggle={() => toggleBlock(asset.assetCode)} crestUrl={media.crest(asset.realTeam)} media={media} />
+                : <PlayerMobileCard key={asset.assetCode} player={asset} media={media.player(asset.displayName, asset.realTeam)} crestUrl={media.crest(asset.realTeam)} />)}
             </div>
             {processedList.length === 0 && (
               <div className="tw-px-6 tw-py-14 tw-text-center"><SearchIcon size={34} className="tw-mx-auto tw-mb-3 tw-text-slate-300"/><h2 className="tw-m-0 tw-text-lg tw-font-bold tw-text-slate-800">Nessun giocatore trovato</h2><p className="tw-mb-0 tw-mt-1 tw-text-sm tw-text-slate-500">Prova a modificare i filtri di ricerca.</p></div>

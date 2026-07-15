@@ -55,6 +55,23 @@ function renderRoster() {
     const left = document.createElement("div");
     left.className = "player-left";
 
+    const media = document.createElement("span");
+    media.className = "player-card__photo";
+    const mediaUrl = player.isGkBlock
+      ? window.LineupPlayerMedia?.crest(player.t)
+      : window.LineupPlayerMedia?.photo(player.n, player.t);
+    if (mediaUrl) {
+      const image = document.createElement("img");
+      image.src = mediaUrl;
+      image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
+      if (player.isGkBlock) image.className = "is-crest";
+      media.appendChild(image);
+    } else {
+      media.textContent = (player.n || player.gkBlock || "?").trim().charAt(0).toUpperCase() || "?";
+    }
+
     const badge = document.createElement("div");
     badge.className = "badge " + (player.r || "U");
     badge.textContent = player.r || "?";
@@ -71,6 +88,7 @@ function renderRoster() {
 
     meta.appendChild(nameEl);
     meta.appendChild(teamEl);
+    left.appendChild(media);
     left.appendChild(badge);
     left.appendChild(meta);
 

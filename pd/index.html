@@ -283,14 +283,8 @@
     </div>
 
     <div class="output-modal__content">
-      <div class="output-copy-actions" aria-label="Scegli il formato dell'anteprima">
-        <button id="copyWhatsAppBtn" class="output-copy-btn output-copy-btn--whatsapp" type="button" aria-pressed="false">Anteprima per WhatsApp</button>
-        <button id="copyDocsBtn" class="output-copy-btn output-copy-btn--docs" type="button" aria-pressed="false">Anteprima per Docs</button>
-      </div>
-      <textarea id="outputText" readonly aria-label="Anteprima formazione">Seleziona un’anteprima per copiare</textarea>
-
-      <button id="copyPreviewBtn" class="output-copy-preview-btn" type="button" disabled>Copia</button>
-      <button id="selectAllOutputBtn" class="output-select-all-btn" type="button" disabled>Seleziona tutto</button>
+      <textarea id="outputText" readonly aria-label="Output formazione"></textarea>
+      <button id="copyOutputBtn" class="output-copy-output-btn" type="button">Copia formazione</button>
       <button id="openStoryBtn" class="output-story-btn" type="button">Crea grafica 9:16</button>
     </div>
   </div>
@@ -357,9 +351,12 @@
 <!-- Toast container -->
 <div id="toastContainer" aria-hidden="true"></div>
 
+<script src="js/runtime-settings.js"></script>
 <script src="js/router.js"></script>
 <script src="js/debug.js"></script>
 <script src="js/formation-constants.js"></script>
+<script src="js/club-keys.js"></script>
+<script src="js/player-media.js"></script>
 <script src="js/csv-parser.js"></script>
 <script src="js/csv-formation-db.js"></script>
 <script src="js/csv.js"></script>

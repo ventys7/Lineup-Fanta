@@ -157,9 +157,10 @@ html[data-route="league"] .formation-shirt {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto auto auto;
   grid-template-areas:
     "role"
+    "photo"
     "name"
     "team";
   justify-items: center;
@@ -241,17 +242,35 @@ html[data-route="league"] .formation-shirt__role {
   grid-area: role;
   display: grid;
   place-items: center;
-  width: 23px;
-  height: 20px;
-  margin-bottom: 14px;
+  width: 21px;
+  height: 18px;
+  margin-bottom: 6px;
   border-radius: 999px;
   border: 0;
   color: #15382e;
   background: rgba(255,255,255,.92);
-  font-size: .61rem;
+  font-size: .56rem;
   font-weight: 900;
   line-height: 1;
 }
+
+html[data-route="league"] .formation-shirt__photo {
+  grid-area: photo;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 6px;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,.75);
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  box-shadow: 0 3px 8px rgba(5,28,21,.18);
+}
+
+html[data-route="league"] .formation-shirt__photo[hidden] { display: none; }
+html[data-route="league"] .formation-shirt__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+html[data-route="league"] .formation-shirt__photo img.is-crest { padding: 5px; object-fit: contain; object-position: center; background: rgba(255,255,255,.94); }
 
 html[data-route="league"] .formation-shirt__name,
 html[data-route="league"] .formation-shirt__team {
@@ -369,6 +388,15 @@ html[data-route="league"] #mobileBenchSlots .formation-shirt--empty {
   color: #83938d;
   background: rgba(88, 104, 98, .14);
   border-color: rgba(128, 145, 138, .32);
+  box-shadow: none;
+}
+
+html[data-route="league"] #benchSlots .formation-shirt__photo,
+html[data-route="league"] #mobileBenchSlots .formation-shirt__photo {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 4px;
+  border-width: 1px;
   box-shadow: none;
 }
 
@@ -668,64 +696,30 @@ html[data-route="league"] .output-modal__content {
   flex-direction: column;
   gap: 12px;
 }
-html[data-route="league"] .output-copy-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-html[data-route="league"] .output-copy-btn {
-  min-height: 42px;
-  padding: 9px 10px;
-  border: 0;
-  color: #fff;
-  font-size: .84rem;
-}
-html[data-route="league"] .output-copy-btn:hover,
-html[data-route="league"] .output-copy-btn:active {
-  transform: none;
-  filter: none;
-}
-html[data-route="league"] .output-copy-btn--whatsapp {
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-}
-html[data-route="league"] .output-copy-btn--docs {
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
-}
-html[data-route="league"] .output-copy-btn.is-preview-active {
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,.78), 0 5px 15px rgba(15,23,42,.18);
-}
 html[data-route="league"] .output-modal__content #outputText {
   width: 100%;
-  min-height: 250px;
-  height: 250px;
+  min-height: 330px;
+  height: 330px;
+  padding: 18px;
   resize: vertical;
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, #d7e2dd);
+  border-radius: 16px;
+  color: #18352c;
+  background: linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--primary-bg) 34%, #ffffff));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 20px rgba(24,53,44,.07);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: .86rem;
+  font-weight: 650;
+  line-height: 1.62;
   text-align: left;
   white-space: pre-wrap;
 }
-html[data-route="league"] .output-modal__content #outputText.output-text--prompt {
-  color: #687a73;
-  font-style: italic;
-  text-align: center;
-}
-html[data-route="league"] .output-copy-preview-btn,
-html[data-route="league"] .output-select-all-btn {
+html[data-route="league"] .output-copy-output-btn {
   width: 100%;
-  min-height: 42px;
-  color: #fff;
+  min-height: 44px;
   border: 0;
-}
-html[data-route="league"] .output-copy-preview-btn {
+  color: #fff;
   background: linear-gradient(135deg, #d97706, #ea580c);
-}
-html[data-route="league"] .output-select-all-btn {
-  display: none;
-  background: linear-gradient(135deg, #d97706, #ea580c);
-}
-html[data-route="league"] .output-copy-preview-btn:disabled,
-html[data-route="league"] .output-select-all-btn:disabled {
-  cursor: not-allowed;
-  opacity: .48;
-  filter: grayscale(.2);
 }
 
 /* ----- desktop layout ----- */
@@ -957,10 +951,17 @@ html[data-route="league"] .output-select-all-btn:disabled {
   }
 
   html[data-route="league"] #mobileStartersSlots .formation-shirt__role {
-    width: 19px;
-    height: 18px;
-    margin-bottom: 9px;
-    font-size: .56rem;
+    width: 18px;
+    height: 16px;
+    margin-bottom: 7px;
+    font-size: .51rem;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-shirt__photo {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 3px;
+    border-width: 1px;
+    box-shadow: none;
   }
   html[data-route="league"] #mobileStartersSlots .formation-shirt__name {
     font-size: clamp(.66rem, 2.35vw, .80rem);
@@ -987,10 +988,15 @@ html[data-route="league"] .output-select-all-btn:disabled {
     padding: 6px 2px 7px;
   }
   html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt__role {
-    width: 17px;
-    height: 16px;
-    margin-bottom: 7px;
-    font-size: .5rem;
+    width: 16px;
+    height: 15px;
+    margin-bottom: 6px;
+    font-size: .46rem;
+  }
+  html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt__photo {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 2px;
   }
   html[data-route="league"] #mobileStartersSlots .formation-row[data-count="5"] .formation-shirt__name {
     font-size: clamp(.54rem, 1.98vw, .66rem);
@@ -1051,9 +1057,7 @@ html[data-route="league"] .output-select-all-btn:disabled {
     min-height: 46px;
   }
 
-  html[data-route="league"] .output-copy-preview-btn { display: none; }
-  html[data-route="league"] .output-select-all-btn { display: block; }
-  html[data-route="league"] .output-modal__content #outputText { min-height: 260px; }
+  html[data-route="league"] .output-modal__content #outputText { min-height: 300px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
