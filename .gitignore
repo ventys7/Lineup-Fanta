@@ -6,3 +6,5 @@ node_modules/
 .lineup-runtime/
 .env.local
 .env.*.local
+bsd-matching-*/
+bsd-team-selection-*/
