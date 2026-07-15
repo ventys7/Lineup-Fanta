@@ -125,6 +125,32 @@ test("player media staging is atomic and failure-safe", async (t) => {
     assert.equal(martinelli.photoUrl.includes("sports.bzzoiro.com"), false);
   });
 
+  await t.test("a persisted teams N/N job repairs itself and starts player uploads", async () => {
+    mode = "success";
+    await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
+
+    let status = await media.startMissingSync("fp");
+    assert.equal(status.refresh.phase, "teams");
+
+    status = await media.processFullSync("fp", 10);
+    assert.equal(status.refresh.phase, "players");
+    assert.equal(status.refresh.teamCursor, status.refresh.teamTotal);
+
+    const stuckJob = await storage.readJson("media/bsd/job-fp.json", null);
+    await storage.writeJson("media/bsd/job-fp.json", {
+      ...stuckJob,
+      pending: true,
+      phase: "teams",
+      teamCursor: stuckJob.clubs.length,
+      playerCursor: 0,
+      error: ""
+    });
+
+    status = await media.processFullSync("fp", 1);
+    assert.notEqual(status.refresh.phase, "teams");
+    assert.equal(Number(status.refresh.playerCursor || 0) > 0, true);
+  });
+
   await t.test("systemic BSD failure leaves the previous live manifest active", async () => {
     mode = "team-failure";
     await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });

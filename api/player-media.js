@@ -42,16 +42,16 @@ module.exports = async function handler(req, res) {
     const id = leagueId(body.leagueId);
 
     if (body.action === "sync-missing") {
-      const synced = await syncMissing(id, { limit: 10 });
+      const synced = await syncMissing(id, { limit: 4 });
       return res.status(200).json({ ...publicManifest(synced.manifest), remaining: synced.remaining, processed: synced.processed });
     }
     if (body.action === "full-sync") {
       await markFullSync(id);
-      const manifest = await processFullSync(id, 10);
+      const manifest = await processFullSync(id, 4);
       return res.status(200).json(publicManifest(manifest));
     }
     if (body.action === "continue-sync" || body.action === "continue-full-sync") {
-      const manifest = await processFullSync(id, 10);
+      const manifest = await processFullSync(id, 4);
       return res.status(200).json(publicManifest(manifest));
     }
     if (body.action === "search") {

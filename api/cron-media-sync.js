@@ -31,14 +31,14 @@ module.exports = async function handler(req, res) {
         if (scheduledToday && !alreadyRefreshedToday) {
           await markFullSync(id);
         } else if (!scheduledToday) {
-          await syncMissing(id, { limit: 10 });
+          await syncMissing(id, { limit: 4 });
         }
         status = await mediaStatus(id);
       }
 
       let iterations = 0;
-      while (status.refresh?.pending && !status.refresh?.error && Date.now() < deadline && iterations < 80) {
-        await processFullSync(id, 10);
+      while (status.refresh?.pending && !status.refresh?.error && Date.now() < deadline && iterations < 140) {
+        await processFullSync(id, 4);
         status = await mediaStatus(id);
         iterations += 1;
       }
