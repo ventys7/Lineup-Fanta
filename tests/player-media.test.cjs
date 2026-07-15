@@ -101,6 +101,47 @@ test("BSD abbreviated names match the Listone only inside the same club", () => 
   assert.equal(result.selected?.id, "157052");
 });
 
+
+
+test("BSD matching handles accents, notes, compound surnames and obvious typos", () => {
+  const arsenal = [
+    { id: "1", name: "Christian Nørgaard", names: ["Christian Nørgaard"], teamName: "Arsenal", teamKey: "arsenal" },
+    { id: "2", name: "Martin Ødegaard", names: ["Martin Ødegaard"], teamName: "Arsenal", teamKey: "arsenal" },
+    { id: "3", name: "Myles Lewis-Skelly", names: ["Myles Lewis-Skelly"], teamName: "Arsenal", teamKey: "arsenal" }
+  ];
+  assert.equal(chooseCandidate({ displayName: "Norgaard", realTeam: "Arsenal" }, arsenal).selected?.id, "1");
+  assert.equal(chooseCandidate({ displayName: "Odegaard", realTeam: "Arsenal" }, arsenal).selected?.id, "2");
+  assert.equal(chooseCandidate({ displayName: "Lewis-Skelly", realTeam: "Arsenal" }, arsenal).selected?.id, "3");
+
+  const everton = [
+    { id: "4", name: "Jake O'Brien", names: ["Jake O'Brien"], teamName: "Everton", teamKey: "everton" },
+    { id: "5", name: "Tyrique George", names: ["Tyrique George"], teamName: "Everton", teamKey: "everton" }
+  ];
+  assert.equal(chooseCandidate({ displayName: "O’Brein", realTeam: "Everton" }, everton).selected?.id, "4");
+  assert.equal(chooseCandidate({ displayName: "George (Akas)", realTeam: "Everton" }, everton).selected?.id, "5");
+
+  const liverpool = [
+    { id: "6", name: "Alexis Mac Allister", names: ["Alexis Mac Allister"], teamName: "Liverpool", teamKey: "liverpool" }
+  ];
+  assert.equal(chooseCandidate({ displayName: "MacAllister", realTeam: "Liverpool" }, liverpool).selected?.id, "6");
+});
+
+test("docsName resolves a short Listone label while true surname collisions stay ambiguous", () => {
+  const arsenal = [
+    { id: "452", name: "Gabriel Martinelli", names: ["Gabriel Martinelli"], teamName: "Arsenal", teamKey: "arsenal" },
+    { id: "461", name: "Gabriel Jesus", names: ["Gabriel Jesus"], teamName: "Arsenal", teamKey: "arsenal" },
+    { id: "4072", name: "Gabriel Magalhães", names: ["Gabriel Magalhães"], teamName: "Arsenal", teamKey: "arsenal" }
+  ];
+  assert.equal(chooseCandidate({ displayName: "Gabriel", docsName: "Gabriel Martinelli", realTeam: "Arsenal" }, arsenal).selected?.id, "452");
+  assert.equal(chooseCandidate({ displayName: "Gabriel", realTeam: "Arsenal" }, arsenal).selected, null);
+
+  const newcastle = [
+    { id: "706", name: "Jacob Murphy", names: ["Jacob Murphy"], teamName: "Newcastle", teamKey: "newcastle" },
+    { id: "714", name: "Alex Murphy", names: ["Alex Murphy"], teamName: "Newcastle", teamKey: "newcastle" }
+  ];
+  assert.equal(chooseCandidate({ displayName: "Murphy", realTeam: "Newcastle" }, newcastle).selected, null);
+});
+
 test("a failed refresh preserves the previous verified Blob entry", () => {
   const existing = {
     key: "bukayo saka|arsenal",

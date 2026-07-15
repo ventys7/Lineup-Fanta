@@ -1,0 +1,182 @@
+=== CLUB CON ROSA VUOTA ===
+Getafe: 25 giocatori
+
+=== RIEPILOGO PER CLUB ===
+Alaves                   automatic=  5 ambiguous=  0 no-match= 19 no-roster=  0
+Athletic Bilbao          automatic=  2 ambiguous=  0 no-match= 22 no-roster=  0
+Atletico Madrid          automatic= 21 ambiguous=  1 no-match=  0 no-roster=  0
+Barcelona                automatic= 22 ambiguous=  0 no-match=  1 no-roster=  0
+Celta Vigo               automatic= 25 ambiguous=  0 no-match=  2 no-roster=  0
+Elche                    automatic= 20 ambiguous=  0 no-match=  1 no-roster=  0
+Espanyol                 automatic= 22 ambiguous=  0 no-match=  0 no-roster=  0
+Getafe                   automatic=  0 ambiguous=  0 no-match=  0 no-roster= 25
+Girona                   automatic= 20 ambiguous=  2 no-match=  2 no-roster=  0
+Mallorca                 automatic= 20 ambiguous=  0 no-match=  3 no-roster=  0
+Osasuna                  automatic= 19 ambiguous=  3 no-match=  0 no-roster=  0
+Rayo Vallecano           automatic= 24 ambiguous=  0 no-match=  2 no-roster=  0
+Real Betis               automatic= 26 ambiguous=  0 no-match=  0 no-roster=  0
+Real Madrid              automatic=  3 ambiguous=  0 no-match= 21 no-roster=  0
+Real Sociedad            automatic=  1 ambiguous=  1 no-match= 26 no-roster=  0
+Sevilla                  automatic= 23 ambiguous=  0 no-match=  1 no-roster=  0
+Sevilla/Getafe           automatic=  1 ambiguous=  0 no-match=  0 no-roster=  0
+Valencia                 automatic=  0 ambiguous=  0 no-match= 24 no-roster=  0
+Villarreal               automatic= 23 ambiguous=  0 no-match=  1 no-roster=  0
+
+=== AMBIGUI, SENZA MATCH E ROSA VUOTA ===
+no-name-match | Alaves                 | Listone: Alena                        | Docs: Alena                        | nessun candidato
+no-name-match | Alaves                 | Listone: Angel Perez                  | Docs: Angel Perez                  | nessun candidato
+no-name-match | Alaves                 | Listone: Benavidez                    | Docs: Benavidez                    | nessun candidato
+no-name-match | Alaves                 | Listone: Blanco                       | Docs: Blanco                       | nessun candidato
+no-name-match | Alaves                 | Listone: Boye                         | Docs: Boye                         | nessun candidato
+no-name-match | Alaves                 | Listone: Calebe                       | Docs: Calebe                       | nessun candidato
+no-name-match | Alaves                 | Listone: Denis Suarez                 | Docs: Denis Suarez                 | nessun candidato
+no-name-match | Alaves                 | Listone: Enriquez                     | Docs: Enriquez                     | nessun candidato
+no-name-match | Alaves                 | Listone: Garces                       | Docs: Garces                       | nessun candidato
+no-name-match | Alaves                 | Listone: Guevara                      | Docs: Guevara                      | nessun candidato
+no-name-match | Alaves                 | Listone: Guridi                       | Docs: Guridi                       | nessun candidato
+no-name-match | Alaves                 | Listone: Ibanez                       | Docs: Ibanez                       | nessun candidato
+no-name-match | Alaves                 | Listone: Jonny                        | Docs: Jonny                        | nessun candidato
+no-name-match | Alaves                 | Listone: Koski                        | Docs: Koski                        | nessun candidato
+no-name-match | Alaves                 | Listone: Mariano Diaz                 | Docs: Mariano Diaz                 | nessun candidato
+no-name-match | Alaves                 | Listone: Moussa Diarra                | Docs: Moussa Diarra                | nessun candidato
+no-name-match | Alaves                 | Listone: Pacheco                      | Docs: Pacheco                      | nessun candidato
+no-name-match | Alaves                 | Listone: Rebbach                      | Docs: Rebbach                      | nessun candidato
+no-name-match | Alaves                 | Listone: Tenaglia                     | Docs: Tenaglia                     | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Adama Boiro                  | Docs: Adama Boiro                  | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Areso                        | Docs: Areso                        | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Berchiche                    | Docs: Berchiche                    | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Berenguer                    | Docs: Berenguer                    | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: de Galarreta                 | Docs: de Galarreta                 | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Gorosabel                    | Docs: Gorosabel                    | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Guruzeta                     | Docs: Guruzeta                     | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Inaki Williams               | Docs: Inaki Williams               | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Jauregizar                   | Docs: Jauregizar                   | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Laporte                      | Docs: Laporte                      | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Lekue                        | Docs: Lekue                        | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Nico Williams                | Docs: Nico Williams                | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Padilla                      | Docs: Unai Simon - Padilla         | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Paredes                      | Docs: Paredes                      | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Prados                       | Docs: Prados                       | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Robert Navarro               | Docs: Robert Navarro               | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Sancet                       | Docs: Sancet                       | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Serrano                      | Docs: Serrano                      | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Unai Gomez                   | Docs: Unai Gomez                   | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Unai Simon                   | Docs: Unai Simon - Padilla         | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Vivian                       | Docs: Vivian                       | nessun candidato
+no-name-match | Athletic Bilbao        | Listone: Yeray                        | Docs: Yeray                        | nessun candidato
+ambiguous     | Atletico Madrid        | Listone: Llorente                     | Docs: Llorente                     | Marcos Llorente [3832] score=94 | Miguel Cubo [50447] score=94
+no-name-match | Barcelona              | Listone: Cancelo                      | Docs: Cancelo                      | nessun candidato
+no-name-match | Celta Vigo             | Listone: Beltran                      | Docs: Beltran                      | nessun candidato
+no-name-match | Celta Vigo             | Listone: Fran Beltran                 | Docs: Fran Beltran                 | nessun candidato
+no-name-match | Elche                  | Listone: Leo Petrot                   | Docs: Leo Petrot                   | nessun candidato
+no-roster     | Getafe                 | Listone: Abqar                        | Docs: Abqar                        | nessun candidato
+no-roster     | Getafe                 | Listone: Abu Kamara                   | Docs: Abu Kamara                   | nessun candidato
+no-roster     | Getafe                 | Listone: Adrian Liso                  | Docs: Adrian Liso                  | nessun candidato
+no-roster     | Getafe                 | Listone: Arambarri                    | Docs: Arambarri                    | nessun candidato
+no-roster     | Getafe                 | Listone: Bekhoucha                    | Docs: Bekhoucha                    | nessun candidato
+no-roster     | Getafe                 | Listone: Birmancevic                  | Docs: Birmancevic                  | nessun candidato
+no-roster     | Getafe                 | Listone: Borja Mayoral                | Docs: Borja Mayoral                | nessun candidato
+no-roster     | Getafe                 | Listone: Boselli                      | Docs: Boselli                      | nessun candidato
+no-roster     | Getafe                 | Listone: Davinchi                     | Docs: Davinchi                     | nessun candidato
+no-roster     | Getafe                 | Listone: Diego Rico                   | Docs: Diego Rico                   | nessun candidato
+no-roster     | Getafe                 | Listone: Djene                        | Docs: Djene                        | nessun candidato
+no-roster     | Getafe                 | Listone: Duarte                       | Docs: Duarte                       | nessun candidato
+no-roster     | Getafe                 | Listone: Javi Munoz                   | Docs: Javi Munoz                   | nessun candidato
+no-roster     | Getafe                 | Listone: Juanmi                       | Docs: Juanmi                       | nessun candidato
+no-roster     | Getafe                 | Listone: Kiko                         | Docs: Kiko                         | nessun candidato
+no-roster     | Getafe                 | Listone: Letacek                      | Docs: Soria - Letacek              | nessun candidato
+no-roster     | Getafe                 | Listone: Luis Vazquez                 | Docs: Luis Vazquez                 | nessun candidato
+no-roster     | Getafe                 | Listone: Mario Martin                 | Docs: Mario Martin                 | nessun candidato
+no-roster     | Getafe                 | Listone: Milla                        | Docs: Milla                        | nessun candidato
+no-roster     | Getafe                 | Listone: Noupa                        | Docs: Noupa                        | nessun candidato
+no-roster     | Getafe                 | Listone: Nyom                         | Docs: Nyom                         | nessun candidato
+no-roster     | Getafe                 | Listone: Sancris                      | Docs: Sancris                      | nessun candidato
+no-roster     | Getafe                 | Listone: Satriano                     | Docs: Satriano                     | nessun candidato
+no-roster     | Getafe                 | Listone: Soria                        | Docs: Soria - Letacek              | nessun candidato
+no-roster     | Getafe                 | Listone: Zaid Romero                  | Docs: Zaid Romero                  | nessun candidato
+ambiguous     | Girona                 | Listone: Arnau                        | Docs: Arnau                        | Arnau Martínez [1038] score=94 | Pol Arnau [4383] score=94
+no-name-match | Girona                 | Listone: Asprilla                     | Docs: Asprilla                     | nessun candidato
+no-name-match | Girona                 | Listone: Solis                        | Docs: Solis                        | nessun candidato
+ambiguous     | Girona                 | Listone: Ter Stegen                   | Docs: Ter Stegen - Gazzaniga       | Marc-André Ter Stegen [5176] score=92 | Paulo Gazzaniga [1036] score=90
+no-name-match | Mallorca               | Listone: Asano                        | Docs: Asano                        | nessun candidato
+no-name-match | Mallorca               | Listone: Dani Rodriguez               | Docs: Dani Rodriguez               | nessun candidato
+no-name-match | Mallorca               | Listone: Llabres                      | Docs: Llabres                      | nessun candidato
+ambiguous     | Osasuna                | Listone: Juan Cruz                    | Docs: Juan Cruz                    | Juan Cruz [2674] score=102 | Juan Cruz [50435] score=102
+ambiguous     | Osasuna                | Listone: Raul Garcia                  | Docs: Raul Garcia                  | Rubén García [2670] score=100 | Raúl García de Haro [2672] score=100
+ambiguous     | Osasuna                | Listone: Ruben Garcia                 | Docs: Ruben Garcia                 | Rubén García [2670] score=102 | Raúl García de Haro [2672] score=100
+no-name-match | Rayo Vallecano         | Listone: Espino                       | Docs: Espino                       | nessun candidato
+no-name-match | Rayo Vallecano         | Listone: Gumbau                       | Docs: Gumbau                       | nessun candidato
+no-name-match | Real Madrid            | Listone: Asencio                      | Docs: Asencio                      | nessun candidato
+no-name-match | Real Madrid            | Listone: Bellingham                   | Docs: Bellingham                   | nessun candidato
+no-name-match | Real Madrid            | Listone: Brahim Diaz                  | Docs: Brahim Diaz                  | nessun candidato
+no-name-match | Real Madrid            | Listone: Camavinga                    | Docs: Camavinga                    | nessun candidato
+no-name-match | Real Madrid            | Listone: Carreras                     | Docs: Carreras                     | nessun candidato
+no-name-match | Real Madrid            | Listone: Carvajal                     | Docs: Carvajal                     | nessun candidato
+no-name-match | Real Madrid            | Listone: Ceballos                     | Docs: Ceballos                     | nessun candidato
+no-name-match | Real Madrid            | Listone: Courtois                     | Docs: Courtois - Lunin             | nessun candidato
+no-name-match | Real Madrid            | Listone: Guler                        | Docs: Guler                        | nessun candidato
+no-name-match | Real Madrid            | Listone: Huijsen                      | Docs: Huijsen                      | nessun candidato
+no-name-match | Real Madrid            | Listone: Lunin                        | Docs: Courtois - Lunin             | nessun candidato
+no-name-match | Real Madrid            | Listone: Mastantuono                  | Docs: Mastantuono                  | nessun candidato
+no-name-match | Real Madrid            | Listone: Mbappe                       | Docs: Mbappe                       | nessun candidato
+no-name-match | Real Madrid            | Listone: Mendy                        | Docs: Mendy                        | nessun candidato
+no-name-match | Real Madrid            | Listone: Militao                      | Docs: Militao                      | nessun candidato
+no-name-match | Real Madrid            | Listone: Rodrygo                      | Docs: Rodrygo                      | nessun candidato
+no-name-match | Real Madrid            | Listone: Rudiger                      | Docs: Rudiger                      | nessun candidato
+no-name-match | Real Madrid            | Listone: Tchouameni                   | Docs: Tchouameni                   | nessun candidato
+no-name-match | Real Madrid            | Listone: Trent                        | Docs: Trent                        | nessun candidato
+no-name-match | Real Madrid            | Listone: Valverde                     | Docs: Valverde                     | nessun candidato
+no-name-match | Real Madrid            | Listone: Vinicius                     | Docs: Vinicius                     | nessun candidato
+no-name-match | Real Sociedad          | Listone: Aihen Munoz                  | Docs: Aihen Munoz                  | nessun candidato
+no-name-match | Real Sociedad          | Listone: Aramburu                     | Docs: Aramburu                     | nessun candidato
+no-name-match | Real Sociedad          | Listone: Barrenetxea                  | Docs: Barrenetxea                  | nessun candidato
+no-name-match | Real Sociedad          | Listone: Brais Mendez                 | Docs: Brais Mendez                 | nessun candidato
+no-name-match | Real Sociedad          | Listone: Caleta-Car                   | Docs: Caleta-Car                   | nessun candidato
+no-name-match | Real Sociedad          | Listone: Elustondo                    | Docs: Elustondo                    | nessun candidato
+no-name-match | Real Sociedad          | Listone: Gorrotxategi                 | Docs: Gorrotxategi                 | nessun candidato
+no-name-match | Real Sociedad          | Listone: Goti                         | Docs: Goti                         | nessun candidato
+no-name-match | Real Sociedad          | Listone: Guedes                       | Docs: Guedes                       | nessun candidato
+no-name-match | Real Sociedad          | Listone: Karrikaburu                  | Docs: Karrikaburu                  | nessun candidato
+no-name-match | Real Sociedad          | Listone: Kubo                         | Docs: Kubo                         | nessun candidato
+no-name-match | Real Sociedad          | Listone: Mariezkurrena                | Docs: Mariezkurrena                | nessun candidato
+no-name-match | Real Sociedad          | Listone: Marrero                      | Docs: Remiro - Marrero             | nessun candidato
+no-name-match | Real Sociedad          | Listone: Odriozola                    | Docs: Odriozola                    | nessun candidato
+no-name-match | Real Sociedad          | Listone: Oskarsson                    | Docs: Oskarsson                    | nessun candidato
+no-name-match | Real Sociedad          | Listone: Oyarzabal                    | Docs: Oyarzabal                    | nessun candidato
+ambiguous     | Real Sociedad          | Listone: Pablo Marin                  | Docs: Pablo Marin                  | María Molina [21262] score=90 | Maren Lezeta [21283] score=90
+no-name-match | Real Sociedad          | Listone: Remiro                       | Docs: Remiro - Marrero             | nessun candidato
+no-name-match | Real Sociedad          | Listone: Sadiq                        | Docs: Sadiq                        | nessun candidato
+no-name-match | Real Sociedad          | Listone: Sergio Gomez                 | Docs: Sergio Gomez                 | nessun candidato
+no-name-match | Real Sociedad          | Listone: Soler                        | Docs: Soler                        | nessun candidato
+no-name-match | Real Sociedad          | Listone: Sucic                        | Docs: Sucic                        | nessun candidato
+no-name-match | Real Sociedad          | Listone: Turrientes                   | Docs: Turrientes                   | nessun candidato
+no-name-match | Real Sociedad          | Listone: Wesley                       | Docs: Wesley                       | nessun candidato
+no-name-match | Real Sociedad          | Listone: Yangel Herrera               | Docs: Yangel Herrera               | nessun candidato
+no-name-match | Real Sociedad          | Listone: Zakharyan                    | Docs: Zakharyan                    | nessun candidato
+no-name-match | Real Sociedad          | Listone: Zubeldia                     | Docs: Zubeldia                     | nessun candidato
+no-name-match | Sevilla                | Listone: Andres Lopez                 | Docs: Andres Lopez                 | nessun candidato
+no-name-match | Valencia               | Listone: Agirrezabala                 | Docs: Agirrezabala - Dimitrievski  | nessun candidato
+no-name-match | Valencia               | Listone: Andre Almeida                | Docs: Andre Almeida                | nessun candidato
+no-name-match | Valencia               | Listone: Beltran                      | Docs: Beltran                      | nessun candidato
+no-name-match | Valencia               | Listone: Comert                       | Docs: Comert                       | nessun candidato
+no-name-match | Valencia               | Listone: Copete                       | Docs: Copete                       | nessun candidato
+no-name-match | Valencia               | Listone: Correia                      | Docs: Correia                      | nessun candidato
+no-name-match | Valencia               | Listone: Danjuma                      | Docs: Danjuma                      | nessun candidato
+no-name-match | Valencia               | Listone: Diakhaby                     | Docs: Diakhaby                     | nessun candidato
+no-name-match | Valencia               | Listone: Diego Lopez                  | Docs: Diego Lopez                  | nessun candidato
+no-name-match | Valencia               | Listone: Dimitrievski                 | Docs: Agirrezabala - Dimitrievski  | nessun candidato
+no-name-match | Valencia               | Listone: Foulquier                    | Docs: Foulquier                    | nessun candidato
+no-name-match | Valencia               | Listone: Gaya                         | Docs: Gaya                         | nessun candidato
+no-name-match | Valencia               | Listone: Guido Rodriguez              | Docs: Guido Rodriguez              | nessun candidato
+no-name-match | Valencia               | Listone: Hugo Duro                    | Docs: Hugo Duro                    | nessun candidato
+no-name-match | Valencia               | Listone: Javi Guerra                  | Docs: Javi Guerra                  | nessun candidato
+no-name-match | Valencia               | Listone: Pepelu                       | Docs: Pepelu                       | nessun candidato
+no-name-match | Valencia               | Listone: Raba                         | Docs: Raba                         | nessun candidato
+no-name-match | Valencia               | Listone: Ramazani                     | Docs: Ramazani                     | nessun candidato
+no-name-match | Valencia               | Listone: Rioja                        | Docs: Rioja                        | nessun candidato
+no-name-match | Valencia               | Listone: Sadiq                        | Docs: Sadiq                        | nessun candidato
+no-name-match | Valencia               | Listone: Santamaria                   | Docs: Santamaria                   | nessun candidato
+no-name-match | Valencia               | Listone: Tarrega                      | Docs: Tarrega                      | nessun candidato
+no-name-match | Valencia               | Listone: Ugrinic                      | Docs: Ugrinic                      | nessun candidato
+no-name-match | Valencia               | Listone: Vazquez                      | Docs: Vazquez                      | nessun candidato
+no-name-match | Villarreal             | Listone: Adrià Altimira               | Docs: Adrià Altimira               | nessun candidato

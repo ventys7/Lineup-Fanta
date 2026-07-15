@@ -3,12 +3,14 @@ const { methodNotAllowed, readBody } = require("../lib/http.cjs");
 const { leagueId } = require("../lib/settings.cjs");
 const {
   linkManual,
+  linkTeamManual,
   markFullSync,
   mediaStatus,
   processFullSync,
   publicManifest,
   readManifest,
   searchProvider,
+  searchProviderTeams,
   syncMissing
 } = require("../lib/player-media.cjs");
 
@@ -56,6 +58,12 @@ module.exports = async function handler(req, res) {
     }
     if (body.action === "search") {
       return res.status(200).json({ candidates: await searchProvider(id, body.query, body.teamName) });
+    }
+    if (body.action === "search-team") {
+      return res.status(200).json({ candidates: await searchProviderTeams(id, body.teamName) });
+    }
+    if (body.action === "link-team") {
+      return res.status(200).json({ team: await linkTeamManual(id, body.teamName, body.externalId) });
     }
     if (body.action === "link") {
       return res.status(200).json({ entry: await linkManual(id, body.key, body.candidate) });

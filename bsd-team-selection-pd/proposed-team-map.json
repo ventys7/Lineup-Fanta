@@ -1,0 +1,92 @@
+{
+  "alaves": {
+    "id": "45",
+    "name": "Deportivo Alavés",
+    "listoneName": "Alaves"
+  },
+  "athletic club": {
+    "id": "51",
+    "name": "Athletic Club",
+    "listoneName": "Athletic Bilbao"
+  },
+  "atletico de madrid": {
+    "id": "54",
+    "name": "Atlético Madrid",
+    "listoneName": "Atletico Madrid"
+  },
+  "barcelona": {
+    "id": "44",
+    "name": "FC Barcelona",
+    "listoneName": "Barcelona"
+  },
+  "celta vigo": {
+    "id": "49",
+    "name": "Celta Vigo",
+    "listoneName": "Celta Vigo"
+  },
+  "elche": {
+    "id": "55",
+    "name": "Elche",
+    "listoneName": "Elche"
+  },
+  "espanyol": {
+    "id": "53",
+    "name": "Espanyol",
+    "listoneName": "Espanyol"
+  },
+  "getafe": {
+    "id": "50",
+    "name": "Getafe",
+    "listoneName": "Getafe"
+  },
+  "girona": {
+    "id": "39",
+    "name": "Girona FC",
+    "listoneName": "Girona"
+  },
+  "mallorca": {
+    "id": "43",
+    "name": "Mallorca",
+    "listoneName": "Mallorca"
+  },
+  "osasuna": {
+    "id": "58",
+    "name": "Osasuna",
+    "listoneName": "Osasuna"
+  },
+  "rayo vallecano": {
+    "id": "40",
+    "name": "Rayo Vallecano",
+    "listoneName": "Rayo Vallecano"
+  },
+  "real betis": {
+    "id": "56",
+    "name": "Real Betis",
+    "listoneName": "Real Betis"
+  },
+  "real madrid": {
+    "id": "57",
+    "name": "Real Madrid",
+    "listoneName": "Real Madrid"
+  },
+  "real sociedad": {
+    "id": "48",
+    "name": "Real Sociedad",
+    "listoneName": "Real Sociedad"
+  },
+  "sevilla": {
+    "id": "52",
+    "name": "Sevilla",
+    "listoneName": "Sevilla"
+  },
+  "valencia": {
+    "id": "47",
+    "name": "Valencia",
+    "listoneName": "Valencia"
+  },
+  "villarreal": {
+    "id": "41",
+    "name": "Villarreal",
+    "listoneName": "Villarreal"
+  }
+}

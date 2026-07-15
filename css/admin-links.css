@@ -48,3 +48,7 @@ button:disabled { opacity: .55; cursor: wait; }
 @media (max-width: 760px) { .code-grid { grid-template-columns: 1fr; } .admin-card { padding: 16px; border-radius: 14px; } .admin-section-title { align-items: flex-start; flex-direction: column; } .admin-header { align-items: flex-start; flex-direction: column; gap: 8px; } .unresolved-search, .unresolved-direct { flex-direction: column; } }
 .media-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 @media (max-width: 760px) { .media-actions { width: 100%; justify-content: stretch; } .media-actions button { flex: 1 1 150px; } }
+.team-issues-grid:empty { display: none; }
+.team-issue-card { border-color: #f0d7a6; background: #fffaf0; }
+.team-issue-card .unresolved-card__head { align-items: flex-start; flex-direction: column; }
+.team-issue-card .unresolved-card__head span { color: #9a6b1e; }

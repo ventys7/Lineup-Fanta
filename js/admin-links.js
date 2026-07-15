@@ -16,6 +16,7 @@
   const mediaRefresh = document.getElementById("mediaRefresh");
   const mediaRefreshAll = document.getElementById("mediaRefreshAll");
   const mediaStatus = document.getElementById("mediaStatus");
+  const unresolvedTeams = document.getElementById("unresolvedTeams");
   const unresolvedPlayers = document.getElementById("unresolvedPlayers");
   let state = null;
   let mediaManifest = null;
@@ -156,6 +157,102 @@
     return choice;
   }
 
+  function teamCandidateButton(issue, candidate, card) {
+    const choice = document.createElement("button");
+    choice.type = "button";
+    const identity = document.createElement("span");
+    identity.className = "candidate-list__identity";
+    const copy = document.createElement("span");
+    const name = document.createElement("b");
+    name.textContent = candidate.name;
+    const details = document.createElement("span");
+    const coverage = `${Math.round(Number(candidate.coverage || 0) * 100)}%`;
+    details.textContent = `ID ${candidate.id} · ${candidate.automatic}/${Number(candidate.automatic || 0) + Number(candidate.ambiguous || 0) + Number(candidate.noNameMatch || 0)} nomi · ${coverage}`;
+    copy.append(name, document.createElement("br"), details);
+    identity.append(copy);
+    const action = document.createElement("span");
+    action.textContent = "Usa rosa";
+    choice.append(identity, action);
+
+    choice.addEventListener("click", async () => {
+      choice.disabled = true;
+      try {
+        await mediaApi({ action: "link-team", teamName: issue.teamName, externalId: candidate.id });
+        card.classList.add("is-resolved");
+        window.setTimeout(() => card.remove(), 180);
+        message(`${issue.teamName} collegata a BSD. Premi “Sincronizza nuove” per completare le facce.`);
+      } catch (error) {
+        message(error.message, true);
+        choice.disabled = false;
+      }
+    });
+    return choice;
+  }
+
+  function unresolvedTeamCard(issue) {
+    const card = document.createElement("article");
+    card.className = "unresolved-card team-issue-card";
+    card.dataset.teamKey = issue.key;
+
+    const head = document.createElement("div");
+    head.className = "unresolved-card__head";
+    const name = document.createElement("strong");
+    name.textContent = issue.teamName;
+    const error = document.createElement("span");
+    error.textContent = issue.error || "Squadra BSD da confermare";
+    head.append(name, error);
+
+    const search = document.createElement("div");
+    search.className = "unresolved-search";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "Confronta rose BSD";
+    const candidates = document.createElement("div");
+    candidates.className = "candidate-list";
+
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      candidates.textContent = "Confronto rose…";
+      try {
+        const result = await mediaApi({ action: "search-team", teamName: issue.teamName });
+        candidates.replaceChildren();
+        (result.candidates || []).forEach((candidate) => candidates.appendChild(teamCandidateButton(issue, candidate, card)));
+        if (!candidates.childElementCount) candidates.textContent = "Nessuna squadra BSD compatibile.";
+      } catch (searchError) { candidates.textContent = searchError.message; }
+      finally { button.disabled = false; }
+    });
+    search.append(button);
+
+    const direct = document.createElement("div");
+    direct.className = "unresolved-direct";
+    const directInput = document.createElement("input");
+    directInput.placeholder = "ID squadra BSD";
+    const directButton = document.createElement("button");
+    directButton.type = "button";
+    directButton.textContent = "Usa ID";
+    directButton.addEventListener("click", async () => {
+      directButton.disabled = true;
+      try {
+        await mediaApi({ action: "link-team", teamName: issue.teamName, externalId: directInput.value });
+        card.classList.add("is-resolved");
+        window.setTimeout(() => card.remove(), 180);
+        message(`${issue.teamName} collegata a BSD. Premi “Sincronizza nuove” per completare le facce.`);
+      } catch (linkError) { message(linkError.message, true); }
+      finally { directButton.disabled = false; }
+    });
+    direct.append(directInput, directButton);
+
+    card.append(head, search, direct, candidates);
+    return card;
+  }
+
+  function renderTeamIssues(manifest) {
+    if (!unresolvedTeams) return;
+    unresolvedTeams.replaceChildren();
+    const issues = Array.isArray(manifest?.teamIssues) ? manifest.teamIssues : [];
+    issues.forEach((issue) => unresolvedTeams.appendChild(unresolvedTeamCard(issue)));
+  }
+
   function unresolvedCard(entry) {
     const card = document.createElement("article");
     card.className = "unresolved-card";
@@ -223,6 +320,7 @@
   function renderUnresolved(manifest, { preserveExisting = false } = {}) {
     mediaManifest = manifest;
     mediaStatus.textContent = mediaSummaryText(manifest);
+    renderTeamIssues(manifest);
     const entries = Object.values(manifest?.players || {}).filter((entry) => entry.status !== "resolved" || !entry.photoUrl);
     const incomingKeys = new Set(entries.map((entry) => entry.key));
 
@@ -256,7 +354,7 @@
       return `${mediaSummaryText(manifest)}${warnings}`;
     }
     if (refresh.phase === "teams") {
-      return `${mediaSummaryText(manifest)} · rose BSD ${Number(refresh.teamCursor || 0)}/${Number(refresh.teamTotal || 0) || "…"}`;
+      return `${mediaSummaryText(manifest)} · rose BSD ${Number(refresh.teamSuccesses || 0)} riuscite · ${Number(refresh.teamCursor || 0)}/${Number(refresh.teamTotal || 0) || "…"} controllate`;
     }
     if (refresh.phase === "players") {
       return `${mediaSummaryText(manifest)} · facce ${Number(refresh.playerCursor || 0)}/${Number(refresh.playerTotal || 0) || "…"}`;
@@ -310,7 +408,10 @@
         Boolean(syncError || incomplete)
       );
     } catch (error) { message(error.message, true); }
-    finally { setMediaButtonsDisabled(false); }
+    finally {
+      setMediaButtonsDisabled(false);
+      loadMediaStatus({ preserveExisting: true });
+    }
   }
 
   function render(nextState) {

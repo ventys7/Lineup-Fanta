@@ -11,6 +11,7 @@ let tempRoot;
 let media;
 let storage;
 let mode = "success";
+let transientRosterFailures = 0;
 
 function jsonResponse(payload, status = 200) {
   return new Response(JSON.stringify(payload), {
@@ -46,9 +47,30 @@ async function setup() {
     if (url.hostname === "example.test") return csvResponse();
     if (url.pathname === "/api/teams/") {
       if (mode === "team-failure") return jsonResponse({ detail: "temporary outage" }, 503);
-      return jsonResponse({ count: 1, results: [{ id: 18, name: "Arsenal", country: "England" }] });
+      assert.equal(url.searchParams.get("country"), "England");
+      const page = Number(url.searchParams.get("page") || 1);
+      if (page === 1) {
+        return jsonResponse({
+          count: 2,
+          next: "https://sports.bzzoiro.com/api/teams/?country=England&page=2",
+          previous: null,
+          results: [{ id: 999, name: "Unrelated Town", country: "England" }]
+        });
+      }
+      return jsonResponse({
+        count: 2,
+        next: null,
+        previous: "https://sports.bzzoiro.com/api/teams/?country=England&page=1",
+        results: [{ id: 18, name: "Arsenal", short_name: "Arsenal", country: "England" }]
+      });
     }
     if (url.pathname === "/api/players/") {
+      if (mode === "transient-team-abort" && transientRosterFailures === 0) {
+        transientRosterFailures += 1;
+        const error = new Error("This operation was aborted");
+        error.name = "AbortError";
+        throw error;
+      }
       return jsonResponse({
         count: 2,
         results: [
@@ -77,6 +99,31 @@ async function teardown() {
 test("player media staging is atomic and failure-safe", async (t) => {
   await setup();
   t.after(teardown);
+
+  await t.test("matching diagnostic uses the real CSV/BSD path without downloading images", async () => {
+    mode = "success";
+    await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
+    const report = await media.diagnoseFreshMatching("fp");
+    assert.equal(report.totalPlayers, 2);
+    assert.equal(report.teamsOk, 1);
+    assert.equal(report.counts.automatic, 2);
+    assert.equal(report.counts.ambiguous, 0);
+    assert.equal(report.rows.every((row) => row.selected?.id), true);
+    await assert.rejects(fs.stat(path.join(tempRoot, ".lineup-runtime", "player-faces")), /ENOENT/);
+  });
+
+
+
+  await t.test("a transient BSD roster timeout is retried instead of losing the club", async () => {
+    mode = "transient-team-abort";
+    transientRosterFailures = 0;
+    await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
+    const report = await media.diagnoseFreshMatching("fp");
+    assert.equal(transientRosterFailures, 1);
+    assert.equal(report.teamsOk, 1);
+    assert.equal(report.teamsFailed, 0);
+    assert.equal(report.counts.automatic, 2);
+  });
 
   await t.test("live manifest stays unchanged until verified publication", async () => {
     mode = "success";

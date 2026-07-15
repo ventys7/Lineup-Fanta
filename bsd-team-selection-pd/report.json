@@ -1,0 +1,3798 @@
+{
+  "version": 1,
+  "leagueId": "pd",
+  "country": "Spain",
+  "generatedAt": "2026-07-15T14:39:03.498Z",
+  "totalPlayers": 433,
+  "totalClubs": 18,
+  "annotatedPlayers": [
+    {
+      "listoneName": "Juan Iglesias",
+      "docsName": "Juan Iglesias",
+      "realTeam": "Sevilla/Getafe"
+    }
+  ],
+  "counts": {
+    "recommended": 18,
+    "review": 0,
+    "unresolved": 0
+  },
+  "recommendedTeamMap": {
+    "alaves": {
+      "id": "45",
+      "name": "Deportivo Alavés",
+      "listoneName": "Alaves"
+    },
+    "athletic club": {
+      "id": "51",
+      "name": "Athletic Club",
+      "listoneName": "Athletic Bilbao"
+    },
+    "atletico de madrid": {
+      "id": "54",
+      "name": "Atlético Madrid",
+      "listoneName": "Atletico Madrid"
+    },
+    "barcelona": {
+      "id": "44",
+      "name": "FC Barcelona",
+      "listoneName": "Barcelona"
+    },
+    "celta vigo": {
+      "id": "49",
+      "name": "Celta Vigo",
+      "listoneName": "Celta Vigo"
+    },
+    "elche": {
+      "id": "55",
+      "name": "Elche",
+      "listoneName": "Elche"
+    },
+    "espanyol": {
+      "id": "53",
+      "name": "Espanyol",
+      "listoneName": "Espanyol"
+    },
+    "getafe": {
+      "id": "50",
+      "name": "Getafe",
+      "listoneName": "Getafe"
+    },
+    "girona": {
+      "id": "39",
+      "name": "Girona FC",
+      "listoneName": "Girona"
+    },
+    "mallorca": {
+      "id": "43",
+      "name": "Mallorca",
+      "listoneName": "Mallorca"
+    },
+    "osasuna": {
+      "id": "58",
+      "name": "Osasuna",
+      "listoneName": "Osasuna"
+    },
+    "rayo vallecano": {
+      "id": "40",
+      "name": "Rayo Vallecano",
+      "listoneName": "Rayo Vallecano"
+    },
+    "real betis": {
+      "id": "56",
+      "name": "Real Betis",
+      "listoneName": "Real Betis"
+    },
+    "real madrid": {
+      "id": "57",
+      "name": "Real Madrid",
+      "listoneName": "Real Madrid"
+    },
+    "real sociedad": {
+      "id": "48",
+      "name": "Real Sociedad",
+      "listoneName": "Real Sociedad"
+    },
+    "sevilla": {
+      "id": "52",
+      "name": "Sevilla",
+      "listoneName": "Sevilla"
+    },
+    "valencia": {
+      "id": "47",
+      "name": "Valencia",
+      "listoneName": "Valencia"
+    },
+    "villarreal": {
+      "id": "41",
+      "name": "Villarreal",
+      "listoneName": "Villarreal"
+    }
+  },
+  "rows": [
+    {
+      "club": "Alaves",
+      "clubKey": "alaves",
+      "listonePlayers": 24,
+      "status": "recommended",
+      "reason": "23/24 match automatici, vantaggio 18 sul secondo candidato",
+      "recommendedTeamId": "45",
+      "recommendedTeamName": "Deportivo Alavés",
+      "candidates": [
+        {
+          "id": "45",
+          "name": "Deportivo Alavés",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 38,
+          "automatic": 23,
+          "ambiguous": 0,
+          "noNameMatch": 1,
+          "coverage": 0.9583333333333334,
+          "matchedPlayers": [
+            {
+              "listoneName": "Alena",
+              "docsName": "Alena",
+              "bsdId": "2354",
+              "bsdName": "Carles Aleñá"
+            },
+            {
+              "listoneName": "Angel Perez",
+              "docsName": "Angel Perez",
+              "bsdId": "8845",
+              "bsdName": "Ángel Pérez"
+            },
+            {
+              "listoneName": "Benavidez",
+              "docsName": "Benavidez",
+              "bsdId": "2362",
+              "bsdName": "Carlos Benavídez"
+            },
+            {
+              "listoneName": "Blanco",
+              "docsName": "Blanco",
+              "bsdId": "2348",
+              "bsdName": "Antonio Blanco"
+            },
+            {
+              "listoneName": "Boye",
+              "docsName": "Boye",
+              "bsdId": "2353",
+              "bsdName": "Lucas Boyé"
+            },
+            {
+              "listoneName": "Denis Suarez",
+              "docsName": "Denis Suarez",
+              "bsdId": "2351",
+              "bsdName": "Denis Suárez"
+            },
+            {
+              "listoneName": "Enriquez",
+              "docsName": "Enriquez",
+              "bsdId": "2363",
+              "bsdName": "Youssef Enriquez"
+            },
+            {
+              "listoneName": "Garces",
+              "docsName": "Garces",
+              "bsdId": "4670",
+              "bsdName": "Facundo Garcés"
+            },
+            {
+              "listoneName": "Guevara",
+              "docsName": "Guevara",
+              "bsdId": "2356",
+              "bsdName": "Ander Guevara"
+            },
+            {
+              "listoneName": "Guridi",
+              "docsName": "Guridi",
+              "bsdId": "2357",
+              "bsdName": "Jon Guridi"
+            },
+            {
+              "listoneName": "Ibanez",
+              "docsName": "Ibanez",
+              "bsdId": "2350",
+              "bsdName": "Pablo Ibáñez"
+            },
+            {
+              "listoneName": "Jonny",
+              "docsName": "Jonny",
+              "bsdId": "2344",
+              "bsdName": "Jonny Otto"
+            },
+            {
+              "listoneName": "Koski",
+              "docsName": "Koski",
+              "bsdId": "13547",
+              "bsdName": "Ville Koski"
+            },
+            {
+              "listoneName": "Mariano Diaz",
+              "docsName": "Mariano Diaz",
+              "bsdId": "2364",
+              "bsdName": "Mariano Díaz"
+            },
+            {
+              "listoneName": "Moussa Diarra",
+              "docsName": "Moussa Diarra",
+              "bsdId": "2361",
+              "bsdName": "Moussa Diarra"
+            },
+            {
+              "listoneName": "Pacheco",
+              "docsName": "Pacheco",
+              "bsdId": "2346",
+              "bsdName": "Jon Pacheco"
+            },
+            {
+              "listoneName": "Parada",
+              "docsName": "Parada",
+              "bsdId": "2347",
+              "bsdName": "Victor Parada"
+            },
+            {
+              "listoneName": "Pinillos",
+              "docsName": "Pinillos",
+              "bsdId": "4115",
+              "bsdName": "Lander Pinillos"
+            },
+            {
+              "listoneName": "Raul Fernandez",
+              "docsName": "Sivera - Raul Fernandez",
+              "bsdId": "2365",
+              "bsdName": "Izei Hernandez"
+            },
+            {
+              "listoneName": "Rebbach",
+              "docsName": "Rebbach",
+              "bsdId": "2352",
+              "bsdName": "Abderrahman Rebbach"
+            },
+            {
+              "listoneName": "Sivera",
+              "docsName": "Sivera - Raul Fernandez",
+              "bsdId": "2343",
+              "bsdName": "Antonio Sivera"
+            },
+            {
+              "listoneName": "Tenaglia",
+              "docsName": "Tenaglia",
+              "bsdId": "2345",
+              "bsdName": "Nahuel Tenaglia"
+            },
+            {
+              "listoneName": "Toni Martinez",
+              "docsName": "Toni Martinez",
+              "bsdId": "2358",
+              "bsdName": "Toni Martínez"
+            }
+          ]
+        },
+        {
+          "id": "3884",
+          "name": "Deportivo Alavés",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 47,
+          "automatic": 5,
+          "ambiguous": 0,
+          "noNameMatch": 19,
+          "coverage": 0.20833333333333334,
+          "matchedPlayers": [
+            {
+              "listoneName": "Parada",
+              "docsName": "Parada",
+              "bsdId": "63799",
+              "bsdName": "Laia Parera Cañueto"
+            },
+            {
+              "listoneName": "Pinillos",
+              "docsName": "Pinillos",
+              "bsdId": "63782",
+              "bsdName": "Paula Pinilla"
+            },
+            {
+              "listoneName": "Raul Fernandez",
+              "docsName": "Sivera - Raul Fernandez",
+              "bsdId": "63787",
+              "bsdName": "Claudia Fernández"
+            },
+            {
+              "listoneName": "Sivera",
+              "docsName": "Sivera - Raul Fernandez",
+              "bsdId": "63787",
+              "bsdName": "Claudia Fernández"
+            },
+            {
+              "listoneName": "Toni Martinez",
+              "docsName": "Toni Martinez",
+              "bsdId": "63780",
+              "bsdName": "Ane Miren Martínez"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Athletic Bilbao",
+      "clubKey": "athletic club",
+      "listonePlayers": 24,
+      "status": "recommended",
+      "reason": "23/24 match automatici, vantaggio 19 sul secondo candidato",
+      "recommendedTeamId": "51",
+      "recommendedTeamName": "Athletic Club",
+      "candidates": [
+        {
+          "id": "51",
+          "name": "Athletic Club",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 34,
+          "automatic": 23,
+          "ambiguous": 0,
+          "noNameMatch": 1,
+          "coverage": 0.9583333333333334,
+          "matchedPlayers": [
+            {
+              "listoneName": "Adama Boiro",
+              "docsName": "Adama Boiro",
+              "bsdId": "566",
+              "bsdName": "Adama Boiro"
+            },
+            {
+              "listoneName": "Areso",
+              "docsName": "Areso",
+              "bsdId": "573",
+              "bsdName": "Jesús Areso"
+            },
+            {
+              "listoneName": "Berchiche",
+              "docsName": "Berchiche",
+              "bsdId": "579",
+              "bsdName": "Yuri Berchiche"
+            },
+            {
+              "listoneName": "Berenguer",
+              "docsName": "Berenguer",
+              "bsdId": "568",
+              "bsdName": "Álex Berenguer"
+            },
+            {
+              "listoneName": "de Galarreta",
+              "docsName": "de Galarreta",
+              "bsdId": "570",
+              "bsdName": "Iñigo Ruiz de Galarreta"
+            },
+            {
+              "listoneName": "Gorosabel",
+              "docsName": "Gorosabel",
+              "bsdId": "580",
+              "bsdName": "Andoni Gorosabel"
+            },
+            {
+              "listoneName": "Guruzeta",
+              "docsName": "Guruzeta",
+              "bsdId": "572",
+              "bsdName": "Gorka Guruzeta"
+            },
+            {
+              "listoneName": "Inaki Williams",
+              "docsName": "Inaki Williams",
+              "bsdId": "4436",
+              "bsdName": "Iñaki Williams"
+            },
+            {
+              "listoneName": "Jauregizar",
+              "docsName": "Jauregizar",
+              "bsdId": "569",
+              "bsdName": "Mikel Jauregizar"
+            },
+            {
+              "listoneName": "Laporte",
+              "docsName": "Laporte",
+              "bsdId": "565",
+              "bsdName": "Aymeric Laporte"
+            },
+            {
+              "listoneName": "Lekue",
+              "docsName": "Lekue",
+              "bsdId": "563",
+              "bsdName": "Íñigo Lekue"
+            },
+            {
+              "listoneName": "Nico Williams",
+              "docsName": "Nico Williams",
+              "bsdId": "571",
+              "bsdName": "Nico Williams"
+            },
+            {
+              "listoneName": "Padilla",
+              "docsName": "Unai Simon - Padilla",
+              "bsdId": "562",
+              "bsdName": "Unai Simón"
+            },
+            {
+              "listoneName": "Paredes",
+              "docsName": "Paredes",
+              "bsdId": "581",
+              "bsdName": "Aitor Paredes"
+            },
+            {
+              "listoneName": "Prados",
+              "docsName": "Prados",
+              "bsdId": "4777",
+              "bsdName": "Beñat Prados"
+            },
+            {
+              "listoneName": "Robert Navarro",
+              "docsName": "Robert Navarro",
+              "bsdId": "2132",
+              "bsdName": "Robert Navarro"
+            },
+            {
+              "listoneName": "Sancet",
+              "docsName": "Sancet",
+              "bsdId": "3721",
+              "bsdName": "Oihan Sancet"
+            },
+            {
+              "listoneName": "Sannadi",
+              "docsName": "Sannadi",
+              "bsdId": "4372",
+              "bsdName": "Maroan Sannadi"
+            },
+            {
+              "listoneName": "Serrano",
+              "docsName": "Serrano",
+              "bsdId": "575",
+              "bsdName": "Nico Serrano"
+            },
+            {
+              "listoneName": "Unai Simon",
+              "docsName": "Unai Simon - Padilla",
+              "bsdId": "562",
+              "bsdName": "Unai Simón"
+            },
+            {
+              "listoneName": "Vesga",
+              "docsName": "Vesga",
+              "bsdId": "576",
+              "bsdName": "Mikel Vesga"
+            },
+            {
+              "listoneName": "Vivian",
+              "docsName": "Vivian",
+              "bsdId": "564",
+              "bsdName": "Dani Vivian"
+            },
+            {
+              "listoneName": "Yeray",
+              "docsName": "Yeray",
+              "bsdId": "21657",
+              "bsdName": "Yeray Álvarez"
+            }
+          ]
+        },
+        {
+          "id": "1400",
+          "name": "Real Racing Club",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 34,
+          "automatic": 4,
+          "ambiguous": 0,
+          "noNameMatch": 20,
+          "coverage": 0.16666666666666666,
+          "matchedPlayers": [
+            {
+              "listoneName": "Areso",
+              "docsName": "Areso",
+              "bsdId": "30592",
+              "bsdName": "Aitor Crespo"
+            },
+            {
+              "listoneName": "Sancet",
+              "docsName": "Sancet",
+              "bsdId": "37071",
+              "bsdName": "Carlos Sánchez"
+            },
+            {
+              "listoneName": "Unai Gomez",
+              "docsName": "Unai Gomez",
+              "bsdId": "31380",
+              "bsdName": "Laro Gómez"
+            },
+            {
+              "listoneName": "Yeray",
+              "docsName": "Yeray",
+              "bsdId": "31470",
+              "bsdName": "Yeray Cabanzon"
+            }
+          ]
+        },
+        {
+          "id": "1455",
+          "name": "Club Portugalete",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 28,
+          "automatic": 3,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.125,
+          "matchedPlayers": [
+            {
+              "listoneName": "Unai Gomez",
+              "docsName": "Unai Gomez",
+              "bsdId": "31887",
+              "bsdName": "Xabi Gómez"
+            },
+            {
+              "listoneName": "Unai Simon",
+              "docsName": "Unai Simon - Padilla",
+              "bsdId": "63072",
+              "bsdName": "Jorge García Salmón"
+            },
+            {
+              "listoneName": "Yeray",
+              "docsName": "Yeray",
+              "bsdId": "31885",
+              "bsdName": "Yeray Cuello"
+            }
+          ]
+        },
+        {
+          "id": "918",
+          "name": "Alhama Club de Fútbol",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 31,
+          "automatic": 3,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.125,
+          "matchedPlayers": [
+            {
+              "listoneName": "Robert Navarro",
+              "docsName": "Robert Navarro",
+              "bsdId": "17892",
+              "bsdName": "Encarni Jiménez Navarro"
+            },
+            {
+              "listoneName": "Unai Gomez",
+              "docsName": "Unai Gomez",
+              "bsdId": "21301",
+              "bsdName": "Elsa Gomez"
+            },
+            {
+              "listoneName": "Vesga",
+              "docsName": "Vesga",
+              "bsdId": "17889",
+              "bsdName": "Vega Montesinos"
+            }
+          ]
+        },
+        {
+          "id": "1401",
+          "name": "Burgos Club de Fútbol",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 40,
+          "automatic": 3,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.125,
+          "matchedPlayers": [
+            {
+              "listoneName": "Robert Navarro",
+              "docsName": "Robert Navarro",
+              "bsdId": "30399",
+              "bsdName": "Raúl Navarro"
+            },
+            {
+              "listoneName": "Sancet",
+              "docsName": "Sancet",
+              "bsdId": "30472",
+              "bsdName": "Curro Sánchez"
+            },
+            {
+              "listoneName": "Serrano",
+              "docsName": "Serrano",
+              "bsdId": "30541",
+              "bsdName": "Hugo Sedano"
+            }
+          ]
+        },
+        {
+          "id": "1478",
+          "name": "Club Deportivo Azuaga",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 27,
+          "automatic": 3,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.125,
+          "matchedPlayers": [
+            {
+              "listoneName": "Prados",
+              "docsName": "Prados",
+              "bsdId": "35767",
+              "bsdName": "Jose Antonio Parada Prado"
+            },
+            {
+              "listoneName": "Unai Simon",
+              "docsName": "Unai Simon - Padilla",
+              "bsdId": "32508",
+              "bsdName": "Ale Limón"
+            },
+            {
+              "listoneName": "Vesga",
+              "docsName": "Vesga",
+              "bsdId": "32521",
+              "bsdName": "Ricardo de la Vega"
+            }
+          ]
+        },
+        {
+          "id": "911",
+          "name": "Athletic Club",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 34,
+          "automatic": 2,
+          "ambiguous": 0,
+          "noNameMatch": 22,
+          "coverage": 0.08333333333333333,
+          "matchedPlayers": [
+            {
+              "listoneName": "Sannadi",
+              "docsName": "Sannadi",
+              "bsdId": "21246",
+              "bsdName": "Marta Sanadri"
+            },
+            {
+              "listoneName": "Vesga",
+              "docsName": "Vesga",
+              "bsdId": "21144",
+              "bsdName": "Ziara Vega Uribarri"
+            }
+          ]
+        },
+        {
+          "id": "1472",
+          "name": "Arenas Club",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 37,
+          "automatic": 2,
+          "ambiguous": 0,
+          "noNameMatch": 22,
+          "coverage": 0.08333333333333333,
+          "matchedPlayers": [
+            {
+              "listoneName": "Padilla",
+              "docsName": "Unai Simon - Padilla",
+              "bsdId": "31800",
+              "bsdName": "Ibon Badiola"
+            },
+            {
+              "listoneName": "Unai Simon",
+              "docsName": "Unai Simon - Padilla",
+              "bsdId": "31800",
+              "bsdName": "Ibon Badiola"
+            }
+          ]
+        },
+        {
+          "id": "915",
+          "name": "Real Club Deportivo de la Coruña",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 38,
+          "automatic": 2,
+          "ambiguous": 1,
+          "noNameMatch": 21,
+          "coverage": 0.08333333333333333,
+          "matchedPlayers": [
+            {
+              "listoneName": "Laporte",
+              "docsName": "Laporte",
+              "bsdId": "17802",
+              "bsdName": "Bárbara Latorre"
+            },
+            {
+              "listoneName": "Vesga",
+              "docsName": "Vesga",
+              "bsdId": "21660",
+              "bsdName": "Antia Veiga"
+            }
+          ]
+        },
+        {
+          "id": "1465",
+          "name": "Club Atlético Antoniano",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 34,
+          "automatic": 2,
+          "ambiguous": 0,
+          "noNameMatch": 22,
+          "coverage": 0.08333333333333333,
+          "matchedPlayers": [
+            {
+              "listoneName": "Sancet",
+              "docsName": "Sancet",
+              "bsdId": "31705",
+              "bsdName": "Matheo Sanchez"
+            },
+            {
+              "listoneName": "Serrano",
+              "docsName": "Serrano",
+              "bsdId": "31709",
+              "bsdName": "Juan Serrano"
+            }
+          ]
+        },
+        {
+          "id": "914",
+          "name": "Granada Club de Fútbol",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 31,
+          "automatic": 0,
+          "ambiguous": 2,
+          "noNameMatch": 22,
+          "coverage": 0,
+          "matchedPlayers": []
+        }
+      ]
+    },
+    {
+      "club": "Atletico Madrid",
+      "clubKey": "atletico de madrid",
+      "listonePlayers": 22,
+      "status": "recommended",
+      "reason": "21/22 match automatici, vantaggio 19 sul secondo candidato",
+      "recommendedTeamId": "54",
+      "recommendedTeamName": "Atlético Madrid",
+      "candidates": [
+        {
+          "id": "54",
+          "name": "Atlético Madrid",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 41,
+          "automatic": 21,
+          "ambiguous": 1,
+          "noNameMatch": 0,
+          "coverage": 0.9545454545454546,
+          "matchedPlayers": [
+            {
+              "listoneName": "Almada",
+              "docsName": "Almada",
+              "bsdId": "773",
+              "bsdName": "Thiago Almada"
+            },
+            {
+              "listoneName": "Baena",
+              "docsName": "Baena",
+              "bsdId": "769",
+              "bsdName": "Alex Baena"
+            },
+            {
+              "listoneName": "Barrios",
+              "docsName": "Barrios",
+              "bsdId": "765",
+              "bsdName": "Pablo Barrios"
+            },
+            {
+              "listoneName": "Gimenez",
+              "docsName": "Gimenez",
+              "bsdId": "762",
+              "bsdName": "José María Giménez"
+            },
+            {
+              "listoneName": "Giuliano",
+              "docsName": "Giuliano",
+              "bsdId": "767",
+              "bsdName": "Giuliano Simeone"
+            },
+            {
+              "listoneName": "Griezmann",
+              "docsName": "Griezmann",
+              "bsdId": "775",
+              "bsdName": "Antoine Griezmann"
+            },
+            {
+              "listoneName": "Hancko",
+              "docsName": "Hancko",
+              "bsdId": "764",
+              "bsdName": "Dávid Hancko"
+            },
+            {
+              "listoneName": "Julian Alvarez**",
+              "docsName": "Julian Alvarez**",
+              "bsdId": "770",
+              "bsdName": "Julián Alvarez"
+            },
+            {
+              "listoneName": "Koke",
+              "docsName": "Koke",
+              "bsdId": "771",
+              "bsdName": "Koke"
+            },
+            {
+              "listoneName": "Le Normand",
+              "docsName": "Le Normand",
+              "bsdId": "4248",
+              "bsdName": "Robin Le Normand"
+            },
+            {
+              "listoneName": "Lenglet",
+              "docsName": "Lenglet",
+              "bsdId": "763",
+              "bsdName": "Clément Lenglet"
+            },
+            {
+              "listoneName": "Lookman",
+              "docsName": "Lookman",
+              "bsdId": "1306",
+              "bsdName": "Ademola Lookman"
+            },
+            {
+              "listoneName": "Mendoza",
+              "docsName": "Mendoza",
+              "bsdId": "2769",
+              "bsdName": "Rodrigo Mendoza"
+            },
+            {
+              "listoneName": "Molina",
+              "docsName": "Molina",
+              "bsdId": "761",
+              "bsdName": "Nahuel Molina"
+            },
+            {
+              "listoneName": "Musso",
+              "docsName": "Oblak - Musso",
+              "bsdId": "777",
+              "bsdName": "Juan Musso"
+            },
+            {
+              "listoneName": "Nico Gonzalez",
+              "docsName": "Nico Gonzalez",
+              "bsdId": "768",
+              "bsdName": "Nicolás González"
+            },
+            {
+              "listoneName": "Obed Vargas",
+              "docsName": "Obed Vargas",
+              "bsdId": "9006",
+              "bsdName": "Obed Vargas"
+            },
+            {
+              "listoneName": "Oblak",
+              "docsName": "Oblak - Musso",
+              "bsdId": "760",
+              "bsdName": "Jan Oblak"
+            },
+            {
+              "listoneName": "Pubill",
+              "docsName": "Pubill",
+              "bsdId": "778",
+              "bsdName": "Marc Pubill"
+            },
+            {
+              "listoneName": "Ruggeri",
+              "docsName": "Ruggeri",
+              "bsdId": "780",
+              "bsdName": "Matteo Ruggeri"
+            },
+            {
+              "listoneName": "Sorloth",
+              "docsName": "Sorloth",
+              "bsdId": "774",
+              "bsdName": "Alexander Sørloth"
+            }
+          ]
+        },
+        {
+          "id": "920",
+          "name": "Club Atlético de Madrid",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 39,
+          "automatic": 2,
+          "ambiguous": 0,
+          "noNameMatch": 20,
+          "coverage": 0.09090909090909091,
+          "matchedPlayers": [
+            {
+              "listoneName": "Barrios",
+              "docsName": "Barrios",
+              "bsdId": "21259",
+              "bsdName": "Claudia Barrios"
+            },
+            {
+              "listoneName": "Molina",
+              "docsName": "Molina",
+              "bsdId": "17650",
+              "bsdName": "Andrea Medina"
+            }
+          ]
+        },
+        {
+          "id": "923",
+          "name": "Madrid CFF",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 31,
+          "automatic": 2,
+          "ambiguous": 1,
+          "noNameMatch": 19,
+          "coverage": 0.09090909090909091,
+          "matchedPlayers": [
+            {
+              "listoneName": "Mendoza",
+              "docsName": "Mendoza",
+              "bsdId": "17689",
+              "bsdName": "Núria Mendoza"
+            },
+            {
+              "listoneName": "Nico Gonzalez",
+              "docsName": "Nico Gonzalez",
+              "bsdId": "48251",
+              "bsdName": "Estefanía González"
+            }
+          ]
+        },
+        {
+          "id": "57",
+          "name": "Real Madrid",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 41,
+          "automatic": 2,
+          "ambiguous": 2,
+          "noNameMatch": 18,
+          "coverage": 0.09090909090909091,
+          "matchedPlayers": [
+            {
+              "listoneName": "Almada",
+              "docsName": "Almada",
+              "bsdId": "4020",
+              "bsdName": "David Alaba"
+            },
+            {
+              "listoneName": "Gimenez",
+              "docsName": "Gimenez",
+              "bsdId": "4609",
+              "bsdName": "David Jiménez"
+            }
+          ]
+        },
+        {
+          "id": "1392",
+          "name": "Atlético Albacete",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 14,
+          "automatic": 1,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.045454545454545456,
+          "matchedPlayers": [
+            {
+              "listoneName": "Julian Alvarez**",
+              "docsName": "Julian Alvarez**",
+              "bsdId": "30595",
+              "bsdName": "Álvaro Vázquez"
+            }
+          ]
+        },
+        {
+          "id": "1451",
+          "name": "CD Atlético Baleares",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 32,
+          "automatic": 1,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.045454545454545456,
+          "matchedPlayers": [
+            {
+              "listoneName": "Julian Alvarez**",
+              "docsName": "Julian Alvarez**",
+              "bsdId": "62997",
+              "bsdName": "Álvaro Martín Espiau"
+            }
+          ]
+        },
+        {
+          "id": "1474",
+          "name": "Atlético Astorga",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 34,
+          "automatic": 1,
+          "ambiguous": 1,
+          "noNameMatch": 20,
+          "coverage": 0.045454545454545456,
+          "matchedPlayers": [
+            {
+              "listoneName": "Gimenez",
+              "docsName": "Gimenez",
+              "bsdId": "32618",
+              "bsdName": "Jesús Jiménez"
+            }
+          ]
+        },
+        {
+          "id": "1523",
+          "name": "FC La Union Atletico",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 14,
+          "automatic": 1,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.045454545454545456,
+          "matchedPlayers": [
+            {
+              "listoneName": "Molina",
+              "docsName": "Molina",
+              "bsdId": "32713",
+              "bsdName": "Diego Ruiz Molina"
+            }
+          ]
+        },
+        {
+          "id": "926",
+          "name": "Real Madrid",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 41,
+          "automatic": 1,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.045454545454545456,
+          "matchedPlayers": [
+            {
+              "listoneName": "Mendoza",
+              "docsName": "Mendoza",
+              "bsdId": "17585",
+              "bsdName": "María Méndez"
+            }
+          ]
+        },
+        {
+          "id": "1465",
+          "name": "Club Atlético Antoniano",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 34,
+          "automatic": 1,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.045454545454545456,
+          "matchedPlayers": [
+            {
+              "listoneName": "Julian Alvarez**",
+              "docsName": "Julian Alvarez**",
+              "bsdId": "31707",
+              "bsdName": "Álvaro Caro"
+            }
+          ]
+        },
+        {
+          "id": "1505",
+          "name": "Atlético Tordesillas",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 29,
+          "automatic": 0,
+          "ambiguous": 0,
+          "noNameMatch": 22,
+          "coverage": 0,
+          "matchedPlayers": []
+        },
+        {
+          "id": "1526",
+          "name": "Atlético Calatayud",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 0,
+          "automatic": 0,
+          "ambiguous": 0,
+          "noNameMatch": 22,
+          "coverage": 0,
+          "matchedPlayers": []
+        }
+      ]
+    },
+    {
+      "club": "Barcelona",
+      "clubKey": "barcelona",
+      "listonePlayers": 23,
+      "status": "recommended",
+      "reason": "22/23 match automatici, vantaggio 21 sul secondo candidato",
+      "recommendedTeamId": "44",
+      "recommendedTeamName": "FC Barcelona",
+      "candidates": [
+        {
+          "id": "44",
+          "name": "FC Barcelona",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 29,
+          "automatic": 22,
+          "ambiguous": 0,
+          "noNameMatch": 1,
+          "coverage": 0.9565217391304348,
+          "matchedPlayers": [
+            {
+              "listoneName": "Araujo",
+              "docsName": "Araujo",
+              "bsdId": "3661",
+              "bsdName": "Ronald Araújo"
+            },
+            {
+              "listoneName": "Balde",
+              "docsName": "Balde",
+              "bsdId": "742",
+              "bsdName": "Alejandro Balde"
+            },
+            {
+              "listoneName": "Bernal",
+              "docsName": "Bernal",
+              "bsdId": "757",
+              "bsdName": "Marc Bernal"
+            },
+            {
+              "listoneName": "Casado",
+              "docsName": "Casado",
+              "bsdId": "752",
+              "bsdName": "Marc Casadó"
+            },
+            {
+              "listoneName": "Christensen",
+              "docsName": "Christensen",
+              "bsdId": "753",
+              "bsdName": "Andreas Christensen"
+            },
+            {
+              "listoneName": "Cubarsi",
+              "docsName": "Cubarsi",
+              "bsdId": "740",
+              "bsdName": "Pau Cubarsí"
+            },
+            {
+              "listoneName": "De Jong",
+              "docsName": "De Jong",
+              "bsdId": "3662",
+              "bsdName": "Frenkie de Jong"
+            },
+            {
+              "listoneName": "Eric Garcia",
+              "docsName": "Eric Garcia",
+              "bsdId": "743",
+              "bsdName": "Eric García"
+            },
+            {
+              "listoneName": "Fermin",
+              "docsName": "Fermin",
+              "bsdId": "3663",
+              "bsdName": "Fermín López"
+            },
+            {
+              "listoneName": "Ferran Torres",
+              "docsName": "Ferran Torres",
+              "bsdId": "749",
+              "bsdName": "Ferran Torres"
+            },
+            {
+              "listoneName": "Gavi",
+              "docsName": "Gavi",
+              "bsdId": "4900",
+              "bsdName": "Pablo Gavi"
+            },
+            {
+              "listoneName": "Gerard Martin",
+              "docsName": "Gerard Martin",
+              "bsdId": "741",
+              "bsdName": "Gerard Martín"
+            },
+            {
+              "listoneName": "Joan Garcia",
+              "docsName": "Joan Garcia - Szczesny",
+              "bsdId": "738",
+              "bsdName": "Joan García"
+            },
+            {
+              "listoneName": "Kounde",
+              "docsName": "Kounde",
+              "bsdId": "739",
+              "bsdName": "Jules Koundé"
+            },
+            {
+              "listoneName": "Lamine Yamal",
+              "docsName": "Lamine Yamal",
+              "bsdId": "745",
+              "bsdName": "Lamine Yamal"
+            },
+            {
+              "listoneName": "Lewandowski**",
+              "docsName": "Lewandowski**",
+              "bsdId": "748",
+              "bsdName": "Robert Lewandowski"
+            },
+            {
+              "listoneName": "Olmo",
+              "docsName": "Olmo",
+              "bsdId": "746",
+              "bsdName": "Dani Olmo"
+            },
+            {
+              "listoneName": "Pedri",
+              "docsName": "Pedri",
+              "bsdId": "744",
+              "bsdName": "Pedri"
+            },
+            {
+              "listoneName": "Raphinha",
+              "docsName": "Raphinha",
+              "bsdId": "747",
+              "bsdName": "Raphinha"
+            },
+            {
+              "listoneName": "Rashford",
+              "docsName": "Rashford",
+              "bsdId": "750",
+              "bsdName": "Marcus Rashford"
+            },
+            {
+              "listoneName": "Roony B.",
+              "docsName": "Roony B.",
+              "bsdId": "759",
+              "bsdName": "Roony Bardghji"
+            },
+            {
+              "listoneName": "Szczesny",
+              "docsName": "Joan Garcia - Szczesny",
+              "bsdId": "738",
+              "bsdName": "Joan García"
+            }
+          ]
+        },
+        {
+          "id": "917",
+          "name": "Fútbol Club Barcelona",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 34,
+          "automatic": 1,
+          "ambiguous": 1,
+          "noNameMatch": 21,
+          "coverage": 0.043478260869565216,
+          "matchedPlayers": [
+            {
+              "listoneName": "Balde",
+              "docsName": "Balde",
+              "bsdId": "17607",
+              "bsdName": "Ona Batlle"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Celta Vigo",
+      "clubKey": "celta vigo",
+      "listonePlayers": 27,
+      "status": "recommended",
+      "reason": "25/27 match automatici, vantaggio 24 sul secondo candidato",
+      "recommendedTeamId": "49",
+      "recommendedTeamName": "Celta Vigo",
+      "candidates": [
+        {
+          "id": "49",
+          "name": "Celta Vigo",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 28,
+          "automatic": 25,
+          "ambiguous": 0,
+          "noNameMatch": 2,
+          "coverage": 0.9259259259259259,
+          "matchedPlayers": [
+            {
+              "listoneName": "Aidoo",
+              "docsName": "Aidoo",
+              "bsdId": "1268",
+              "bsdName": "Joseph Aidoo"
+            },
+            {
+              "listoneName": "Alvaro Nunez",
+              "docsName": "Alvaro Nunez",
+              "bsdId": "2760",
+              "bsdName": "Alvaro Núñez"
+            },
+            {
+              "listoneName": "Aspas",
+              "docsName": "Aspas",
+              "bsdId": "1259",
+              "bsdName": "Iago Aspas"
+            },
+            {
+              "listoneName": "Borja Iglesias",
+              "docsName": "Borja Iglesias",
+              "bsdId": "1260",
+              "bsdName": "Borja Iglesias"
+            },
+            {
+              "listoneName": "Carreira",
+              "docsName": "Carreira",
+              "bsdId": "1258",
+              "bsdName": "Sergio Carreira"
+            },
+            {
+              "listoneName": "Cervi",
+              "docsName": "Cervi",
+              "bsdId": "3979",
+              "bsdName": "Franco Cervi"
+            },
+            {
+              "listoneName": "Dominguez",
+              "docsName": "Dominguez",
+              "bsdId": "1270",
+              "bsdName": "Carlos Domínguez"
+            },
+            {
+              "listoneName": "El-Abdellaoui",
+              "docsName": "El-Abdellaoui",
+              "bsdId": "1263",
+              "bsdName": "Jones El-Abdellaoui"
+            },
+            {
+              "listoneName": "Hugo Alvarez",
+              "docsName": "Hugo Alvarez",
+              "bsdId": "1273",
+              "bsdName": "Hugo Álvarez"
+            },
+            {
+              "listoneName": "Javi Rodriguez",
+              "docsName": "Javi Rodriguez",
+              "bsdId": "1252",
+              "bsdName": "Javi Rodríguez"
+            },
+            {
+              "listoneName": "Javi Rueda",
+              "docsName": "Javi Rueda",
+              "bsdId": "1255",
+              "bsdName": "Javier Rueda"
+            },
+            {
+              "listoneName": "Jutgla",
+              "docsName": "Jutgla",
+              "bsdId": "1266",
+              "bsdName": "Ferran Jutglà"
+            },
+            {
+              "listoneName": "Lago",
+              "docsName": "Lago",
+              "bsdId": "3330",
+              "bsdName": "Yoel Lago"
+            },
+            {
+              "listoneName": "Manu Fernandez",
+              "docsName": "Manu Fernandez",
+              "bsdId": "3331",
+              "bsdName": "Manu Fernández"
+            },
+            {
+              "listoneName": "Marcos Alonso",
+              "docsName": "Marcos Alonso",
+              "bsdId": "1254",
+              "bsdName": "Marcos Alonso"
+            },
+            {
+              "listoneName": "Miguel Roman",
+              "docsName": "Miguel Roman",
+              "bsdId": "1257",
+              "bsdName": "Miguel Román"
+            },
+            {
+              "listoneName": "Moriba",
+              "docsName": "Moriba",
+              "bsdId": "1262",
+              "bsdName": "Ilaix Moriba"
+            },
+            {
+              "listoneName": "Pablo Duran",
+              "docsName": "Pablo Duran",
+              "bsdId": "1265",
+              "bsdName": "Pablo Durán"
+            },
+            {
+              "listoneName": "Radu",
+              "docsName": "Radu - Villar",
+              "bsdId": "1251",
+              "bsdName": "Ionuț Radu"
+            },
+            {
+              "listoneName": "Ristic",
+              "docsName": "Ristic",
+              "bsdId": "1269",
+              "bsdName": "Mihailo Ristić"
+            },
+            {
+              "listoneName": "Sotelo",
+              "docsName": "Sotelo",
+              "bsdId": "1271",
+              "bsdName": "Hugo Sotelo"
+            },
+            {
+              "listoneName": "Starfelt",
+              "docsName": "Starfelt",
+              "bsdId": "1253",
+              "bsdName": "Carl Starfelt"
+            },
+            {
+              "listoneName": "Swedberg",
+              "docsName": "Swedberg",
+              "bsdId": "1264",
+              "bsdName": "Williot Swedberg"
+            },
+            {
+              "listoneName": "Vecino",
+              "docsName": "Vecino",
+              "bsdId": "2012",
+              "bsdName": "Matías Vecino"
+            },
+            {
+              "listoneName": "Villar",
+              "docsName": "Radu - Villar",
+              "bsdId": "1267",
+              "bsdName": "Iván Villar"
+            }
+          ]
+        },
+        {
+          "id": "3883",
+          "name": "Celta Fortuna",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 28,
+          "automatic": 1,
+          "ambiguous": 0,
+          "noNameMatch": 26,
+          "coverage": 0.037037037037037035,
+          "matchedPlayers": [
+            {
+              "listoneName": "Hugo Alvarez",
+              "docsName": "Hugo Alvarez",
+              "bsdId": "63714",
+              "bsdName": "Álvaro Marín"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Elche",
+      "clubKey": "elche",
+      "listonePlayers": 21,
+      "status": "recommended",
+      "reason": "20/21 match automatici",
+      "recommendedTeamId": "55",
+      "recommendedTeamName": "Elche",
+      "candidates": [
+        {
+          "id": "55",
+          "name": "Elche",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 45,
+          "automatic": 20,
+          "ambiguous": 0,
+          "noNameMatch": 1,
+          "coverage": 0.9523809523809523,
+          "matchedPlayers": [
+            {
+              "listoneName": "Affengruber",
+              "docsName": "Affengruber",
+              "bsdId": "2761",
+              "bsdName": "David Affengruber"
+            },
+            {
+              "listoneName": "Aguado",
+              "docsName": "Aguado",
+              "bsdId": "2770",
+              "bsdName": "Marc Aguado"
+            },
+            {
+              "listoneName": "Alvaro Rodriguez",
+              "docsName": "Alvaro Rodriguez",
+              "bsdId": "2767",
+              "bsdName": "Álvaro Rodriguez"
+            },
+            {
+              "listoneName": "Andre Silva",
+              "docsName": "Andre Silva",
+              "bsdId": "2768",
+              "bsdName": "André Silva"
+            },
+            {
+              "listoneName": "Bigas",
+              "docsName": "Bigas",
+              "bsdId": "2778",
+              "bsdName": "Pedro Bigas"
+            },
+            {
+              "listoneName": "Chust",
+              "docsName": "Chust",
+              "bsdId": "3817",
+              "bsdName": "Víctor Chust"
+            },
+            {
+              "listoneName": "Diamby",
+              "docsName": "Diamby",
+              "bsdId": "2776",
+              "bsdName": "Bambo Diaby"
+            },
+            {
+              "listoneName": "Diangana",
+              "docsName": "Diangana",
+              "bsdId": "2764",
+              "bsdName": "Grady Diangana"
+            },
+            {
+              "listoneName": "Febas",
+              "docsName": "Febas",
+              "bsdId": "2765",
+              "bsdName": "Aleix Febas"
+            },
+            {
+              "listoneName": "Hector Fort",
+              "docsName": "Hector Fort",
+              "bsdId": "2759",
+              "bsdName": "Hector Fort"
+            },
+            {
+              "listoneName": "Iturbe",
+              "docsName": "Pena - Iturbe",
+              "bsdId": "2775",
+              "bsdName": "Alejandro Iturbe"
+            },
+            {
+              "listoneName": "John Donald",
+              "docsName": "John Donald",
+              "bsdId": "2777",
+              "bsdName": "John Donald"
+            },
+            {
+              "listoneName": "Josan",
+              "docsName": "Josan",
+              "bsdId": "4126",
+              "bsdName": "Josan"
+            },
+            {
+              "listoneName": "Neto",
+              "docsName": "Neto",
+              "bsdId": "2766",
+              "bsdName": "Martim Neto"
+            },
+            {
+              "listoneName": "Pedrosa",
+              "docsName": "Pedrosa",
+              "bsdId": "2771",
+              "bsdName": "Adrià Pedrosa"
+            },
+            {
+              "listoneName": "Pena",
+              "docsName": "Pena - Iturbe",
+              "bsdId": "2775",
+              "bsdName": "Alejandro Iturbe"
+            },
+            {
+              "listoneName": "Rafa Mir",
+              "docsName": "Rafa Mir",
+              "bsdId": "2772",
+              "bsdName": "Rafa Mir"
+            },
+            {
+              "listoneName": "Redondo",
+              "docsName": "Redondo",
+              "bsdId": "2779",
+              "bsdName": "Federico Redondo"
+            },
+            {
+              "listoneName": "Valera",
+              "docsName": "Valera",
+              "bsdId": "2763",
+              "bsdName": "Germán Valera"
+            },
+            {
+              "listoneName": "Yago Santiago",
+              "docsName": "Yago Santiago",
+              "bsdId": "2773",
+              "bsdName": "Yago Santiago"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Espanyol",
+      "clubKey": "espanyol",
+      "listonePlayers": 22,
+      "status": "recommended",
+      "reason": "22/22 match automatici, vantaggio 19 sul secondo candidato",
+      "recommendedTeamId": "53",
+      "recommendedTeamName": "Espanyol",
+      "candidates": [
+        {
+          "id": "53",
+          "name": "Espanyol",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 39,
+          "automatic": 22,
+          "ambiguous": 0,
+          "noNameMatch": 0,
+          "coverage": 1,
+          "matchedPlayers": [
+            {
+              "listoneName": "Antoniu Roca",
+              "docsName": "Antoniu Roca",
+              "bsdId": "1293",
+              "bsdName": "Antoniu Roca"
+            },
+            {
+              "listoneName": "Cabrera",
+              "docsName": "Cabrera",
+              "bsdId": "1277",
+              "bsdName": "Leandro Cabrera"
+            },
+            {
+              "listoneName": "Calero",
+              "docsName": "Calero",
+              "bsdId": "1276",
+              "bsdName": "Fernando Calero"
+            },
+            {
+              "listoneName": "Carlos Romero",
+              "docsName": "Carlos Romero",
+              "bsdId": "1278",
+              "bsdName": "Carlos Romero"
+            },
+            {
+              "listoneName": "Dmitrovic",
+              "docsName": "Dmitrovic - Fortuno",
+              "bsdId": "1274",
+              "bsdName": "Marko Dmitrović"
+            },
+            {
+              "listoneName": "Dolan",
+              "docsName": "Dolan",
+              "bsdId": "1279",
+              "bsdName": "Tyrhys Dolan"
+            },
+            {
+              "listoneName": "Edu Exposito",
+              "docsName": "Edu Exposito",
+              "bsdId": "1288",
+              "bsdName": "Edu Expósito"
+            },
+            {
+              "listoneName": "El Hilali",
+              "docsName": "El Hilali",
+              "bsdId": "1275",
+              "bsdName": "Omar El Hilali"
+            },
+            {
+              "listoneName": "Fortuno",
+              "docsName": "Dmitrovic - Fortuno",
+              "bsdId": "1290",
+              "bsdName": "Angel Fortuno"
+            },
+            {
+              "listoneName": "Jofre Carreras",
+              "docsName": "Jofre Carreras",
+              "bsdId": "1287",
+              "bsdName": "Jofre Carreras"
+            },
+            {
+              "listoneName": "Kike Garcia",
+              "docsName": "Kike Garcia",
+              "bsdId": "1285",
+              "bsdName": "Kike García"
+            },
+            {
+              "listoneName": "Pere Milla",
+              "docsName": "Pere Milla",
+              "bsdId": "1283",
+              "bsdName": "Pere Milla"
+            },
+            {
+              "listoneName": "Pickel",
+              "docsName": "Pickel",
+              "bsdId": "1295",
+              "bsdName": "Charles Pickel"
+            },
+            {
+              "listoneName": "Pol Lozano",
+              "docsName": "Pol Lozano",
+              "bsdId": "1280",
+              "bsdName": "Pol Lozano"
+            },
+            {
+              "listoneName": "Puado",
+              "docsName": "Puado",
+              "bsdId": "4508",
+              "bsdName": "Javi Puado"
+            },
+            {
+              "listoneName": "Riedel",
+              "docsName": "Riedel",
+              "bsdId": "1286",
+              "bsdName": "Clemens Riedel"
+            },
+            {
+              "listoneName": "Roberto Fernandez",
+              "docsName": "Roberto Fernandez",
+              "bsdId": "1284",
+              "bsdName": "Roberto Fernández"
+            },
+            {
+              "listoneName": "Ruben Sanchez",
+              "docsName": "Ruben Sanchez",
+              "bsdId": "1291",
+              "bsdName": "Rubén Sánchez"
+            },
+            {
+              "listoneName": "Rubio",
+              "docsName": "Rubio",
+              "bsdId": "1292",
+              "bsdName": "Miguel Rubio"
+            },
+            {
+              "listoneName": "Salinas",
+              "docsName": "Salinas",
+              "bsdId": "1289",
+              "bsdName": "Jose Salinas"
+            },
+            {
+              "listoneName": "Terrats",
+              "docsName": "Terrats",
+              "bsdId": "1282",
+              "bsdName": "Ramón Terrats"
+            },
+            {
+              "listoneName": "Urko Gonzalez",
+              "docsName": "Urko Gonzalez",
+              "bsdId": "1281",
+              "bsdName": "Urko González"
+            }
+          ]
+        },
+        {
+          "id": "919",
+          "name": "RCD Espanyol de Barcelona",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 26,
+          "automatic": 3,
+          "ambiguous": 0,
+          "noNameMatch": 19,
+          "coverage": 0.13636363636363635,
+          "matchedPlayers": [
+            {
+              "listoneName": "Kike Garcia",
+              "docsName": "Kike Garcia",
+              "bsdId": "17831",
+              "bsdName": "Naima García"
+            },
+            {
+              "listoneName": "Terrats",
+              "docsName": "Terrats",
+              "bsdId": "17830",
+              "bsdName": "Mar Torrás"
+            },
+            {
+              "listoneName": "Urko Gonzalez",
+              "docsName": "Urko Gonzalez",
+              "bsdId": "21275",
+              "bsdName": "Laura Martínez González"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Getafe",
+      "clubKey": "getafe",
+      "listonePlayers": 25,
+      "status": "recommended",
+      "reason": "20/25 match automatici",
+      "recommendedTeamId": "50",
+      "recommendedTeamName": "Getafe",
+      "candidates": [
+        {
+          "id": "50",
+          "name": "Getafe",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 33,
+          "automatic": 20,
+          "ambiguous": 0,
+          "noNameMatch": 5,
+          "coverage": 0.8,
+          "matchedPlayers": [
+            {
+              "listoneName": "Abqar",
+              "docsName": "Abqar",
+              "bsdId": "3830",
+              "bsdName": "Abdel Abqar"
+            },
+            {
+              "listoneName": "Arambarri",
+              "docsName": "Arambarri",
+              "bsdId": "2743",
+              "bsdName": "Mauro Arambarri"
+            },
+            {
+              "listoneName": "Bekhoucha",
+              "docsName": "Bekhoucha",
+              "bsdId": "4373",
+              "bsdName": "Ismael Bekhoucha"
+            },
+            {
+              "listoneName": "Borja Mayoral",
+              "docsName": "Borja Mayoral",
+              "bsdId": "2746",
+              "bsdName": "Borja Mayoral"
+            },
+            {
+              "listoneName": "Boselli",
+              "docsName": "Boselli",
+              "bsdId": "8800",
+              "bsdName": "Sebastián Boselli"
+            },
+            {
+              "listoneName": "Davinchi",
+              "docsName": "Davinchi",
+              "bsdId": "4561",
+              "bsdName": "Davinchi"
+            },
+            {
+              "listoneName": "Diego Rico",
+              "docsName": "Diego Rico",
+              "bsdId": "2747",
+              "bsdName": "Diego Rico"
+            },
+            {
+              "listoneName": "Djene",
+              "docsName": "Djene",
+              "bsdId": "2739",
+              "bsdName": "Djené"
+            },
+            {
+              "listoneName": "Duarte",
+              "docsName": "Duarte",
+              "bsdId": "2738",
+              "bsdName": "Domingos Duarte"
+            },
+            {
+              "listoneName": "Javi Munoz",
+              "docsName": "Javi Munoz",
+              "bsdId": "2749",
+              "bsdName": "Javier Muñoz"
+            },
+            {
+              "listoneName": "Juanmi",
+              "docsName": "Juanmi",
+              "bsdId": "2757",
+              "bsdName": "Juanmi"
+            },
+            {
+              "listoneName": "Kiko",
+              "docsName": "Kiko",
+              "bsdId": "2741",
+              "bsdName": "Kiko Femenía"
+            },
+            {
+              "listoneName": "Letacek",
+              "docsName": "Soria - Letacek",
+              "bsdId": "2751",
+              "bsdName": "Jiří Letáček"
+            },
+            {
+              "listoneName": "Mario Martin",
+              "docsName": "Mario Martin",
+              "bsdId": "3831",
+              "bsdName": "Mario Martín"
+            },
+            {
+              "listoneName": "Milla",
+              "docsName": "Milla",
+              "bsdId": "2742",
+              "bsdName": "Luis Milla"
+            },
+            {
+              "listoneName": "Nyom",
+              "docsName": "Nyom",
+              "bsdId": "2740",
+              "bsdName": "Allan Nyom"
+            },
+            {
+              "listoneName": "Sancris",
+              "docsName": "Sancris",
+              "bsdId": "2744",
+              "bsdName": "Álex Sancris"
+            },
+            {
+              "listoneName": "Satriano",
+              "docsName": "Satriano",
+              "bsdId": "1114",
+              "bsdName": "Martín Satriano"
+            },
+            {
+              "listoneName": "Soria",
+              "docsName": "Soria - Letacek",
+              "bsdId": "2736",
+              "bsdName": "David Soria"
+            },
+            {
+              "listoneName": "Zaid Romero",
+              "docsName": "Zaid Romero",
+              "bsdId": "3548",
+              "bsdName": "Zaid Romero"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Girona",
+      "clubKey": "girona",
+      "listonePlayers": 24,
+      "status": "recommended",
+      "reason": "20/24 match automatici",
+      "recommendedTeamId": "39",
+      "recommendedTeamName": "Girona FC",
+      "candidates": [
+        {
+          "id": "39",
+          "name": "Girona FC",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 34,
+          "automatic": 20,
+          "ambiguous": 2,
+          "noNameMatch": 2,
+          "coverage": 0.8333333333333334,
+          "matchedPlayers": [
+            {
+              "listoneName": "Abel Ruiz",
+              "docsName": "Abel Ruiz",
+              "bsdId": "1051",
+              "bsdName": "Abel Ruíz"
+            },
+            {
+              "listoneName": "Alex Moreno",
+              "docsName": "Alex Moreno",
+              "bsdId": "1040",
+              "bsdName": "Álex Moreno"
+            },
+            {
+              "listoneName": "Artero",
+              "docsName": "Artero",
+              "bsdId": "24032",
+              "bsdName": "Ricard Artero"
+            },
+            {
+              "listoneName": "Blind",
+              "docsName": "Blind",
+              "bsdId": "4110",
+              "bsdName": "Daley Blind"
+            },
+            {
+              "listoneName": "Bryan Gil",
+              "docsName": "Bryan Gil",
+              "bsdId": "1045",
+              "bsdName": "Bryan Gil"
+            },
+            {
+              "listoneName": "David Lopez",
+              "docsName": "David Lopez",
+              "bsdId": "4804",
+              "bsdName": "David López"
+            },
+            {
+              "listoneName": "Frances",
+              "docsName": "Frances",
+              "bsdId": "1047",
+              "bsdName": "Alejandro Francés"
+            },
+            {
+              "listoneName": "Gazzaniga",
+              "docsName": "Ter Stegen - Gazzaniga",
+              "bsdId": "1036",
+              "bsdName": "Paulo Gazzaniga"
+            },
+            {
+              "listoneName": "Ivan Martin",
+              "docsName": "Ivan Martin",
+              "bsdId": "1041",
+              "bsdName": "Iván Martín"
+            },
+            {
+              "listoneName": "Joel Roca",
+              "docsName": "Joel Roca",
+              "bsdId": "1049",
+              "bsdName": "Joel Roca"
+            },
+            {
+              "listoneName": "Lemar",
+              "docsName": "Lemar",
+              "bsdId": "4112",
+              "bsdName": "Thomas Lemar"
+            },
+            {
+              "listoneName": "Ounahi",
+              "docsName": "Ounahi",
+              "bsdId": "1044",
+              "bsdName": "Azzedine Ounahi"
+            },
+            {
+              "listoneName": "Portu",
+              "docsName": "Portu",
+              "bsdId": "4113",
+              "bsdName": "Portu"
+            },
+            {
+              "listoneName": "Rincon",
+              "docsName": "Rincon",
+              "bsdId": "1037",
+              "bsdName": "Hugo Rincón"
+            },
+            {
+              "listoneName": "Stuani",
+              "docsName": "Stuani",
+              "bsdId": "3851",
+              "bsdName": "Cristhian Stuani"
+            },
+            {
+              "listoneName": "Tsigankov",
+              "docsName": "Tsigankov",
+              "bsdId": "1043",
+              "bsdName": "Viktor Tsygankov"
+            },
+            {
+              "listoneName": "van de Beek",
+              "docsName": "van de Beek",
+              "bsdId": "4675",
+              "bsdName": "Donny van de Beek"
+            },
+            {
+              "listoneName": "Vanat",
+              "docsName": "Vanat",
+              "bsdId": "1046",
+              "bsdName": "Vladyslav Vanat"
+            },
+            {
+              "listoneName": "Vitor Reis",
+              "docsName": "Vitor Reis",
+              "bsdId": "1039",
+              "bsdName": "Vitor Reis"
+            },
+            {
+              "listoneName": "Witsel",
+              "docsName": "Witsel",
+              "bsdId": "1042",
+              "bsdName": "Axel Witsel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Mallorca",
+      "clubKey": "mallorca",
+      "listonePlayers": 23,
+      "status": "recommended",
+      "reason": "20/23 match automatici",
+      "recommendedTeamId": "43",
+      "recommendedTeamName": "Mallorca",
+      "candidates": [
+        {
+          "id": "43",
+          "name": "Mallorca",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 33,
+          "automatic": 20,
+          "ambiguous": 0,
+          "noNameMatch": 3,
+          "coverage": 0.8695652173913043,
+          "matchedPlayers": [
+            {
+              "listoneName": "Antonio Sanchez",
+              "docsName": "Antonio Sanchez",
+              "bsdId": "2648",
+              "bsdName": "Antonio Sánchez"
+            },
+            {
+              "listoneName": "Bergstrom",
+              "docsName": "Leo Roman - Bergstrom",
+              "bsdId": "2637",
+              "bsdName": "Lucas Bergström"
+            },
+            {
+              "listoneName": "Darder",
+              "docsName": "Darder",
+              "bsdId": "2645",
+              "bsdName": "Sergi Darder"
+            },
+            {
+              "listoneName": "David Lopez",
+              "docsName": "David Lopez",
+              "bsdId": "2652",
+              "bsdName": "David López"
+            },
+            {
+              "listoneName": "Joseph",
+              "docsName": "Joseph",
+              "bsdId": "2644",
+              "bsdName": "Mateo Joseph"
+            },
+            {
+              "listoneName": "Kumbulla",
+              "docsName": "Kumbulla",
+              "bsdId": "2654",
+              "bsdName": "Marash Kumbulla"
+            },
+            {
+              "listoneName": "Leo Roman",
+              "docsName": "Leo Roman - Bergstrom",
+              "bsdId": "2637",
+              "bsdName": "Lucas Bergström"
+            },
+            {
+              "listoneName": "Maffeo",
+              "docsName": "Maffeo",
+              "bsdId": "2638",
+              "bsdName": "Pablo Maffeo"
+            },
+            {
+              "listoneName": "Mascarell",
+              "docsName": "Mascarell",
+              "bsdId": "2643",
+              "bsdName": "Omar Mascarell"
+            },
+            {
+              "listoneName": "Mojica",
+              "docsName": "Mojica",
+              "bsdId": "2641",
+              "bsdName": "Johan Mojica"
+            },
+            {
+              "listoneName": "Morey",
+              "docsName": "Morey",
+              "bsdId": "2655",
+              "bsdName": "Mateu Morey"
+            },
+            {
+              "listoneName": "Morlanes",
+              "docsName": "Morlanes",
+              "bsdId": "2657",
+              "bsdName": "Manu Morlanes"
+            },
+            {
+              "listoneName": "Muriqi",
+              "docsName": "Muriqi",
+              "bsdId": "2647",
+              "bsdName": "Vedat Muriqi"
+            },
+            {
+              "listoneName": "Pablo Torre",
+              "docsName": "Pablo Torre",
+              "bsdId": "2650",
+              "bsdName": "Pablo Torre"
+            },
+            {
+              "listoneName": "Prats",
+              "docsName": "Prats",
+              "bsdId": "2659",
+              "bsdName": "Abdón Prats"
+            },
+            {
+              "listoneName": "Raillo",
+              "docsName": "Raillo",
+              "bsdId": "2640",
+              "bsdName": "Antonio Raíllo"
+            },
+            {
+              "listoneName": "Samu Costa",
+              "docsName": "Samu Costa",
+              "bsdId": "2642",
+              "bsdName": "Samú Costa"
+            },
+            {
+              "listoneName": "Toni Lato",
+              "docsName": "Toni Lato",
+              "bsdId": "4534",
+              "bsdName": "Toni Lato"
+            },
+            {
+              "listoneName": "Valjent",
+              "docsName": "Valjent",
+              "bsdId": "2639",
+              "bsdName": "Martin Valjent"
+            },
+            {
+              "listoneName": "Virgili",
+              "docsName": "Virgili",
+              "bsdId": "2646",
+              "bsdName": "Jan Virgili"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Osasuna",
+      "clubKey": "osasuna",
+      "listonePlayers": 22,
+      "status": "recommended",
+      "reason": "19/22 match automatici",
+      "recommendedTeamId": "58",
+      "recommendedTeamName": "Osasuna",
+      "candidates": [
+        {
+          "id": "58",
+          "name": "Osasuna",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 31,
+          "automatic": 19,
+          "ambiguous": 3,
+          "noNameMatch": 0,
+          "coverage": 0.8636363636363636,
+          "matchedPlayers": [
+            {
+              "listoneName": "Aimar",
+              "docsName": "Aimar",
+              "bsdId": "2666",
+              "bsdName": "Aimar Oroz"
+            },
+            {
+              "listoneName": "Aitor Fernandez",
+              "docsName": "Herrera - Aitor Fernandez",
+              "bsdId": "2676",
+              "bsdName": "Aitor Fernández"
+            },
+            {
+              "listoneName": "Boyomo",
+              "docsName": "Boyomo",
+              "bsdId": "2661",
+              "bsdName": "Enzo Boyomo"
+            },
+            {
+              "listoneName": "Bretones",
+              "docsName": "Bretones",
+              "bsdId": "2667",
+              "bsdName": "Abel Bretones"
+            },
+            {
+              "listoneName": "Budimir",
+              "docsName": "Budimir",
+              "bsdId": "2669",
+              "bsdName": "Ante Budimir"
+            },
+            {
+              "listoneName": "Catena",
+              "docsName": "Catena",
+              "bsdId": "3888",
+              "bsdName": "Alejandro Catena"
+            },
+            {
+              "listoneName": "Galan",
+              "docsName": "Galan",
+              "bsdId": "779",
+              "bsdName": "Javi Galán"
+            },
+            {
+              "listoneName": "Herrando",
+              "docsName": "Herrando",
+              "bsdId": "2662",
+              "bsdName": "Jorge Herrando"
+            },
+            {
+              "listoneName": "Herrera",
+              "docsName": "Herrera - Aitor Fernandez",
+              "bsdId": "2676",
+              "bsdName": "Aitor Fernández"
+            },
+            {
+              "listoneName": "Iker Benito",
+              "docsName": "Iker Benito",
+              "bsdId": "4336",
+              "bsdName": "Iker Benito"
+            },
+            {
+              "listoneName": "Iker Munoz",
+              "docsName": "Iker Munoz",
+              "bsdId": "2678",
+              "bsdName": "Iker Muñoz"
+            },
+            {
+              "listoneName": "Kike Barja",
+              "docsName": "Kike Barja",
+              "bsdId": "2673",
+              "bsdName": "Kike Barja"
+            },
+            {
+              "listoneName": "Moi Gomez",
+              "docsName": "Moi Gomez",
+              "bsdId": "2671",
+              "bsdName": "Moi Gómez"
+            },
+            {
+              "listoneName": "Moncayola",
+              "docsName": "Moncayola",
+              "bsdId": "2664",
+              "bsdName": "Jon Moncayola"
+            },
+            {
+              "listoneName": "Osambela",
+              "docsName": "Osambela",
+              "bsdId": "2663",
+              "bsdName": "Asier Osambela"
+            },
+            {
+              "listoneName": "Raul Moro",
+              "docsName": "Raul Moro",
+              "bsdId": "3780",
+              "bsdName": "Raúl Moro"
+            },
+            {
+              "listoneName": "Rosier",
+              "docsName": "Rosier",
+              "bsdId": "4464",
+              "bsdName": "Valentin Rosier"
+            },
+            {
+              "listoneName": "Torro",
+              "docsName": "Torro",
+              "bsdId": "2665",
+              "bsdName": "Lucas Torró"
+            },
+            {
+              "listoneName": "Victor Munoz",
+              "docsName": "Victor Munoz",
+              "bsdId": "2668",
+              "bsdName": "Víctor Muñoz"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Rayo Vallecano",
+      "clubKey": "rayo vallecano",
+      "listonePlayers": 26,
+      "status": "recommended",
+      "reason": "24/26 match automatici, vantaggio 22 sul secondo candidato",
+      "recommendedTeamId": "40",
+      "recommendedTeamName": "Rayo Vallecano",
+      "candidates": [
+        {
+          "id": "40",
+          "name": "Rayo Vallecano",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 36,
+          "automatic": 24,
+          "ambiguous": 0,
+          "noNameMatch": 2,
+          "coverage": 0.9230769230769231,
+          "matchedPlayers": [
+            {
+              "listoneName": "Abdul Mumin",
+              "docsName": "Abdul Mumin",
+              "bsdId": "12045",
+              "bsdName": "Abdul Mumin"
+            },
+            {
+              "listoneName": "Alemao",
+              "docsName": "Alemao",
+              "bsdId": "915",
+              "bsdName": "Alemão"
+            },
+            {
+              "listoneName": "Alvaro Garcia",
+              "docsName": "Alvaro Garcia",
+              "bsdId": "912",
+              "bsdName": "Álvaro García"
+            },
+            {
+              "listoneName": "Balliu",
+              "docsName": "Balliu",
+              "bsdId": "916",
+              "bsdName": "Iván Balliu"
+            },
+            {
+              "listoneName": "Batalla",
+              "docsName": "Batalla - Cardenas",
+              "bsdId": "903",
+              "bsdName": "Augusto Batalla"
+            },
+            {
+              "listoneName": "Camello",
+              "docsName": "Camello",
+              "bsdId": "918",
+              "bsdName": "Sergio Camello"
+            },
+            {
+              "listoneName": "Cardenas",
+              "docsName": "Batalla - Cardenas",
+              "bsdId": "920",
+              "bsdName": "Dani Cárdenas"
+            },
+            {
+              "listoneName": "Carlos Martin",
+              "docsName": "Carlos Martin",
+              "bsdId": "781",
+              "bsdName": "Carlos Martín"
+            },
+            {
+              "listoneName": "Chavarria",
+              "docsName": "Chavarria",
+              "bsdId": "907",
+              "bsdName": "Pep Chavarría"
+            },
+            {
+              "listoneName": "de Frutos",
+              "docsName": "de Frutos",
+              "bsdId": "913",
+              "bsdName": "Jorge de Frutos"
+            },
+            {
+              "listoneName": "Fran Perez",
+              "docsName": "Fran Perez",
+              "bsdId": "909",
+              "bsdName": "Fran Pérez"
+            },
+            {
+              "listoneName": "Ilias Akhomach",
+              "docsName": "Ilias Akhomach",
+              "bsdId": "1778",
+              "bsdName": "Ilias Akhomach"
+            },
+            {
+              "listoneName": "Isi Palazon",
+              "docsName": "Isi Palazon",
+              "bsdId": "3863",
+              "bsdName": "Isi Palazón"
+            },
+            {
+              "listoneName": "Lejeune",
+              "docsName": "Lejeune",
+              "bsdId": "905",
+              "bsdName": "Florian Lejeune"
+            },
+            {
+              "listoneName": "Luiz Felipe",
+              "docsName": "Luiz Felipe",
+              "bsdId": "917",
+              "bsdName": "Luiz Felipe"
+            },
+            {
+              "listoneName": "Nobel Mendy",
+              "docsName": "Nobel Mendy",
+              "bsdId": "906",
+              "bsdName": "Nobel Mendy"
+            },
+            {
+              "listoneName": "Nteka",
+              "docsName": "Nteka",
+              "bsdId": "4311",
+              "bsdName": "Randy Nteka"
+            },
+            {
+              "listoneName": "Oscar Valentin",
+              "docsName": "Oscar Valentin",
+              "bsdId": "908",
+              "bsdName": "Óscar Valentín"
+            },
+            {
+              "listoneName": "Pathe Ciss",
+              "docsName": "Pathe Ciss",
+              "bsdId": "3864",
+              "bsdName": "Pathé Ismaël Ciss"
+            },
+            {
+              "listoneName": "Pedro Diaz",
+              "docsName": "Pedro Diaz",
+              "bsdId": "4019",
+              "bsdName": "Pedro Díaz"
+            },
+            {
+              "listoneName": "Ratiu",
+              "docsName": "Ratiu",
+              "bsdId": "904",
+              "bsdName": "Andrei Rațiu"
+            },
+            {
+              "listoneName": "Trejo",
+              "docsName": "Trejo",
+              "bsdId": "3865",
+              "bsdName": "Óscar Trejo"
+            },
+            {
+              "listoneName": "Unai Lopez",
+              "docsName": "Unai Lopez",
+              "bsdId": "910",
+              "bsdName": "Unai López"
+            },
+            {
+              "listoneName": "Vertrouwd",
+              "docsName": "Vertrouwd",
+              "bsdId": "921",
+              "bsdName": "Jozhua Vertrouwd"
+            }
+          ]
+        },
+        {
+          "id": "1510",
+          "name": "Rayo Majadahonda",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 41,
+          "automatic": 2,
+          "ambiguous": 1,
+          "noNameMatch": 23,
+          "coverage": 0.07692307692307693,
+          "matchedPlayers": [
+            {
+              "listoneName": "Alvaro Garcia",
+              "docsName": "Alvaro Garcia",
+              "bsdId": "37020",
+              "bsdName": "Alex Garcia"
+            },
+            {
+              "listoneName": "Fran Perez",
+              "docsName": "Fran Perez",
+              "bsdId": "37013",
+              "bsdName": "Fran Pérez"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Real Betis",
+      "clubKey": "real betis",
+      "listonePlayers": 26,
+      "status": "recommended",
+      "reason": "26/26 match automatici",
+      "recommendedTeamId": "56",
+      "recommendedTeamName": "Real Betis",
+      "candidates": [
+        {
+          "id": "56",
+          "name": "Real Betis",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 32,
+          "automatic": 26,
+          "ambiguous": 0,
+          "noNameMatch": 0,
+          "coverage": 1,
+          "matchedPlayers": [
+            {
+              "listoneName": "Amrabat",
+              "docsName": "Amrabat",
+              "bsdId": "2985",
+              "bsdName": "Sofyan Amrabat"
+            },
+            {
+              "listoneName": "Angel Ortiz",
+              "docsName": "Angel Ortiz",
+              "bsdId": "1580",
+              "bsdName": "Angel Ortiz"
+            },
+            {
+              "listoneName": "Antony",
+              "docsName": "Antony",
+              "bsdId": "2986",
+              "bsdName": "Antony"
+            },
+            {
+              "listoneName": "Avila",
+              "docsName": "Avila",
+              "bsdId": "1583",
+              "bsdName": "Chimy Ávila"
+            },
+            {
+              "listoneName": "Bakambu",
+              "docsName": "Bakambu",
+              "bsdId": "1588",
+              "bsdName": "Cédric Bakambu"
+            },
+            {
+              "listoneName": "Bartra",
+              "docsName": "Bartra",
+              "bsdId": "1570",
+              "bsdName": "Marc Bartra"
+            },
+            {
+              "listoneName": "Bellerin",
+              "docsName": "Bellerin",
+              "bsdId": "3849",
+              "bsdName": "Héctor Bellerín"
+            },
+            {
+              "listoneName": "Cucho Hernandez",
+              "docsName": "Cucho Hernandez",
+              "bsdId": "1578",
+              "bsdName": "Cucho Hernández"
+            },
+            {
+              "listoneName": "Deossa",
+              "docsName": "Deossa",
+              "bsdId": "1574",
+              "bsdName": "Nelson Deossa"
+            },
+            {
+              "listoneName": "Ezzalzouli",
+              "docsName": "Ezzalzouli",
+              "bsdId": "1577",
+              "bsdName": "Abdessamad Ezzalzouli"
+            },
+            {
+              "listoneName": "Fidalgo",
+              "docsName": "Fidalgo",
+              "bsdId": "9008",
+              "bsdName": "Álvaro Fidalgo"
+            },
+            {
+              "listoneName": "Firpo",
+              "docsName": "Firpo",
+              "bsdId": "1586",
+              "bsdName": "Junior Firpo"
+            },
+            {
+              "listoneName": "Fornals",
+              "docsName": "Fornals",
+              "bsdId": "1576",
+              "bsdName": "Pablo Fornals"
+            },
+            {
+              "listoneName": "Isco",
+              "docsName": "Isco",
+              "bsdId": "2987",
+              "bsdName": "Isco"
+            },
+            {
+              "listoneName": "Llorente",
+              "docsName": "Llorente",
+              "bsdId": "1587",
+              "bsdName": "Diego Llorente"
+            },
+            {
+              "listoneName": "Lo Celso",
+              "docsName": "Lo Celso",
+              "bsdId": "3850",
+              "bsdName": "Giovani Lo Celso"
+            },
+            {
+              "listoneName": "Marc Roca",
+              "docsName": "Marc Roca",
+              "bsdId": "1573",
+              "bsdName": "Marc Roca"
+            },
+            {
+              "listoneName": "Natan",
+              "docsName": "Natan",
+              "bsdId": "1571",
+              "bsdName": "Natan"
+            },
+            {
+              "listoneName": "Pablo Garcia",
+              "docsName": "Pablo Garcia",
+              "bsdId": "1575",
+              "bsdName": "Pablo García"
+            },
+            {
+              "listoneName": "Pau Lopez",
+              "docsName": "Pau Lopez - Valles",
+              "bsdId": "4331",
+              "bsdName": "Pau López"
+            },
+            {
+              "listoneName": "Ricardo Rodriguez",
+              "docsName": "Ricardo Rodriguez",
+              "bsdId": "1582",
+              "bsdName": "Ricardo Rodríguez"
+            },
+            {
+              "listoneName": "Riquelme",
+              "docsName": "Riquelme",
+              "bsdId": "1581",
+              "bsdName": "Rodrigo Riquelme"
+            },
+            {
+              "listoneName": "Ruibal",
+              "docsName": "Ruibal",
+              "bsdId": "1569",
+              "bsdName": "Aitor Ruibal"
+            },
+            {
+              "listoneName": "Sergi Altimira",
+              "docsName": "Sergi Altimira",
+              "bsdId": "1579",
+              "bsdName": "Sergi Altimira"
+            },
+            {
+              "listoneName": "Valentin Gomez",
+              "docsName": "Valentin Gomez",
+              "bsdId": "1572",
+              "bsdName": "Valentín Gómez"
+            },
+            {
+              "listoneName": "Valles",
+              "docsName": "Pau Lopez - Valles",
+              "bsdId": "4331",
+              "bsdName": "Pau López"
+            }
+          ]
+        },
+        {
+          "id": "1527",
+          "name": "Betis C.F.",
+          "country": "Spain",
+          "nameScore": 10,
+          "rosterSize": 0,
+          "automatic": 0,
+          "ambiguous": 0,
+          "noNameMatch": 26,
+          "coverage": 0,
+          "matchedPlayers": []
+        }
+      ]
+    },
+    {
+      "club": "Real Madrid",
+      "clubKey": "real madrid",
+      "listonePlayers": 24,
+      "status": "recommended",
+      "reason": "24/24 match automatici, vantaggio 21 sul secondo candidato",
+      "recommendedTeamId": "57",
+      "recommendedTeamName": "Real Madrid",
+      "candidates": [
+        {
+          "id": "57",
+          "name": "Real Madrid",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 41,
+          "automatic": 24,
+          "ambiguous": 0,
+          "noNameMatch": 0,
+          "coverage": 1,
+          "matchedPlayers": [
+            {
+              "listoneName": "Alaba",
+              "docsName": "Alaba",
+              "bsdId": "4020",
+              "bsdName": "David Alaba"
+            },
+            {
+              "listoneName": "Asencio",
+              "docsName": "Asencio",
+              "bsdId": "596",
+              "bsdName": "Raúl Asencio"
+            },
+            {
+              "listoneName": "Bellingham",
+              "docsName": "Bellingham",
+              "bsdId": "592",
+              "bsdName": "Jude Bellingham"
+            },
+            {
+              "listoneName": "Brahim Diaz",
+              "docsName": "Brahim Diaz",
+              "bsdId": "598",
+              "bsdName": "Brahim Díaz"
+            },
+            {
+              "listoneName": "Camavinga",
+              "docsName": "Camavinga",
+              "bsdId": "590",
+              "bsdName": "Eduardo Camavinga"
+            },
+            {
+              "listoneName": "Carreras",
+              "docsName": "Carreras",
+              "bsdId": "589",
+              "bsdName": "Álvaro Carreras"
+            },
+            {
+              "listoneName": "Carvajal",
+              "docsName": "Carvajal",
+              "bsdId": "4343",
+              "bsdName": "Dani Carvajal"
+            },
+            {
+              "listoneName": "Ceballos",
+              "docsName": "Ceballos",
+              "bsdId": "605",
+              "bsdName": "Dani Ceballos"
+            },
+            {
+              "listoneName": "Courtois",
+              "docsName": "Courtois - Lunin",
+              "bsdId": "585",
+              "bsdName": "Thibaut Courtois"
+            },
+            {
+              "listoneName": "Fran Garcia",
+              "docsName": "Fran Garcia",
+              "bsdId": "603",
+              "bsdName": "Fran García"
+            },
+            {
+              "listoneName": "Gonzalo Garcia",
+              "docsName": "Gonzalo Garcia",
+              "bsdId": "600",
+              "bsdName": "Gonzalo García"
+            },
+            {
+              "listoneName": "Guler",
+              "docsName": "Guler",
+              "bsdId": "597",
+              "bsdName": "Arda Güler"
+            },
+            {
+              "listoneName": "Huijsen",
+              "docsName": "Huijsen",
+              "bsdId": "3818",
+              "bsdName": "Dean Huijsen"
+            },
+            {
+              "listoneName": "Lunin",
+              "docsName": "Courtois - Lunin",
+              "bsdId": "601",
+              "bsdName": "Andriy Lunin"
+            },
+            {
+              "listoneName": "Mastantuono",
+              "docsName": "Mastantuono",
+              "bsdId": "604",
+              "bsdName": "Franco Mastantuono"
+            },
+            {
+              "listoneName": "Mbappe",
+              "docsName": "Mbappe",
+              "bsdId": "594",
+              "bsdName": "Kylian Mbappé"
+            },
+            {
+              "listoneName": "Mendy",
+              "docsName": "Mendy",
+              "bsdId": "1057",
+              "bsdName": "Ferland Mendy"
+            },
+            {
+              "listoneName": "Militao",
+              "docsName": "Militao",
+              "bsdId": "587",
+              "bsdName": "Éder Militão"
+            },
+            {
+              "listoneName": "Rodrygo",
+              "docsName": "Rodrygo",
+              "bsdId": "599",
+              "bsdName": "Rodrygo"
+            },
+            {
+              "listoneName": "Rudiger",
+              "docsName": "Rudiger",
+              "bsdId": "588",
+              "bsdName": "Antonio Rüdiger"
+            },
+            {
+              "listoneName": "Tchouameni",
+              "docsName": "Tchouameni",
+              "bsdId": "591",
+              "bsdName": "Aurélien Tchouaméni"
+            },
+            {
+              "listoneName": "Trent",
+              "docsName": "Trent",
+              "bsdId": "586",
+              "bsdName": "Trent Alexander-Arnold"
+            },
+            {
+              "listoneName": "Valverde",
+              "docsName": "Valverde",
+              "bsdId": "593",
+              "bsdName": "Federico Valverde"
+            },
+            {
+              "listoneName": "Vinicius",
+              "docsName": "Vinicius",
+              "bsdId": "595",
+              "bsdName": "Vinícius Júnior"
+            }
+          ]
+        },
+        {
+          "id": "926",
+          "name": "Real Madrid",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 41,
+          "automatic": 3,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.125,
+          "matchedPlayers": [
+            {
+              "listoneName": "Alaba",
+              "docsName": "Alaba",
+              "bsdId": "17600",
+              "bsdName": "Alba Redondo"
+            },
+            {
+              "listoneName": "Fran Garcia",
+              "docsName": "Fran Garcia",
+              "bsdId": "17597",
+              "bsdName": "Sheila García"
+            },
+            {
+              "listoneName": "Gonzalo Garcia",
+              "docsName": "Gonzalo Garcia",
+              "bsdId": "17597",
+              "bsdName": "Sheila García"
+            }
+          ]
+        },
+        {
+          "id": "54",
+          "name": "Atlético Madrid",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 41,
+          "automatic": 3,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.125,
+          "matchedPlayers": [
+            {
+              "listoneName": "Alaba",
+              "docsName": "Alaba",
+              "bsdId": "773",
+              "bsdName": "Thiago Almada"
+            },
+            {
+              "listoneName": "Brahim Diaz",
+              "docsName": "Brahim Diaz",
+              "bsdId": "8480",
+              "bsdName": "Julio Díaz"
+            },
+            {
+              "listoneName": "Rodrygo",
+              "docsName": "Rodrygo",
+              "bsdId": "2769",
+              "bsdName": "Rodrigo Mendoza"
+            }
+          ]
+        },
+        {
+          "id": "920",
+          "name": "Club Atlético de Madrid",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 39,
+          "automatic": 3,
+          "ambiguous": 0,
+          "noNameMatch": 21,
+          "coverage": 0.125,
+          "matchedPlayers": [
+            {
+              "listoneName": "Alaba",
+              "docsName": "Alaba",
+              "bsdId": "21260",
+              "bsdName": "Alba Bucero"
+            },
+            {
+              "listoneName": "Fran Garcia",
+              "docsName": "Fran Garcia",
+              "bsdId": "21266",
+              "bsdName": "Gabriela García"
+            },
+            {
+              "listoneName": "Gonzalo Garcia",
+              "docsName": "Gonzalo Garcia",
+              "bsdId": "21266",
+              "bsdName": "Gabriela García"
+            }
+          ]
+        },
+        {
+          "id": "923",
+          "name": "Madrid CFF",
+          "country": "Spain",
+          "nameScore": 9,
+          "rosterSize": 31,
+          "automatic": 1,
+          "ambiguous": 2,
+          "noNameMatch": 21,
+          "coverage": 0.041666666666666664,
+          "matchedPlayers": [
+            {
+              "listoneName": "Alaba",
+              "docsName": "Alaba",
+              "bsdId": "17997",
+              "bsdName": "Alba Ruiz Soto"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Real Sociedad",
+      "clubKey": "real sociedad",
+      "listonePlayers": 28,
+      "status": "recommended",
+      "reason": "22/28 match automatici, vantaggio 16 sul secondo candidato",
+      "recommendedTeamId": "48",
+      "recommendedTeamName": "Real Sociedad",
+      "candidates": [
+        {
+          "id": "48",
+          "name": "Real Sociedad",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 21,
+          "automatic": 22,
+          "ambiguous": 0,
+          "noNameMatch": 6,
+          "coverage": 0.7857142857142857,
+          "matchedPlayers": [
+            {
+              "listoneName": "Aihen Munoz",
+              "docsName": "Aihen Munoz",
+              "bsdId": "1761",
+              "bsdName": "Aihen Muñoz"
+            },
+            {
+              "listoneName": "Aramburu",
+              "docsName": "Aramburu",
+              "bsdId": "1742",
+              "bsdName": "Jon Aramburu"
+            },
+            {
+              "listoneName": "Barrenetxea",
+              "docsName": "Barrenetxea",
+              "bsdId": "1752",
+              "bsdName": "Ander Barrenetxea"
+            },
+            {
+              "listoneName": "Brais Mendez",
+              "docsName": "Brais Mendez",
+              "bsdId": "1749",
+              "bsdName": "Brais Méndez"
+            },
+            {
+              "listoneName": "Elustondo",
+              "docsName": "Elustondo",
+              "bsdId": "1744",
+              "bsdName": "Aritz Elustondo"
+            },
+            {
+              "listoneName": "Gorrotxategi",
+              "docsName": "Gorrotxategi",
+              "bsdId": "1746",
+              "bsdName": "Jon Gorrotxategi"
+            },
+            {
+              "listoneName": "Guedes",
+              "docsName": "Guedes",
+              "bsdId": "1750",
+              "bsdName": "Gonçalo Guedes"
+            },
+            {
+              "listoneName": "Jon Martin",
+              "docsName": "Jon Martin",
+              "bsdId": "1743",
+              "bsdName": "Jon Martin"
+            },
+            {
+              "listoneName": "Karrikaburu",
+              "docsName": "Karrikaburu",
+              "bsdId": "4387",
+              "bsdName": "Jon Karrikaburu"
+            },
+            {
+              "listoneName": "Kubo",
+              "docsName": "Kubo",
+              "bsdId": "1748",
+              "bsdName": "Takefusa Kubo"
+            },
+            {
+              "listoneName": "Odriozola",
+              "docsName": "Odriozola",
+              "bsdId": "1759",
+              "bsdName": "Álvaro Odriozola"
+            },
+            {
+              "listoneName": "Oskarsson",
+              "docsName": "Oskarsson",
+              "bsdId": "4814",
+              "bsdName": "Orri Óskarsson"
+            },
+            {
+              "listoneName": "Oyarzabal",
+              "docsName": "Oyarzabal",
+              "bsdId": "3890",
+              "bsdName": "Mikel Oyarzabal"
+            },
+            {
+              "listoneName": "Pablo Marin",
+              "docsName": "Pablo Marin",
+              "bsdId": "1743",
+              "bsdName": "Jon Martin"
+            },
+            {
+              "listoneName": "Remiro",
+              "docsName": "Remiro - Marrero",
+              "bsdId": "1741",
+              "bsdName": "Álex Remiro"
+            },
+            {
+              "listoneName": "Sergio Gomez",
+              "docsName": "Sergio Gomez",
+              "bsdId": "1745",
+              "bsdName": "Sergio Gómez"
+            },
+            {
+              "listoneName": "Soler",
+              "docsName": "Soler",
+              "bsdId": "1747",
+              "bsdName": "Carlos Soler"
+            },
+            {
+              "listoneName": "Sucic",
+              "docsName": "Sucic",
+              "bsdId": "1762",
+              "bsdName": "Luka Sučić"
+            },
+            {
+              "listoneName": "Wesley",
+              "docsName": "Wesley",
+              "bsdId": "7876",
+              "bsdName": "Wesley"
+            },
+            {
+              "listoneName": "Yangel Herrera",
+              "docsName": "Yangel Herrera",
+              "bsdId": "4386",
+              "bsdName": "Yangel Herrera"
+            },
+            {
+              "listoneName": "Zakharyan",
+              "docsName": "Zakharyan",
+              "bsdId": "1753",
+              "bsdName": "Arsen Zakharyan"
+            },
+            {
+              "listoneName": "Zubeldia",
+              "docsName": "Zubeldia",
+              "bsdId": "4127",
+              "bsdName": "Igor Zubeldia"
+            }
+          ]
+        },
+        {
+          "id": "1829",
+          "name": "Real Sociedad B",
+          "country": "Spain",
+          "nameScore": 82,
+          "rosterSize": 42,
+          "automatic": 6,
+          "ambiguous": 1,
+          "noNameMatch": 21,
+          "coverage": 0.21428571428571427,
+          "matchedPlayers": [
+            {
+              "listoneName": "Jon Martin",
+              "docsName": "Jon Martin",
+              "bsdId": "1763",
+              "bsdName": "Pablo Marín"
+            },
+            {
+              "listoneName": "Mariezkurrena",
+              "docsName": "Mariezkurrena",
+              "bsdId": "5641",
+              "bsdName": "Arkaitz Mariezkurrena"
+            },
+            {
+              "listoneName": "Marrero",
+              "docsName": "Remiro - Marrero",
+              "bsdId": "1757",
+              "bsdName": "Unai Marrero"
+            },
+            {
+              "listoneName": "Pablo Marin",
+              "docsName": "Pablo Marin",
+              "bsdId": "1763",
+              "bsdName": "Pablo Marín"
+            },
+            {
+              "listoneName": "Turrientes",
+              "docsName": "Turrientes",
+              "bsdId": "1756",
+              "bsdName": "Beñat Turrientes"
+            },
+            {
+              "listoneName": "Yangel Herrera",
+              "docsName": "Yangel Herrera",
+              "bsdId": "1754",
+              "bsdName": "Gorka Carrera Zarranz"
+            }
+          ]
+        },
+        {
+          "id": "924",
+          "name": "Real Sociedad",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 28,
+          "automatic": 1,
+          "ambiguous": 1,
+          "noNameMatch": 26,
+          "coverage": 0.03571428571428571,
+          "matchedPlayers": [
+            {
+              "listoneName": "Jon Martin",
+              "docsName": "Jon Martin",
+              "bsdId": "21283",
+              "bsdName": "Maren Lezeta"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Sevilla",
+      "clubKey": "sevilla",
+      "listonePlayers": 24,
+      "status": "recommended",
+      "reason": "23/24 match automatici, vantaggio 22 sul secondo candidato",
+      "recommendedTeamId": "52",
+      "recommendedTeamName": "Sevilla",
+      "candidates": [
+        {
+          "id": "52",
+          "name": "Sevilla",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 35,
+          "automatic": 23,
+          "ambiguous": 0,
+          "noNameMatch": 1,
+          "coverage": 0.9583333333333334,
+          "matchedPlayers": [
+            {
+              "listoneName": "Agoume",
+              "docsName": "Agoume",
+              "bsdId": "1559",
+              "bsdName": "Lucien Agoumé"
+            },
+            {
+              "listoneName": "Akor Adams",
+              "docsName": "Akor Adams",
+              "bsdId": "1555",
+              "bsdName": "Akor Adams"
+            },
+            {
+              "listoneName": "Alexis Sanchez",
+              "docsName": "Alexis Sanchez",
+              "bsdId": "1558",
+              "bsdName": "Alexis Sánchez"
+            },
+            {
+              "listoneName": "Azpilicueta",
+              "docsName": "Azpilicueta",
+              "bsdId": "1547",
+              "bsdName": "César Azpilicueta"
+            },
+            {
+              "listoneName": "Carmona",
+              "docsName": "Carmona",
+              "bsdId": "1549",
+              "bsdName": "José Ángel Carmona"
+            },
+            {
+              "listoneName": "Ejuke",
+              "docsName": "Ejuke",
+              "bsdId": "1552",
+              "bsdName": "Chidera Ejuke"
+            },
+            {
+              "listoneName": "Fabio Cardoso",
+              "docsName": "Fabio Cardoso",
+              "bsdId": "1562",
+              "bsdName": "Fábio Cardoso"
+            },
+            {
+              "listoneName": "Gudelj",
+              "docsName": "Gudelj",
+              "bsdId": "1567",
+              "bsdName": "Nemanja Gudelj"
+            },
+            {
+              "listoneName": "Isaac Romero",
+              "docsName": "Isaac Romero",
+              "bsdId": "1557",
+              "bsdName": "Isaac Romero"
+            },
+            {
+              "listoneName": "Januzaj",
+              "docsName": "Januzaj",
+              "bsdId": "3802",
+              "bsdName": "Adnan Januzaj"
+            },
+            {
+              "listoneName": "Joan Jordan",
+              "docsName": "Joan Jordan",
+              "bsdId": "1565",
+              "bsdName": "Joan Jordán"
+            },
+            {
+              "listoneName": "Juanlu",
+              "docsName": "Juanlu",
+              "bsdId": "1546",
+              "bsdName": "Juanlu Sánchez"
+            },
+            {
+              "listoneName": "Manu Bueno",
+              "docsName": "Manu Bueno",
+              "bsdId": "1564",
+              "bsdName": "Manu Bueno"
+            },
+            {
+              "listoneName": "Marcao",
+              "docsName": "Marcao",
+              "bsdId": "1548",
+              "bsdName": "Marcão"
+            },
+            {
+              "listoneName": "Nianzou",
+              "docsName": "Nianzou",
+              "bsdId": "4090",
+              "bsdName": "Tanguy Nianzou"
+            },
+            {
+              "listoneName": "Nyland",
+              "docsName": "Vlachodimos - Nyland",
+              "bsdId": "1561",
+              "bsdName": "Ørjan Nyland"
+            },
+            {
+              "listoneName": "Peque",
+              "docsName": "Peque",
+              "bsdId": "1553",
+              "bsdName": "Peque Fernández"
+            },
+            {
+              "listoneName": "Ruben Vargas",
+              "docsName": "Ruben Vargas",
+              "bsdId": "3803",
+              "bsdName": "Rubén Vargas"
+            },
+            {
+              "listoneName": "Salas",
+              "docsName": "Salas",
+              "bsdId": "1556",
+              "bsdName": "Kike Salas"
+            },
+            {
+              "listoneName": "Sierra",
+              "docsName": "Sierra",
+              "bsdId": "1560",
+              "bsdName": "Miguel Sierra"
+            },
+            {
+              "listoneName": "Sow",
+              "docsName": "Sow",
+              "bsdId": "1550",
+              "bsdName": "Djibril Sow"
+            },
+            {
+              "listoneName": "Suazo",
+              "docsName": "Suazo",
+              "bsdId": "3801",
+              "bsdName": "Gabriel Suazo"
+            },
+            {
+              "listoneName": "Vlachodimos",
+              "docsName": "Vlachodimos - Nyland",
+              "bsdId": "1545",
+              "bsdName": "Odysseas Vlachodimos"
+            }
+          ]
+        },
+        {
+          "id": "922",
+          "name": "Sevilla FC",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 29,
+          "automatic": 1,
+          "ambiguous": 1,
+          "noNameMatch": 22,
+          "coverage": 0.041666666666666664,
+          "matchedPlayers": [
+            {
+              "listoneName": "Andres Lopez",
+              "docsName": "Andres Lopez",
+              "bsdId": "17756",
+              "bsdName": "Alba López"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "club": "Valencia",
+      "clubKey": "valencia",
+      "listonePlayers": 24,
+      "status": "recommended",
+      "reason": "24/24 match automatici, vantaggio 24 sul secondo candidato",
+      "recommendedTeamId": "47",
+      "recommendedTeamName": "Valencia",
+      "candidates": [
+        {
+          "id": "47",
+          "name": "Valencia",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 41,
+          "automatic": 24,
+          "ambiguous": 0,
+          "noNameMatch": 0,
+          "coverage": 1,
+          "matchedPlayers": [
+            {
+              "listoneName": "Agirrezabala",
+              "docsName": "Agirrezabala - Dimitrievski",
+              "bsdId": "923",
+              "bsdName": "Julen Agirrezabala"
+            },
+            {
+              "listoneName": "Andre Almeida",
+              "docsName": "Andre Almeida",
+              "bsdId": "931",
+              "bsdName": "André Almeida"
+            },
+            {
+              "listoneName": "Beltran",
+              "docsName": "Beltran",
+              "bsdId": "936",
+              "bsdName": "Lucas Beltrán"
+            },
+            {
+              "listoneName": "Comert",
+              "docsName": "Comert",
+              "bsdId": "942",
+              "bsdName": "Eray Cömert"
+            },
+            {
+              "listoneName": "Copete",
+              "docsName": "Copete",
+              "bsdId": "926",
+              "bsdName": "José Copete"
+            },
+            {
+              "listoneName": "Correia",
+              "docsName": "Correia",
+              "bsdId": "924",
+              "bsdName": "Thierry Correia"
+            },
+            {
+              "listoneName": "Danjuma",
+              "docsName": "Danjuma",
+              "bsdId": "934",
+              "bsdName": "Arnaut Danjuma"
+            },
+            {
+              "listoneName": "Diakhaby",
+              "docsName": "Diakhaby",
+              "bsdId": "4549",
+              "bsdName": "Mouctar Diakhaby"
+            },
+            {
+              "listoneName": "Diego Lopez",
+              "docsName": "Diego Lopez",
+              "bsdId": "932",
+              "bsdName": "Diego López"
+            },
+            {
+              "listoneName": "Dimitrievski",
+              "docsName": "Agirrezabala - Dimitrievski",
+              "bsdId": "939",
+              "bsdName": "Stole Dimitrievski"
+            },
+            {
+              "listoneName": "Foulquier",
+              "docsName": "Foulquier",
+              "bsdId": "944",
+              "bsdName": "Dimitri Foulquier"
+            },
+            {
+              "listoneName": "Gaya",
+              "docsName": "Gaya",
+              "bsdId": "927",
+              "bsdName": "José Luis Gayà"
+            },
+            {
+              "listoneName": "Guido Rodriguez",
+              "docsName": "Guido Rodriguez",
+              "bsdId": "1652",
+              "bsdName": "Guido Rodríguez"
+            },
+            {
+              "listoneName": "Hugo Duro",
+              "docsName": "Hugo Duro",
+              "bsdId": "933",
+              "bsdName": "Hugo Duro"
+            },
+            {
+              "listoneName": "Javi Guerra",
+              "docsName": "Javi Guerra",
+              "bsdId": "928",
+              "bsdName": "Javier Guerra"
+            },
+            {
+              "listoneName": "Pepelu",
+              "docsName": "Pepelu",
+              "bsdId": "929",
+              "bsdName": "Pepelu"
+            },
+            {
+              "listoneName": "Raba",
+              "docsName": "Raba",
+              "bsdId": "938",
+              "bsdName": "Dani Raba"
+            },
+            {
+              "listoneName": "Ramazani",
+              "docsName": "Ramazani",
+              "bsdId": "4550",
+              "bsdName": "Largie Ramazani"
+            },
+            {
+              "listoneName": "Rioja",
+              "docsName": "Rioja",
+              "bsdId": "930",
+              "bsdName": "Luis Rioja"
+            },
+            {
+              "listoneName": "Sadiq",
+              "docsName": "Sadiq",
+              "bsdId": "1751",
+              "bsdName": "Umar Sadiq"
+            },
+            {
+              "listoneName": "Santamaria",
+              "docsName": "Santamaria",
+              "bsdId": "937",
+              "bsdName": "Baptiste Santamaria"
+            },
+            {
+              "listoneName": "Tarrega",
+              "docsName": "Tarrega",
+              "bsdId": "925",
+              "bsdName": "César Tárrega"
+            },
+            {
+              "listoneName": "Ugrinic",
+              "docsName": "Ugrinic",
+              "bsdId": "935",
+              "bsdName": "Filip Ugrinić"
+            },
+            {
+              "listoneName": "Vazquez",
+              "docsName": "Vazquez",
+              "bsdId": "941",
+              "bsdName": "Jesús Vázquez"
+            }
+          ]
+        },
+        {
+          "id": "3885",
+          "name": "Valencia",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 57,
+          "automatic": 0,
+          "ambiguous": 0,
+          "noNameMatch": 24,
+          "coverage": 0,
+          "matchedPlayers": []
+        }
+      ]
+    },
+    {
+      "club": "Villarreal",
+      "clubKey": "villarreal",
+      "listonePlayers": 24,
+      "status": "recommended",
+      "reason": "23/24 match automatici",
+      "recommendedTeamId": "41",
+      "recommendedTeamName": "Villarreal",
+      "candidates": [
+        {
+          "id": "41",
+          "name": "Villarreal",
+          "country": "Spain",
+          "nameScore": 100,
+          "rosterSize": 32,
+          "automatic": 23,
+          "ambiguous": 0,
+          "noNameMatch": 1,
+          "coverage": 0.9583333333333334,
+          "matchedPlayers": [
+            {
+              "listoneName": "Alfon",
+              "docsName": "Alfon",
+              "bsdId": "1554",
+              "bsdName": "Alfon González"
+            },
+            {
+              "listoneName": "Ayoze Perez",
+              "docsName": "Ayoze Perez",
+              "bsdId": "1774",
+              "bsdName": "Ayoze Pérez"
+            },
+            {
+              "listoneName": "Buchanan",
+              "docsName": "Buchanan",
+              "bsdId": "1769",
+              "bsdName": "Tajon Buchanan"
+            },
+            {
+              "listoneName": "Cabanes",
+              "docsName": "Cabanes",
+              "bsdId": "4876",
+              "bsdName": "Pau Cabanes"
+            },
+            {
+              "listoneName": "Cardona",
+              "docsName": "Cardona",
+              "bsdId": "1777",
+              "bsdName": "Sergi Cardona"
+            },
+            {
+              "listoneName": "Comesana",
+              "docsName": "Comesana",
+              "bsdId": "1770",
+              "bsdName": "Santi Comesaña"
+            },
+            {
+              "listoneName": "Foyth",
+              "docsName": "Foyth",
+              "bsdId": "1766",
+              "bsdName": "Juan Foyth"
+            },
+            {
+              "listoneName": "Freeman",
+              "docsName": "Freeman",
+              "bsdId": "8860",
+              "bsdName": "Alexander Freeman"
+            },
+            {
+              "listoneName": "Gerard Moreno",
+              "docsName": "Gerard Moreno",
+              "bsdId": "1773",
+              "bsdName": "Gerard Moreno"
+            },
+            {
+              "listoneName": "Kambwala",
+              "docsName": "Kambwala",
+              "bsdId": "13639",
+              "bsdName": "Willy Kambwala"
+            },
+            {
+              "listoneName": "Logan Costa",
+              "docsName": "Logan Costa",
+              "bsdId": "22088",
+              "bsdName": "Logan Costa"
+            },
+            {
+              "listoneName": "Luiz Junior",
+              "docsName": "Luiz Junior - Tenas",
+              "bsdId": "1764",
+              "bsdName": "Luiz Júnior"
+            },
+            {
+              "listoneName": "Mikautadze",
+              "docsName": "Mikautadze",
+              "bsdId": "1776",
+              "bsdName": "Georges Mikautadze"
+            },
+            {
+              "listoneName": "Moleiro",
+              "docsName": "Moleiro",
+              "bsdId": "1772",
+              "bsdName": "Alberto Moleiro"
+            },
+            {
+              "listoneName": "Mourino",
+              "docsName": "Mourino",
+              "bsdId": "1765",
+              "bsdName": "Santiago Mouriño"
+            },
+            {
+              "listoneName": "Pape Gueye",
+              "docsName": "Pape Gueye",
+              "bsdId": "1771",
+              "bsdName": "Pape Gueye"
+            },
+            {
+              "listoneName": "Parejo",
+              "docsName": "Parejo",
+              "bsdId": "1775",
+              "bsdName": "Dani Parejo"
+            },
+            {
+              "listoneName": "Partey",
+              "docsName": "Partey",
+              "bsdId": "1784",
+              "bsdName": "Thomas Partey"
+            },
+            {
+              "listoneName": "Pau Navarro",
+              "docsName": "Pau Navarro",
+              "bsdId": "1782",
+              "bsdName": "Pau Navarro"
+            },
+            {
+              "listoneName": "Pepe",
+              "docsName": "Pepe",
+              "bsdId": "1786",
+              "bsdName": "Nicolas Pépé"
+            },
+            {
+              "listoneName": "Rafa Marin",
+              "docsName": "Rafa Marin",
+              "bsdId": "1767",
+              "bsdName": "Rafa Marín"
+            },
+            {
+              "listoneName": "Renato Veiga",
+              "docsName": "Renato Veiga",
+              "bsdId": "1781",
+              "bsdName": "Renato Veiga"
+            },
+            {
+              "listoneName": "Tenas",
+              "docsName": "Luiz Junior - Tenas",
+              "bsdId": "1764",
+              "bsdName": "Luiz Júnior"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
