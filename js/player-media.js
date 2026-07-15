@@ -1,7 +1,7 @@
 (function exposePlayerMedia(global) {
   "use strict";
 
-  const CACHE_VERSION = 10;
+  const CACHE_VERSION = 11;
   const memory = new Map();
   const networkRequests = new Map();
   const revalidated = new Set();
@@ -99,6 +99,12 @@
     return player(name, team, leagueId)?.photoUrl || "";
   }
 
+  function storyPhoto(name, team, leagueId = currentLeague) {
+    const entry = player(name, team, leagueId);
+    const id = String(entry?.externalId || "").trim();
+    return /^\d+$/.test(id) ? `/api/player-photo?id=${encodeURIComponent(id)}` : "";
+  }
+
   function crest(team) {
     const target = clubKey(team);
     if (!target) return "";
@@ -123,7 +129,7 @@
     return bestScore >= 9 ? (best?.crestUrl || "") : "";
   }
 
-  global.LineupPlayerMedia = Object.freeze({ clubKey, load, payload: payloadFor, photo, player, playerKey, crest });
+  global.LineupPlayerMedia = Object.freeze({ clubKey, load, payload: payloadFor, photo, storyPhoto, player, playerKey, crest });
 
   document.addEventListener("lineup:league-assets-ready", (event) => {
     const detail = event.detail || {};

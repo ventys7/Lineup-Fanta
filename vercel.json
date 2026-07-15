@@ -151,6 +151,9 @@
   "functions": {
     "api/player-media.js": {
       "maxDuration": 300
+    },
+    "api/admin.js": {
+      "maxDuration": 300
     }
   }
 }

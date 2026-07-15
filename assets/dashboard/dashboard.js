@@ -6334,19 +6334,19 @@ function Qc(e, t) {
 function Rp(e) {
   return e.split(/\s+-\s+/).map((t) => t.trim()).filter(Boolean);
 }
-function ga({ asset: e, expanded: t, onToggle: n, crestUrl: r }) {
-  const l = Rp(e.displayName);
+function ga({ asset: e, expanded: t, onToggle: n, crestUrl: r, media: l }) {
+  const i = Rp(e.displayName);
   return /* @__PURE__ */ s.jsxs("div", { children: [
     /* @__PURE__ */ s.jsxs("button", { type: "button", onClick: n, className: "tw-hidden tw-w-full tw-grid-cols-12 tw-gap-4 tw-px-6 tw-py-4 tw-text-left tw-transition hover:tw-bg-slate-50 md:tw-grid", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "tw-col-span-4 tw-flex tw-min-w-0 tw-items-center tw-gap-3", children: [
-        /* @__PURE__ */ s.jsx("div", { className: `lf-player-avatar ${r ? "has-photo lf-player-avatar--crest" : ""}`, children: r ? /* @__PURE__ */ s.jsx("img", { src: r, alt: "", loading: "lazy" }) : /* @__PURE__ */ s.jsx(vl, { size: 22 }) }),
+        /* @__PURE__ */ s.jsx("div", { className: `lf-player-avatar ${r ? "has-photo lf-player-avatar--crest" : ""}`, children: r ? /* @__PURE__ */ s.jsx("img", { src: r, alt: "", loading: "lazy", decoding: "async" }) : /* @__PURE__ */ s.jsx(vl, { size: 22 }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "tw-min-w-0", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "tw-truncate tw-font-semibold tw-text-slate-900", children: [
             "Blocco ",
             e.realTeam || e.displayName
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "tw-flex tw-items-center tw-gap-1 tw-text-sm tw-text-slate-500", children: [
-            l.length,
+            i.length,
             " portieri",
             /* @__PURE__ */ s.jsx(Xe, { size: 15, className: `tw-transition ${t ? "tw-rotate-180" : ""}` })
           ] })
@@ -6358,7 +6358,7 @@ function ga({ asset: e, expanded: t, onToggle: n, crestUrl: r }) {
       /* @__PURE__ */ s.jsx("div", { className: `tw-col-span-2 tw-flex tw-items-center tw-truncate tw-text-sm ${e.ownerTag ? "tw-text-slate-600" : "tw-italic tw-text-slate-400"}`, children: e.ownerTag || "Svincolato" })
     ] }),
     /* @__PURE__ */ s.jsxs("button", { type: "button", onClick: n, className: "tw-flex tw-w-full tw-items-start tw-gap-3 tw-p-3 tw-text-left tw-transition hover:tw-bg-slate-50 md:tw-hidden", children: [
-      /* @__PURE__ */ s.jsx("div", { className: `lf-player-avatar lf-player-avatar--mobile ${r ? "has-photo lf-player-avatar--crest" : ""}`, children: r ? /* @__PURE__ */ s.jsx("img", { src: r, alt: "", loading: "lazy" }) : /* @__PURE__ */ s.jsx(vl, { size: 22 }) }),
+      /* @__PURE__ */ s.jsx("div", { className: `lf-player-avatar lf-player-avatar--mobile ${r ? "has-photo lf-player-avatar--crest" : ""}`, children: r ? /* @__PURE__ */ s.jsx("img", { src: r, alt: "", loading: "lazy", decoding: "async" }) : /* @__PURE__ */ s.jsx(vl, { size: 22 }) }),
       /* @__PURE__ */ s.jsxs("div", { className: "tw-min-w-0 tw-flex-1", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "tw-flex tw-items-center tw-gap-2", children: [
           /* @__PURE__ */ s.jsx("span", { className: "lf-role-badge lf-role-badge--p", children: "P" }),
@@ -6368,7 +6368,7 @@ function ga({ asset: e, expanded: t, onToggle: n, crestUrl: r }) {
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "tw-mt-1 tw-flex tw-items-center tw-gap-1 tw-text-xs tw-text-slate-500", children: [
-          l.length,
+          i.length,
           " portieri ",
           /* @__PURE__ */ s.jsx(Xe, { size: 14, className: `tw-transition ${t ? "tw-rotate-180" : ""}` })
         ] }),
@@ -6390,13 +6390,17 @@ function ga({ asset: e, expanded: t, onToggle: n, crestUrl: r }) {
         ] })
       ] })
     ] }),
-    t && /* @__PURE__ */ s.jsx("div", { className: "lf-block-expanded", children: l.map((i) => /* @__PURE__ */ s.jsxs("div", { className: "tw-flex tw-items-center tw-gap-3 tw-px-6 tw-py-3", children: [
-      /* @__PURE__ */ s.jsx("div", { className: "lf-mini-avatar", children: "P" }),
-      /* @__PURE__ */ s.jsxs("div", { className: "tw-min-w-0", children: [
-        /* @__PURE__ */ s.jsx("div", { className: "tw-truncate tw-font-medium tw-text-slate-800", children: i }),
-        /* @__PURE__ */ s.jsx("div", { className: "tw-text-xs tw-text-slate-500", children: e.realTeam || "Portiere" })
-      ] })
-    ] }, i)) })
+    t && /* @__PURE__ */ s.jsx("div", { className: "lf-block-expanded", children: i.map((o) => {
+      var u;
+      const a = (u = l.player(o, e.realTeam)) == null ? void 0 : u.photoUrl;
+      return /* @__PURE__ */ s.jsxs("div", { className: "tw-flex tw-items-center tw-gap-3 tw-px-6 tw-py-3", children: [
+        /* @__PURE__ */ s.jsx("div", { className: `lf-mini-avatar ${a ? "has-photo" : ""}`, children: a ? /* @__PURE__ */ s.jsx("img", { src: a, alt: "", loading: "lazy", decoding: "async" }) : "P" }),
+        /* @__PURE__ */ s.jsxs("div", { className: "tw-min-w-0", children: [
+          /* @__PURE__ */ s.jsx("div", { className: "tw-truncate tw-font-medium tw-text-slate-800", children: o }),
+          /* @__PURE__ */ s.jsx("div", { className: "tw-text-xs tw-text-slate-500", children: e.realTeam || "Portiere" })
+        ] })
+      ] }, o);
+    }) })
   ] });
 }
 function Dp(e) {
@@ -6643,8 +6647,8 @@ function Up({ assets: e }) {
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "lf-list-table", children: [
         /* @__PURE__ */ s.jsx(Ip, { sortKey: y, sortDirection: w, onSort: U }),
-        /* @__PURE__ */ s.jsx("div", { className: "tw-hidden tw-divide-y tw-divide-slate-100 md:tw-block", children: N.map((E) => ya(E) ? /* @__PURE__ */ s.jsx(ga, { asset: E, expanded: p.has(E.assetCode), onToggle: () => R(E.assetCode), crestUrl: n.crest(E.realTeam) }, E.assetCode) : /* @__PURE__ */ s.jsx(Mp, { player: E, media: n.player(E.displayName, E.realTeam), crestUrl: n.crest(E.realTeam) }, E.assetCode)) }),
-        /* @__PURE__ */ s.jsx("div", { className: "tw-divide-y tw-divide-slate-100 md:tw-hidden", children: N.map((E) => ya(E) ? /* @__PURE__ */ s.jsx(ga, { asset: E, expanded: p.has(E.assetCode), onToggle: () => R(E.assetCode), crestUrl: n.crest(E.realTeam) }, E.assetCode) : /* @__PURE__ */ s.jsx($p, { player: E, media: n.player(E.displayName, E.realTeam), crestUrl: n.crest(E.realTeam) }, E.assetCode)) }),
+        /* @__PURE__ */ s.jsx("div", { className: "tw-hidden tw-divide-y tw-divide-slate-100 md:tw-block", children: N.map((E) => ya(E) ? /* @__PURE__ */ s.jsx(ga, { asset: E, expanded: p.has(E.assetCode), onToggle: () => R(E.assetCode), crestUrl: n.crest(E.realTeam), media: n }, E.assetCode) : /* @__PURE__ */ s.jsx(Mp, { player: E, media: n.player(E.displayName, E.realTeam), crestUrl: n.crest(E.realTeam) }, E.assetCode)) }),
+        /* @__PURE__ */ s.jsx("div", { className: "tw-divide-y tw-divide-slate-100 md:tw-hidden", children: N.map((E) => ya(E) ? /* @__PURE__ */ s.jsx(ga, { asset: E, expanded: p.has(E.assetCode), onToggle: () => R(E.assetCode), crestUrl: n.crest(E.realTeam), media: n }, E.assetCode) : /* @__PURE__ */ s.jsx($p, { player: E, media: n.player(E.displayName, E.realTeam), crestUrl: n.crest(E.realTeam) }, E.assetCode)) }),
         N.length === 0 && /* @__PURE__ */ s.jsxs("div", { className: "tw-px-6 tw-py-14 tw-text-center", children: [
           /* @__PURE__ */ s.jsx(ma, { size: 34, className: "tw-mx-auto tw-mb-3 tw-text-slate-300" }),
           /* @__PURE__ */ s.jsx("h2", { className: "tw-m-0 tw-text-lg tw-font-bold tw-text-slate-800", children: "Nessun giocatore trovato" }),

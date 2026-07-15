@@ -84,8 +84,8 @@ test("an unknown promoted club is resolved automatically without Blob persistenc
   assert.equal(candidates[0].id, "902");
   assert.equal(candidates[0].automatic, 3);
 
-  assert.throws(
-    () => media.linkTeamManual("fp", "Leicester City", "902"),
-    /URL BSD diretti senza scritture Blob/
+  await assert.rejects(
+    media.linkTeamManual("fp", "Leicester City", "902"),
+    /Neon non configurato/
   );
 });

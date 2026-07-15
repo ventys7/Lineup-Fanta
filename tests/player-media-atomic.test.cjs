@@ -126,6 +126,17 @@ test("player media uses direct BSD URLs without Blob writes", async (t) => {
     await assertNoPlayerMediaFiles();
   });
 
+  await t.test("candidate search is grouped by similar names, club roster and optional league database", async () => {
+    mode = "success";
+    await media.readManifest("fp", { fresh: true });
+    const local = await media.searchProvider("fp", "Saka", "Arsenal");
+    assert.equal(local.similar[0].id, "455");
+    assert.ok(Array.isArray(local.roster));
+    assert.deepEqual(local.database, []);
+    const expanded = await media.searchProvider("fp", "Saka", "Arsenal", { includeDatabase: true });
+    assert.ok(Array.isArray(expanded.database));
+  });
+
   await t.test("legacy sync entry points only rebuild the direct manifest", async () => {
     mode = "success";
     const started = await media.startMissingSync("fp");

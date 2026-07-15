@@ -23,7 +23,8 @@ Da ciascun pannello è possibile:
 - cambiare il Docs pubblicato Richiami/Penalizzazioni;
 - generare o resettare i codici stemma delle fantasquadre;
 - ricalcolare i collegamenti tra Listone e rose BSD;
-- controllare le associazioni rimaste ambigue senza scrivere immagini nel Blob.
+- controllare e salvare su Neon le associazioni rimaste ambigue;
+- migrare una volta impostazioni, codici e stemmi legacy dal Blob a Neon.
 
 ## Richiami, penalizzazioni e Classifica
 
@@ -37,7 +38,7 @@ I dati fantacalcistici — ruolo, quotazione, proprietario e rosa — arrivano s
 
 - Foto giocatori FP e PD: BSD, usato esclusivamente dal backend come sorgente di acquisizione.
 - Crest FP e PD: manifest già esposto dalla card Kick-off.
-- Stemmi fantasquadre: modificabili dalla sezione Rose usando il codice della singola squadra, senza condividere la password admin.
+- Stemmi fantasquadre: salvati in Neon e modificabili dalla sezione Rose usando il codice della singola squadra, senza condividere la password admin.
 
 Le pagine pubbliche ricevono dal backend un manifest calcolato in memoria con URL BSD diretti del formato `https://sports.bzzoiro.com/img/player/<id>/`. Il browser usa lazy loading e scarica soltanto le facce visibili o vicine allo schermo.
 
@@ -47,9 +48,10 @@ Il backend:
 2. recupera le rose BSD;
 3. identifica automaticamente la squadra corretta tramite seed e sovrapposizione dei nomi;
 4. abbina i giocatori usando nome e club, senza usare il ruolo BSD;
-5. restituisce gli URL diretti e conserva il risultato in cache per sei ore.
+5. restituisce gli URL diretti e conserva il risultato in Neon per sei ore;
+6. salva in Neon gli override manuali di giocatori e squadre.
 
-Le facce non vengono scaricate, caricate, elencate o verificate nel Vercel Blob. Non esistono job, staging o cron media attivi. Il Blob resta usato soltanto dalle altre funzioni persistenti dell'app, come impostazioni e stemmi delle fantasquadre.
+Le facce non vengono scaricate, caricate, elencate o verificate nel Vercel Blob. Non esistono job, staging o cron media attivi. Impostazioni runtime, profili delle fantasquadre, codici stemma, stemmi e override BSD sono salvati in Neon. Il Blob viene letto soltanto dalla procedura di migrazione legacy, che non effettua scritture.
 
 ## Avvio locale
 
@@ -57,6 +59,7 @@ Creare `.env.local` nella root:
 
 ```env
 BSD_API_KEY=token_privato
+DATABASE_URL=connessione_neon
 ```
 
 Il nome non deve avere il prefisso `VITE_`: la chiave deve restare server-side.
@@ -88,7 +91,8 @@ La porta può cambiare se `4173` è già occupata: usare sempre quella stampata 
 - `ADMIN_LINKS_PASSWORD_HASH`
 - `ADMIN_LINKS_SESSION_SECRET`
 - `BSD_API_KEY`
-- `BLOB_READ_WRITE_TOKEN`
+- `DATABASE_URL` e le altre variabili Neon aggiunte automaticamente da Vercel
+- credenziali Blob solo durante la migrazione legacy, poi rimovibili
 - eventuali variabili già necessarie alla card Kick-off
 
 ## Verifica

@@ -19,7 +19,7 @@
       <form id="loginForm"><label>Password<input id="adminPassword" type="password" autocomplete="current-password" required></label><button type="submit">Accedi</button></form>
     </section>
     <div id="adminView" hidden>
-      <div class="admin-actions"><button id="saveSettings" type="button">Salva collegamenti</button><button id="logoutButton" class="secondary" type="button">Esci</button></div>
+      <div class="admin-actions"><button id="migrateNeon" class="secondary" type="button">Migra Blob → Neon</button><button id="saveSettings" type="button">Salva collegamenti</button><button id="logoutButton" class="secondary" type="button">Esci</button></div>
       <section id="leagueSettings" class="admin-card"></section>
       <section class="admin-card">
         <div class="admin-section-title"><div><p>ACCESSO MANAGER</p><h2>Codici stemma</h2></div><span>Ogni codice modifica soltanto la sua fantasquadra.</span></div>
@@ -27,7 +27,7 @@
       </section>
       <section class="admin-card">
         <div class="admin-section-title"><div><p>BSD DIRETTO</p><h2>Foto giocatori</h2></div><div class="media-actions"><button id="mediaRefresh" class="secondary" type="button">Ricalcola collegamenti</button></div></div>
-        <p class="media-direct-note">Le facce sono caricate direttamente da BSD con lazy loading. Nessun upload o manifest viene scritto nel Vercel Blob.</p>
+        <p class="media-direct-note">Le facce sono caricate direttamente da BSD con lazy loading. Le facce arrivano direttamente da BSD. Override, configurazioni e codici sono salvati su Neon: nessuna scrittura Blob per le foto.</p>
         <div id="mediaStatus" class="media-status">Caricamento stato…</div>
         <div id="unresolvedTeams" class="unresolved-grid team-issues-grid"></div>
         <div id="unresolvedPlayers" class="unresolved-grid"></div>

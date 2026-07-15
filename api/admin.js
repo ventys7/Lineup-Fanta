@@ -2,6 +2,7 @@ const { isAuthenticated, passwordHash, setLogin, setLogout, verifyPassword } = r
 const { methodNotAllowed, noStore, readBody } = require("../lib/http.cjs");
 const { loadLeagueAssets, teamNamesFromAssets } = require("../lib/listone.cjs");
 const { resetCode } = require("../lib/logo-access.cjs");
+const { migrateLegacyRuntimeToNeon } = require("../lib/migrate-neon.cjs");
 const { leagueId, readSettings, readTeamProfiles, saveLeagueSettings } = require("../lib/settings.cjs");
 
 async function adminState(rawLeagueId) {
@@ -54,6 +55,10 @@ module.exports = async function handler(req, res) {
     if (action === "reset-logo-code") {
       const code = await resetCode(id, body.teamName);
       return res.status(200).json({ code, teamName: body.teamName, leagueId: id });
+    }
+    if (action === "migrate-neon") {
+      const migration = await migrateLegacyRuntimeToNeon();
+      return res.status(200).json({ migration, authenticated: true, ...(await adminState(id)) });
     }
 
     return res.status(400).json({ error: "Azione non riconosciuta" });

@@ -81,3 +81,15 @@ button:disabled { opacity: .55; cursor: wait; }
 .unresolved-card__reason {
   margin: 8px 0 0;
 }
+
+.candidate-results { display: grid; gap: 12px; margin-top: 10px; }
+.candidate-section { display: grid; gap: 7px; }
+.candidate-section h4 { margin: 0; color: #67746e; font-size: 10px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+.candidate-section--scroll .candidate-list { max-height: 280px; overflow: auto; padding-right: 3px; overscroll-behavior: contain; }
+.candidate-choice { display: flex; width: 100%; min-height: 54px; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 10px; border: 1px solid #dce5e1; background: #fff; color: #425049; text-align: left; }
+.candidate-choice:hover { border-color: color-mix(in srgb, var(--accent) 42%, #dce5e1); background: color-mix(in srgb, var(--accent) 4%, #fff); }
+.candidate-choice small { display: block; margin-top: 3px; color: #87938e; font-size: 9px; font-weight: 700; }
+.candidate-choice__use { flex: 0 0 auto; color: var(--accent); font-size: 10px; }
+.candidate-choice--team > span:first-child { min-width: 0; }
+.candidate-expand { width: 100%; min-height: 38px; }
+.candidate-empty { margin: 0; padding: 9px 10px; color: #87938e; font-size: 11px; }

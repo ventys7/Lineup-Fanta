@@ -12,6 +12,7 @@
     "dev:test": "ADMIN_LINKS_PASSWORD_HASH=\"$(node scripts/hash-admin-password.mjs 'prova123')\" ADMIN_LINKS_SESSION_SECRET='lineup-local-admin' node scripts/dev-server.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "@vercel/blob": "2.6.1"
   }
 }

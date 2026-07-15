@@ -41,6 +41,7 @@ declare global {
       payload: (leagueId?: string) => { players: Record<string, any> };
       player: (name: string, team: string, leagueId?: string) => any;
       photo: (name: string, team: string, leagueId?: string) => string;
+      storyPhoto: (name: string, team: string, leagueId?: string) => string;
       crest: (team: string) => string;
       playerKey: (name: string, team: string) => string;
     };

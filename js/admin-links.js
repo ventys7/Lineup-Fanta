@@ -12,6 +12,7 @@
   const logoCodes = document.getElementById("logoCodes");
   const feedback = document.getElementById("adminFeedback");
   const saveButton = document.getElementById("saveSettings");
+  const migrateNeonButton = document.getElementById("migrateNeon");
   const logoutButton = document.getElementById("logoutButton");
   const mediaRefresh = document.getElementById("mediaRefresh");
   const mediaStatus = document.getElementById("mediaStatus");
@@ -114,29 +115,114 @@
     const summary = manifest?.summary || {};
     const bsd = Number(summary.bsdResolved || 0);
     const unresolved = Number(summary.unresolved || 0);
-    return `BSD dirette ${bsd} · ${unresolved} da controllare · 0 scritture Blob`;
+    return `BSD dirette ${bsd} · ${unresolved} da controllare · override su Neon · 0 scritture Blob`;
+  }
+
+  function markPlayerResolved(entry, resolvedEntry) {
+    if (mediaManifest?.players) mediaManifest.players[entry.key] = resolvedEntry;
+    const card = unresolvedPlayers.querySelector(`[data-key="${CSS.escape(entry.key)}"]`);
+    if (card) {
+      card.classList.add("is-resolved");
+      window.setTimeout(() => card.remove(), 180);
+    }
+    if (mediaManifest?.summary) {
+      mediaManifest.summary.bsdResolved = Number(mediaManifest.summary.bsdResolved || 0) + 1;
+      mediaManifest.summary.resolved = Number(mediaManifest.summary.resolved || 0) + 1;
+      mediaManifest.summary.unresolved = Math.max(0, Number(mediaManifest.summary.unresolved || 0) - 1);
+    }
+    mediaStatus.textContent = mediaSummaryText(mediaManifest);
   }
 
   function candidateButton(entry, candidate) {
-    const choice = document.createElement("div");
-    choice.className = "candidate-list__readonly";
+    const choice = document.createElement("button");
+    choice.type = "button";
+    choice.className = "candidate-choice";
+
+    const identity = document.createElement("span");
+    identity.className = "candidate-list__identity";
+    const image = document.createElement("img");
+    image.src = `https://sports.bzzoiro.com/img/player/${candidate.id}/`;
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    const copy = document.createElement("span");
     const name = document.createElement("b");
-    name.textContent = candidate.name;
-    const details = document.createElement("span");
+    name.textContent = candidate.name || `ID ${candidate.id}`;
+    const details = document.createElement("small");
     details.textContent = `${candidate.teamName || "Squadra non indicata"} · ID ${candidate.id}`;
-    choice.append(name, details);
+    copy.append(name, details);
+    identity.append(image, copy);
+
+    const use = document.createElement("strong");
+    use.className = "candidate-choice__use";
+    use.textContent = "Usa";
+    choice.append(identity, use);
+
+    choice.addEventListener("click", async () => {
+      choice.disabled = true;
+      message("");
+      try {
+        const result = await mediaApi({ action: "link", key: entry.key, candidate });
+        markPlayerResolved(entry, result.entry);
+        message(`${entry.listoneName} collegato a ${candidate.name}.`);
+      } catch (error) {
+        message(error.message, true);
+        choice.disabled = false;
+      }
+    });
     return choice;
   }
 
+  function candidateSection(titleText, entries, entry, options = {}) {
+    const section = document.createElement("section");
+    section.className = `candidate-section ${options.scroll ? "candidate-section--scroll" : ""}`;
+    const title = document.createElement("h4");
+    title.textContent = titleText;
+    const list = document.createElement("div");
+    list.className = "candidate-list";
+    entries.forEach((candidate) => list.appendChild(candidateButton(entry, candidate)));
+    if (!entries.length) {
+      const empty = document.createElement("p");
+      empty.className = "candidate-empty";
+      empty.textContent = options.empty || "Nessun risultato.";
+      list.appendChild(empty);
+    }
+    section.append(title, list);
+    return section;
+  }
+
   function teamCandidateButton(issue, candidate) {
-    const choice = document.createElement("div");
-    choice.className = "candidate-list__readonly";
+    const choice = document.createElement("button");
+    choice.type = "button";
+    choice.className = "candidate-choice candidate-choice--team";
+    const copy = document.createElement("span");
     const name = document.createElement("b");
     name.textContent = candidate.name;
-    const details = document.createElement("span");
+    const details = document.createElement("small");
     const total = Number(candidate.automatic || 0) + Number(candidate.ambiguous || 0) + Number(candidate.noNameMatch || 0);
     details.textContent = `ID ${candidate.id} · ${candidate.automatic}/${total} nomi · ${Math.round(Number(candidate.coverage || 0) * 100)}%`;
-    choice.append(name, details);
+    copy.append(name, details);
+    const use = document.createElement("strong");
+    use.className = "candidate-choice__use";
+    use.textContent = "Usa rosa";
+    choice.append(copy, use);
+    choice.addEventListener("click", async () => {
+      choice.disabled = true;
+      message("");
+      try {
+        await mediaApi({
+          action: "link-team",
+          teamName: issue.teamName,
+          externalId: candidate.id,
+          externalName: candidate.name
+        });
+        message(`${issue.teamName} collegato alla rosa BSD ${candidate.name}.`);
+        await loadMediaStatus();
+      } catch (error) {
+        message(error.message, true);
+        choice.disabled = false;
+      }
+    });
     return choice;
   }
 
@@ -184,6 +270,39 @@
     issues.forEach((issue) => unresolvedTeams.appendChild(unresolvedTeamCard(issue)));
   }
 
+  async function renderCandidateResults(entry, input, host, includeDatabase = false) {
+    host.textContent = "Ricerca…";
+    const result = await mediaApi({
+      action: "search",
+      query: input.value.trim() || entry.listoneName,
+      teamName: entry.realTeam,
+      includeDatabase
+    });
+    host.replaceChildren();
+    host.appendChild(candidateSection("Nomi simili nella rosa", result.similar || [], entry, {
+      empty: "Nessun nome particolarmente simile nella rosa."
+    }));
+    host.appendChild(candidateSection("Rosa completa", result.roster || [], entry, { scroll: true }));
+
+    if (includeDatabase) {
+      host.appendChild(candidateSection("Tutto il database BSD della lega", result.database || [], entry, {
+        scroll: true,
+        empty: "Nessun altro nome compatibile nel database della lega."
+      }));
+    } else {
+      const expand = document.createElement("button");
+      expand.type = "button";
+      expand.className = "secondary candidate-expand";
+      expand.textContent = "Espandi a tutto il database BSD";
+      expand.addEventListener("click", async () => {
+        expand.disabled = true;
+        try { await renderCandidateResults(entry, input, host, true); }
+        catch (error) { host.textContent = error.message; }
+      });
+      host.appendChild(expand);
+    }
+  }
+
   function unresolvedCard(entry) {
     const card = document.createElement("article");
     card.className = "unresolved-card";
@@ -204,27 +323,53 @@
     const search = document.createElement("div");
     search.className = "unresolved-search";
     const input = document.createElement("input");
-    input.value = `${entry.listoneName} ${entry.realTeam || ""}`.trim();
+    input.value = entry.listoneName;
+    input.setAttribute("aria-label", `Cerca candidato per ${entry.listoneName}`);
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = "Cerca candidati";
     const candidates = document.createElement("div");
-    candidates.className = "candidate-list";
+    candidates.className = "candidate-results";
 
     button.addEventListener("click", async () => {
       button.disabled = true;
-      candidates.textContent = "Ricerca…";
-      try {
-        const result = await mediaApi({ action: "search", query: input.value, teamName: entry.realTeam });
-        candidates.replaceChildren();
-        (result.candidates || []).forEach((candidate) => candidates.appendChild(candidateButton(entry, candidate)));
-        if (!candidates.childElementCount) candidates.textContent = "Nessun risultato.";
-      } catch (error) { candidates.textContent = error.message; }
+      try { await renderCandidateResults(entry, input, candidates, false); }
+      catch (error) { candidates.textContent = error.message; }
       finally { button.disabled = false; }
     });
 
+    const direct = document.createElement("div");
+    direct.className = "unresolved-direct";
+    const directInput = document.createElement("input");
+    directInput.type = "text";
+    directInput.inputMode = "numeric";
+    directInput.placeholder = "ID giocatore BSD";
+    const directButton = document.createElement("button");
+    directButton.type = "button";
+    directButton.className = "secondary";
+    directButton.textContent = "Usa ID";
+    directButton.addEventListener("click", async () => {
+      directButton.disabled = true;
+      message("");
+      try {
+        const result = await mediaApi({
+          action: "link-id",
+          key: entry.key,
+          externalId: directInput.value.trim(),
+          externalName: entry.listoneName,
+          teamName: entry.realTeam
+        });
+        markPlayerResolved(entry, result.entry);
+        message(`${entry.listoneName} collegato all'ID BSD ${directInput.value.trim()}.`);
+      } catch (error) {
+        message(error.message, true);
+        directButton.disabled = false;
+      }
+    });
+
     search.append(input, button);
-    card.append(head, reason, search, candidates);
+    direct.append(directInput, directButton);
+    card.append(head, reason, search, candidates, direct);
     return card;
   }
 
@@ -250,7 +395,7 @@
 
   async function loadMediaStatus({ preserveExisting = false } = {}) {
     try {
-      const response = await fetch(`/api/player-media?league=${encodeURIComponent(leagueId)}&fresh=1`, { cache: "no-store", credentials: "same-origin" });
+      const response = await fetch(`/api/player-media?league=${encodeURIComponent(leagueId)}&_lf=${Date.now()}`, { cache: "no-store", credentials: "same-origin" });
       if (!response.ok) throw new Error("Stato non disponibile");
       renderUnresolved(await response.json(), { preserveExisting });
     } catch {
@@ -264,11 +409,11 @@
 
   async function syncMediaLoop() {
     setMediaButtonsDisabled(true);
-    message("Ricalcolo i collegamenti BSD senza caricare immagini nel Blob…");
+    message("Ricalcolo i collegamenti BSD e aggiorno la cache Neon…");
     try {
       const result = await mediaApi({ action: "refresh" });
       renderUnresolved(result);
-      message("Collegamenti BSD aggiornati. Le immagini vengono servite direttamente da BSD: nessuna scrittura Blob.");
+      message("Collegamenti BSD aggiornati. Le facce restano dirette da BSD e gli override sono salvati su Neon.");
     } catch (error) { message(error.message, true); }
     finally { setMediaButtonsDisabled(false); }
   }
@@ -307,11 +452,28 @@
     message("");
     try {
       render(await adminApi({ action: "save-settings", settings }));
-      message("Collegamenti salvati.");
+      message("Collegamenti salvati su Neon.");
     } catch (error) { message(error.message, true); }
     finally { saveButton.disabled = false; }
   });
 
+  migrateNeonButton?.addEventListener("click", async () => {
+    migrateNeonButton.disabled = true;
+    message("Migrazione dati legacy dal Blob a Neon…");
+    try {
+      const result = await adminApi({ action: "migrate-neon" });
+      render(result);
+      const migration = result.migration || {};
+      const leagues = migration.leagues || [];
+      const logos = leagues.reduce((total, item) => total + Number(item.logos || 0), 0);
+      const codes = leagues.reduce((total, item) => total + Number(item.logoCodes || 0), 0);
+      const warnings = Array.isArray(migration.warnings) ? migration.warnings.length : 0;
+      if (migration.alreadyMigrated) message("Migrazione Blob → Neon già completata in precedenza.");
+      else if (warnings) message(`Migrazione parziale: ${logos} stemmi e ${codes} codici trasferiti, ${warnings} elementi da ricontrollare.`, true);
+      else message(`Migrazione Neon completata: ${logos} stemmi e ${codes} codici trasferiti.`);
+    } catch (error) { message(error.message, true); }
+    finally { migrateNeonButton.disabled = false; }
+  });
   logoutButton.addEventListener("click", async () => render(await adminApi({ action: "logout" })));
   mediaRefresh.addEventListener("click", syncMediaLoop);
   loadState();

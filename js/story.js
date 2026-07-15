@@ -147,7 +147,9 @@ window.LineupStory = (function () {
     const unique = new Map(players.map((player) => [photoKey(player), player]));
     const photos = new Map();
     await Promise.all([...unique.entries()].map(async ([key, player]) => {
-      const url = window.LineupPlayerMedia?.photo?.(player.n, player.t, leagueId) || "";
+      const url = window.LineupPlayerMedia?.storyPhoto?.(player.n, player.t, leagueId)
+        || window.LineupPlayerMedia?.photo?.(player.n, player.t, leagueId)
+        || "";
       const image = await loadPhoto(url);
       if (image) photos.set(key, image);
     }));

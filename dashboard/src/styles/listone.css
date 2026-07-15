@@ -229,3 +229,6 @@
 .lf-player-club-line--mobile { margin-bottom: 2px; font-size: 11px; }
 .lf-player-club-line--mobile img { width: 16px; height: 16px; flex-basis: 16px; }
 .lf-player-avatar--crest img { padding: 5px; object-fit: contain !important; object-position: center !important; }
+
+.lf-mini-avatar.has-photo { overflow: hidden; padding: 0; background: #edf3f0; }
+.lf-mini-avatar.has-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }

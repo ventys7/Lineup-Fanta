@@ -138,12 +138,12 @@ export function Players({ assets }: { assets: DashboardAsset[] }) {
             <PlayerListHeader sortKey={sortKey} sortDirection={sortDirection} onSort={handleSort} />
             <div className="tw-hidden tw-divide-y tw-divide-slate-100 md:tw-block">
               {processedList.map((asset) => isGoalkeeperBlock(asset)
-                ? <GoalkeeperBlock key={asset.assetCode} asset={asset} expanded={expandedBlocks.has(asset.assetCode)} onToggle={() => toggleBlock(asset.assetCode)} crestUrl={media.crest(asset.realTeam)} />
+                ? <GoalkeeperBlock key={asset.assetCode} asset={asset} expanded={expandedBlocks.has(asset.assetCode)} onToggle={() => toggleBlock(asset.assetCode)} crestUrl={media.crest(asset.realTeam)} media={media} />
                 : <PlayerDesktopRow key={asset.assetCode} player={asset} media={media.player(asset.displayName, asset.realTeam)} crestUrl={media.crest(asset.realTeam)} />)}
             </div>
             <div className="tw-divide-y tw-divide-slate-100 md:tw-hidden">
               {processedList.map((asset) => isGoalkeeperBlock(asset)
-                ? <GoalkeeperBlock key={asset.assetCode} asset={asset} expanded={expandedBlocks.has(asset.assetCode)} onToggle={() => toggleBlock(asset.assetCode)} crestUrl={media.crest(asset.realTeam)} />
+                ? <GoalkeeperBlock key={asset.assetCode} asset={asset} expanded={expandedBlocks.has(asset.assetCode)} onToggle={() => toggleBlock(asset.assetCode)} crestUrl={media.crest(asset.realTeam)} media={media} />
                 : <PlayerMobileCard key={asset.assetCode} player={asset} media={media.player(asset.displayName, asset.realTeam)} crestUrl={media.crest(asset.realTeam)} />)}
             </div>
             {processedList.length === 0 && (

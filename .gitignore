@@ -8,3 +8,4 @@ node_modules/
 .env.*.local
 bsd-matching-*/
 bsd-team-selection-*/
+.env*

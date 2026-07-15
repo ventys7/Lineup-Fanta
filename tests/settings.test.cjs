@@ -13,3 +13,26 @@ test("runtime settings keep separate sources for FP and PD", () => {
   assert.equal(settings.leagues.pd.listoneCsvUrl, "https://example.com/pd.csv");
   assert.equal(settings.leagues.pd.standingsCsvUrl, "");
 });
+
+test("Vercel runtime blocks settings writes when Neon is unavailable", async () => {
+  const previousVercel = process.env.VERCEL;
+  const previousDatabaseUrl = process.env.DATABASE_URL;
+  const previousPostgresUrl = process.env.POSTGRES_URL;
+  process.env.VERCEL = "1";
+  delete process.env.DATABASE_URL;
+  delete process.env.POSTGRES_URL;
+  try {
+    const { saveSettings } = require("../lib/settings.cjs");
+    await assert.rejects(
+      () => saveSettings({ leagues: { fp: {}, pd: {} } }),
+      /scrittura runtime bloccata/
+    );
+  } finally {
+    if (previousVercel === undefined) delete process.env.VERCEL;
+    else process.env.VERCEL = previousVercel;
+    if (previousDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previousDatabaseUrl;
+    if (previousPostgresUrl === undefined) delete process.env.POSTGRES_URL;
+    else process.env.POSTGRES_URL = previousPostgresUrl;
+  }
+});
