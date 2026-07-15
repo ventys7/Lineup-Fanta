@@ -6408,14 +6408,14 @@ function Dp(e) {
 function Mp({ player: e, media: t, crestUrl: n }) {
   return /* @__PURE__ */ s.jsxs("div", { className: "tw-group tw-grid tw-grid-cols-12 tw-gap-4 tw-px-6 tw-py-4 tw-transition hover:tw-bg-slate-50", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "tw-col-span-4 tw-flex tw-min-w-0 tw-items-center tw-gap-3", children: [
-      /* @__PURE__ */ s.jsx("div", { className: `lf-player-avatar ${t != null && t.photoUrl ? "has-photo" : ""}`, "aria-hidden": "true", children: t != null && t.photoUrl ? /* @__PURE__ */ s.jsx("img", { src: t.photoUrl, alt: "", loading: "lazy" }) : Dp(e.displayName) }),
+      /* @__PURE__ */ s.jsx("div", { className: `lf-player-avatar ${t != null && t.photoUrl ? "has-photo" : ""}`, "aria-hidden": "true", children: t != null && t.photoUrl ? /* @__PURE__ */ s.jsx("img", { src: t.photoUrl, alt: "", loading: "lazy", decoding: "async" }) : Dp(e.displayName) }),
       /* @__PURE__ */ s.jsxs("div", { className: "tw-min-w-0", children: [
         /* @__PURE__ */ s.jsxs("div", { className: `tw-truncate tw-font-semibold tw-transition group-hover:tw-text-[var(--primary)] ${e.active ? "tw-text-slate-900" : "tw-italic tw-text-slate-400"}`, children: [
           e.displayName,
           !e.active && " *"
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "lf-player-club-line", children: [
-          n && /* @__PURE__ */ s.jsx("img", { src: n, alt: "", loading: "lazy" }),
+          n && /* @__PURE__ */ s.jsx("img", { src: n, alt: "", loading: "lazy", decoding: "async" }),
           /* @__PURE__ */ s.jsx("span", { children: e.realTeam || "—" })
         ] })
       ] })
@@ -6533,7 +6533,7 @@ function Op(e) {
 }
 function $p({ player: e, media: t, crestUrl: n }) {
   return /* @__PURE__ */ s.jsx("article", { className: "tw-p-3 tw-transition hover:tw-bg-slate-50", children: /* @__PURE__ */ s.jsxs("div", { className: "tw-flex tw-items-start tw-gap-3", children: [
-    /* @__PURE__ */ s.jsx("div", { className: `lf-player-avatar lf-player-avatar--mobile ${t != null && t.photoUrl ? "has-photo" : ""}`, "aria-hidden": "true", children: t != null && t.photoUrl ? /* @__PURE__ */ s.jsx("img", { src: t.photoUrl, alt: "", loading: "lazy" }) : Op(e.displayName) }),
+    /* @__PURE__ */ s.jsx("div", { className: `lf-player-avatar lf-player-avatar--mobile ${t != null && t.photoUrl ? "has-photo" : ""}`, "aria-hidden": "true", children: t != null && t.photoUrl ? /* @__PURE__ */ s.jsx("img", { src: t.photoUrl, alt: "", loading: "lazy", decoding: "async" }) : Op(e.displayName) }),
     /* @__PURE__ */ s.jsxs("div", { className: "tw-min-w-0 tw-flex-1", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "tw-mb-1 tw-flex tw-items-center tw-gap-2", children: [
         /* @__PURE__ */ s.jsx("span", { className: gl[e.role] ?? gl.U, children: e.role || "?" }),
@@ -6543,7 +6543,7 @@ function $p({ player: e, media: t, crestUrl: n }) {
         ] })
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "lf-player-club-line lf-player-club-line--mobile", children: [
-        n && /* @__PURE__ */ s.jsx("img", { src: n, alt: "", loading: "lazy" }),
+        n && /* @__PURE__ */ s.jsx("img", { src: n, alt: "", loading: "lazy", decoding: "async" }),
         /* @__PURE__ */ s.jsx("span", { children: e.realTeam || "—" })
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "tw-mt-2 tw-flex tw-flex-wrap tw-items-center tw-gap-x-3 tw-gap-y-1 tw-text-xs", children: [
@@ -6741,7 +6741,7 @@ function Wp(e) {
 function Kp({ name: e, team: t, role: n, media: r }) {
   var i;
   const l = (i = r.player(e, t)) == null ? void 0 : i.photoUrl;
-  return /* @__PURE__ */ s.jsx("div", { className: `lf-squad-avatar lf-squad-avatar--${n.toLowerCase()} ${l ? "has-photo" : ""}`, "aria-hidden": "true", children: l ? /* @__PURE__ */ s.jsx("img", { src: l, alt: "", loading: "lazy" }) : Wp(e) });
+  return /* @__PURE__ */ s.jsx("div", { className: `lf-squad-avatar lf-squad-avatar--${n.toLowerCase()} ${l ? "has-photo" : ""}`, "aria-hidden": "true", children: l ? /* @__PURE__ */ s.jsx("img", { src: l, alt: "", loading: "lazy", decoding: "async" }) : Wp(e) });
 }
 function Tr({ players: e, role: t, label: n, media: r }) {
   const [l, i] = z.useState(/* @__PURE__ */ new Set()), o = e.filter((u) => u.role === t).sort((u, c) => {
@@ -6761,7 +6761,7 @@ function Tr({ players: e, role: t, label: n, media: r }) {
     o.length === 0 ? /* @__PURE__ */ s.jsx("div", { className: "lf-squad-empty", children: "—" }) : /* @__PURE__ */ s.jsx("div", { className: "lf-squad-list", children: o.map((u) => {
       const c = t === "P" && (u.type === "goalkeeper_block" || /\s+-\s+/.test(u.displayName)), f = l.has(u.assetCode), g = c ? Qp(u.displayName) : [], h = r.crest(u.realTeam), y = /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("div", { className: "lf-squad-item__left", children: [
-          c ? /* @__PURE__ */ s.jsx("div", { className: `lf-squad-block-crest ${h ? "has-crest" : ""}`, "aria-hidden": "true", children: h ? /* @__PURE__ */ s.jsx("img", { src: h, alt: "", loading: "lazy" }) : /* @__PURE__ */ s.jsx(vl, { size: 17 }) }) : /* @__PURE__ */ s.jsx(Kp, { name: u.displayName, team: u.realTeam, role: t, media: r }),
+          c ? /* @__PURE__ */ s.jsx("div", { className: `lf-squad-block-crest ${h ? "has-crest" : ""}`, "aria-hidden": "true", children: h ? /* @__PURE__ */ s.jsx("img", { src: h, alt: "", loading: "lazy", decoding: "async" }) : /* @__PURE__ */ s.jsx(vl, { size: 17 }) }) : /* @__PURE__ */ s.jsx(Kp, { name: u.displayName, team: u.realTeam, role: t, media: r }),
           /* @__PURE__ */ s.jsxs("div", { className: "lf-squad-item__copy", children: [
             /* @__PURE__ */ s.jsxs("div", { className: "lf-squad-item__name", children: [
               c ? `Blocco ${u.realTeam || u.displayName}` : u.displayName,
@@ -6769,7 +6769,7 @@ function Tr({ players: e, role: t, label: n, media: r }) {
               c && /* @__PURE__ */ s.jsx(Xe, { size: 14, className: f ? "lf-chevron-open" : "" })
             ] }),
             /* @__PURE__ */ s.jsxs("div", { className: `lf-squad-item__team ${c ? "lf-squad-item__team--block" : ""}`, children: [
-              !c && h && /* @__PURE__ */ s.jsx("img", { className: "lf-squad-club-crest", src: h, alt: "", loading: "lazy" }),
+              !c && h && /* @__PURE__ */ s.jsx("img", { className: "lf-squad-club-crest", src: h, alt: "", loading: "lazy", decoding: "async" }),
               /* @__PURE__ */ s.jsx("span", { children: c ? `${g.length} portieri` : u.realTeam || "—" })
             ] })
           ] })
@@ -6791,7 +6791,7 @@ function Tr({ players: e, role: t, label: n, media: r }) {
           var T;
           const w = (T = r.player(v, u.realTeam)) == null ? void 0 : T.photoUrl;
           return /* @__PURE__ */ s.jsxs("div", { className: "lf-squad-goalkeeper", children: [
-            /* @__PURE__ */ s.jsx("div", { className: `lf-squad-goalkeeper__avatar ${w ? "has-photo" : ""}`, children: w ? /* @__PURE__ */ s.jsx("img", { src: w, alt: "", loading: "lazy" }) : "P" }),
+            /* @__PURE__ */ s.jsx("div", { className: `lf-squad-goalkeeper__avatar ${w ? "has-photo" : ""}`, children: w ? /* @__PURE__ */ s.jsx("img", { src: w, alt: "", loading: "lazy", decoding: "async" }) : "P" }),
             /* @__PURE__ */ s.jsx("span", { children: v })
           ] }, v);
         }) })

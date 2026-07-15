@@ -22,9 +22,8 @@ Da ciascun pannello è possibile:
 - cambiare il CSV Classifica della sola lega;
 - cambiare il Docs pubblicato Richiami/Penalizzazioni;
 - generare o resettare i codici stemma delle fantasquadre;
-- sincronizzare soltanto i nuovi giocatori del Listone;
-- avviare manualmente un aggiornamento completo delle foto;
-- correggere soltanto le associazioni rimaste ambigue.
+- ricalcolare i collegamenti tra Listone e rose BSD;
+- controllare le associazioni rimaste ambigue senza scrivere immagini nel Blob.
 
 ## Richiami, penalizzazioni e Classifica
 
@@ -40,21 +39,17 @@ I dati fantacalcistici — ruolo, quotazione, proprietario e rosa — arrivano s
 - Crest FP e PD: manifest già esposto dalla card Kick-off.
 - Stemmi fantasquadre: modificabili dalla sezione Rose usando il codice della singola squadra, senza condividere la password admin.
 
-Le pagine pubbliche leggono soltanto il manifest live e gli URL del Vercel Blob. Non interrogano BSD, non scaricano immagini e non modificano manifest.
+Le pagine pubbliche ricevono dal backend un manifest calcolato in memoria con URL BSD diretti del formato `https://sports.bzzoiro.com/img/player/<id>/`. Il browser usa lazy loading e scarica soltanto le facce visibili o vicine allo schermo.
 
-La sincronizzazione segue un flusso atomico:
+Il backend:
 
-1. legge il Listone della sola lega;
-2. recupera le rose BSD dei club interessati;
-3. costruisce catalogo e manifest temporanei separati;
-4. effettua il matching usando nome e club, senza usare il ruolo BSD;
-5. scarica e verifica le immagini;
-6. le salva in percorsi immutabili `player-faces/bsd/<player-id>/...`;
-7. pubblica `media/fp.json` o `media/pd.json` soltanto alla fine.
+1. legge il Listone della lega;
+2. recupera le rose BSD;
+3. identifica automaticamente la squadra corretta tramite seed e sovrapposizione dei nomi;
+4. abbina i giocatori usando nome e club, senza usare il ruolo BSD;
+5. restituisce gli URL diretti e conserva il risultato in cache per sei ore.
 
-Se una foto o una squadra non sono disponibili, le vecchie facce verificate restano nel manifest temporaneo. Un errore di sincronizzazione non sovrascrive il manifest live. FP e PD usano job, cataloghi e staging distinti.
-
-Il cron giornaliero controlla soltanto la presenza di nuovi giocatori. Un aggiornamento completo è pianificato il 15 gennaio e il 15 luglio, oltre al pulsante manuale dell'Admin Links.
+Le facce non vengono scaricate, caricate, elencate o verificate nel Vercel Blob. Non esistono job, staging o cron media attivi. Il Blob resta usato soltanto dalle altre funzioni persistenti dell'app, come impostazioni e stemmi delle fantasquadre.
 
 ## Avvio locale
 
@@ -94,7 +89,6 @@ La porta può cambiare se `4173` è già occupata: usare sempre quella stampata 
 - `ADMIN_LINKS_SESSION_SECRET`
 - `BSD_API_KEY`
 - `BLOB_READ_WRITE_TOKEN`
-- `CRON_SECRET`, consigliata per proteggere la sincronizzazione pianificata
 - eventuali variabili già necessarie alla card Kick-off
 
 ## Verifica

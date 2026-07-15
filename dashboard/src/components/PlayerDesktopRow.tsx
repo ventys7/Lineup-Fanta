@@ -9,11 +9,11 @@ export function PlayerDesktopRow({ player, media, crestUrl }: { player: Dashboar
     <div className="tw-group tw-grid tw-grid-cols-12 tw-gap-4 tw-px-6 tw-py-4 tw-transition hover:tw-bg-slate-50">
       <div className="tw-col-span-4 tw-flex tw-min-w-0 tw-items-center tw-gap-3">
         <div className={`lf-player-avatar ${media?.photoUrl ? "has-photo" : ""}`} aria-hidden="true">
-          {media?.photoUrl ? <img src={media.photoUrl} alt="" loading="lazy" /> : initials(player.displayName)}
+          {media?.photoUrl ? <img src={media.photoUrl} alt="" loading="lazy" decoding="async" /> : initials(player.displayName)}
         </div>
         <div className="tw-min-w-0">
           <div className={`tw-truncate tw-font-semibold tw-transition group-hover:tw-text-[var(--primary)] ${player.active ? "tw-text-slate-900" : "tw-italic tw-text-slate-400"}`}>{player.displayName}{!player.active && " *"}</div>
-          <div className="lf-player-club-line">{crestUrl && <img src={crestUrl} alt="" loading="lazy" />}<span>{player.realTeam || "—"}</span></div>
+          <div className="lf-player-club-line">{crestUrl && <img src={crestUrl} alt="" loading="lazy" decoding="async" />}<span>{player.realTeam || "—"}</span></div>
         </div>
       </div>
       <div className="tw-col-span-2 tw-flex tw-items-center"><span className={ROLE_BADGE_CLASSES[player.role] ?? ROLE_BADGE_CLASSES.U}>{ROLE_LABELS[player.role] ?? "?"}</span></div>

@@ -148,17 +148,8 @@
   "installCommand": "npm install --include=dev --no-audit --no-fund --registry=https://registry.npmjs.org/ && npm --prefix dashboard ci --include=dev --no-audit --no-fund --registry=https://registry.npmjs.org/",
   "buildCommand": "npm run build",
   "outputDirectory": ".",
-  "crons": [
-    {
-      "path": "/api/cron-media-sync",
-      "schedule": "0 4 * * *"
-    }
-  ],
   "functions": {
     "api/player-media.js": {
-      "maxDuration": 300
-    },
-    "api/cron-media-sync.js": {
       "maxDuration": 300
     }
   }

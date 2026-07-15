@@ -9,15 +9,11 @@ const path = require("node:path");
 const originalCwd = process.cwd();
 let tempRoot;
 let media;
-let storage;
 let mode = "success";
 let transientRosterFailures = 0;
 
 function jsonResponse(payload, status = 200) {
-  return new Response(JSON.stringify(payload), {
-    status,
-    headers: { "content-type": "application/json" }
-  });
+  return new Response(JSON.stringify(payload), { status, headers: { "content-type": "application/json" } });
 }
 
 function csvResponse() {
@@ -30,7 +26,7 @@ function csvResponse() {
 }
 
 async function setup() {
-  tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "lineup-media-atomic-"));
+  tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "lineup-media-direct-"));
   await fs.mkdir(path.join(tempRoot, "data"), { recursive: true });
   await fs.writeFile(path.join(tempRoot, "data", "settings.json"), JSON.stringify({
     version: 1,
@@ -79,14 +75,10 @@ async function setup() {
         ]
       });
     }
-    if (url.pathname === "/img/player/455/" || url.pathname === "/img/player/456/") {
-      return new Response(Buffer.alloc(2_048, 7), { status: 200, headers: { "content-type": "image/png" } });
-    }
     throw new Error(`Unexpected fetch: ${url}`);
   };
 
   media = require(path.join(originalCwd, "lib", "player-media.cjs"));
-  storage = require(path.join(originalCwd, "lib", "storage.cjs"));
 }
 
 async function teardown() {
@@ -96,141 +88,59 @@ async function teardown() {
   if (tempRoot) await fs.rm(tempRoot, { recursive: true, force: true });
 }
 
-test("player media staging is atomic and failure-safe", async (t) => {
+async function assertNoPlayerMediaFiles() {
+  await assert.rejects(fs.stat(path.join(tempRoot, ".lineup-runtime", "media")), /ENOENT/);
+  await assert.rejects(fs.stat(path.join(tempRoot, ".lineup-runtime", "player-faces")), /ENOENT/);
+}
+
+test("player media uses direct BSD URLs without Blob writes", async (t) => {
   await setup();
   t.after(teardown);
 
   await t.test("matching diagnostic uses the real CSV/BSD path without downloading images", async () => {
     mode = "success";
-    await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
     const report = await media.diagnoseFreshMatching("fp");
     assert.equal(report.totalPlayers, 2);
     assert.equal(report.teamsOk, 1);
     assert.equal(report.counts.automatic, 2);
-    assert.equal(report.counts.ambiguous, 0);
-    assert.equal(report.rows.every((row) => row.selected?.id), true);
-    await assert.rejects(fs.stat(path.join(tempRoot, ".lineup-runtime", "player-faces")), /ENOENT/);
+    await assertNoPlayerMediaFiles();
   });
-
-
 
   await t.test("a transient BSD roster timeout is retried instead of losing the club", async () => {
     mode = "transient-team-abort";
     transientRosterFailures = 0;
-    await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
     const report = await media.diagnoseFreshMatching("fp");
     assert.equal(transientRosterFailures, 1);
     assert.equal(report.teamsOk, 1);
-    assert.equal(report.teamsFailed, 0);
     assert.equal(report.counts.automatic, 2);
   });
 
-  await t.test("live manifest stays unchanged until verified publication", async () => {
+  await t.test("the public manifest points directly to BSD and never creates staging or image files", async () => {
     mode = "success";
-    await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
-    await storage.writeJson("media/fp.json", {
-      version: 7,
-      leagueId: "fp",
-      provider: "bsd",
-      sourceMode: "bsd-team-rosters",
-      players: {
-        "bukayo saka|arsenal": {
-          key: "bukayo saka|arsenal",
-          listoneName: "Bukayo Saka",
-          realTeam: "Arsenal",
-          status: "resolved",
-          photoUrl: "/.lineup-runtime/player-faces/bsd/455/old.png",
-          cached: true,
-          storageVerified: true,
-          provider: "bsd",
-          externalId: "455",
-          storageKey: "player-faces/bsd/455/old.png"
-        }
-      },
-      refresh: { pending: false }
-    });
+    const manifest = await media.readManifest("fp", { fresh: true });
+    assert.equal(manifest.refresh.pending, false);
+    assert.equal(Object.keys(manifest.players).length, 2);
+    assert.equal(manifest.players["bukayo saka|arsenal"].photoUrl, "https://sports.bzzoiro.com/img/player/455/");
+    assert.equal(manifest.players["gabriel martinelli|arsenal"].photoUrl, "https://sports.bzzoiro.com/img/player/456/");
+    assert.equal(manifest.players["bukayo saka|arsenal"].storageVerified, false);
+    await assertNoPlayerMediaFiles();
+  });
 
+  await t.test("legacy sync entry points only rebuild the direct manifest", async () => {
+    mode = "success";
     const started = await media.startMissingSync("fp");
-    assert.equal(started.refresh.pending, true);
-    assert.equal(started.refresh.playerTotal, 1);
-
-    const liveDuringStaging = await media.readManifest("fp");
-    assert.equal(Boolean(liveDuringStaging.players["gabriel martinelli|arsenal"]), false);
-    assert.equal(liveDuringStaging.players["bukayo saka|arsenal"].photoUrl.includes("old.png"), true);
-
-    let status = started;
-    for (let iteration = 0; status.refresh.pending && iteration < 5; iteration += 1) {
-      status = await media.processFullSync("fp", 10);
-    }
-    assert.equal(status.refresh.pending, false);
-    assert.equal(status.refresh.error, "");
-
-    const published = await media.readManifest("fp");
-    const martinelli = published.players["gabriel martinelli|arsenal"];
-    assert.equal(martinelli.status, "resolved");
-    assert.equal(martinelli.storageVerified, true);
-    assert.match(martinelli.photoUrl, /^\/\.lineup-runtime\/player-faces\/bsd\/456\//);
-    assert.equal(martinelli.photoUrl.includes("sports.bzzoiro.com"), false);
+    const processed = await media.processFullSync("fp");
+    const synced = await media.syncMissing("fp");
+    assert.equal(started.refresh.pending, false);
+    assert.equal(processed.refresh.pending, false);
+    assert.equal(synced.manifest.refresh.pending, false);
+    assert.equal(synced.remaining, 0);
+    await assertNoPlayerMediaFiles();
   });
 
-  await t.test("a persisted teams N/N job repairs itself and starts player uploads", async () => {
-    mode = "success";
-    await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
-
-    let status = await media.startMissingSync("fp");
-    assert.equal(status.refresh.phase, "teams");
-
-    status = await media.processFullSync("fp", 10);
-    assert.equal(status.refresh.phase, "players");
-    assert.equal(status.refresh.teamCursor, status.refresh.teamTotal);
-
-    const stuckJob = await storage.readJson("media/bsd/job-fp.json", null);
-    await storage.writeJson("media/bsd/job-fp.json", {
-      ...stuckJob,
-      pending: true,
-      phase: "teams",
-      teamCursor: stuckJob.clubs.length,
-      playerCursor: 0,
-      error: ""
-    });
-
-    status = await media.processFullSync("fp", 1);
-    assert.notEqual(status.refresh.phase, "teams");
-    assert.equal(Number(status.refresh.playerCursor || 0) > 0, true);
-  });
-
-  await t.test("systemic BSD failure leaves the previous live manifest active", async () => {
+  await t.test("a failed forced rebuild does not write fallback data to Blob", async () => {
     mode = "team-failure";
-    await fs.rm(path.join(tempRoot, ".lineup-runtime"), { recursive: true, force: true });
-    await storage.writeJson("media/fp.json", {
-      version: 7,
-      leagueId: "fp",
-      provider: "bsd",
-      sourceMode: "bsd-team-rosters",
-      players: {
-        "bukayo saka|arsenal": {
-          key: "bukayo saka|arsenal",
-          listoneName: "Bukayo Saka",
-          realTeam: "Arsenal",
-          status: "resolved",
-          photoUrl: "/.lineup-runtime/player-faces/bsd/455/old.png",
-          cached: true,
-          storageVerified: true,
-          provider: "bsd",
-          externalId: "455",
-          storageKey: "player-faces/bsd/455/old.png"
-        }
-      },
-      refresh: { pending: false }
-    });
-
-    await media.markFullSync("fp");
-    const status = await media.processFullSync("fp", 10);
-    assert.equal(status.refresh.pending, true);
-    assert.match(status.refresh.error, /Nessuna rosa BSD/);
-
-    const live = await media.readManifest("fp");
-    assert.deepEqual(Object.keys(live.players), ["bukayo saka|arsenal"]);
-    assert.equal(live.players["bukayo saka|arsenal"].photoUrl.includes("old.png"), true);
+    await assert.rejects(media.readManifest("fp", { fresh: true }), /BSD HTTP 503/);
+    await assertNoPlayerMediaFiles();
   });
 });

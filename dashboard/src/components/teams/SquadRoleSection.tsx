@@ -28,7 +28,7 @@ function PlayerAvatar({ name, team, role, media }: {
   const photo = media.player(name, team)?.photoUrl;
   return (
     <div className={`lf-squad-avatar lf-squad-avatar--${role.toLowerCase()} ${photo ? "has-photo" : ""}`} aria-hidden="true">
-      {photo ? <img src={photo} alt="" loading="lazy" /> : initials(name)}
+      {photo ? <img src={photo} alt="" loading="lazy" decoding="async" /> : initials(name)}
     </div>
   );
 }
@@ -68,7 +68,7 @@ export function SquadRoleSection({ players, role, label, media }: Props) {
                 <div className="lf-squad-item__left">
                   {isBlock ? (
                     <div className={`lf-squad-block-crest ${crest ? "has-crest" : ""}`} aria-hidden="true">
-                      {crest ? <img src={crest} alt="" loading="lazy" /> : <ShieldIcon size={17} />}
+                      {crest ? <img src={crest} alt="" loading="lazy" decoding="async" /> : <ShieldIcon size={17} />}
                     </div>
                   ) : <PlayerAvatar name={player.displayName} team={player.realTeam} role={role} media={media} />}
                   <div className="lf-squad-item__copy">
@@ -78,7 +78,7 @@ export function SquadRoleSection({ players, role, label, media }: Props) {
                       {isBlock && <ChevronDownIcon size={14} className={expanded ? "lf-chevron-open" : ""} />}
                     </div>
                     <div className={`lf-squad-item__team ${isBlock ? "lf-squad-item__team--block" : ""}`}>
-                      {!isBlock && crest && <img className="lf-squad-club-crest" src={crest} alt="" loading="lazy" />}
+                      {!isBlock && crest && <img className="lf-squad-club-crest" src={crest} alt="" loading="lazy" decoding="async" />}
                       <span>{isBlock ? `${goalkeepers.length} portieri` : (player.realTeam || "—")}</span>
                     </div>
                   </div>
@@ -105,7 +105,7 @@ export function SquadRoleSection({ players, role, label, media }: Props) {
                       return (
                         <div key={goalkeeper} className="lf-squad-goalkeeper">
                           <div className={`lf-squad-goalkeeper__avatar ${photo ? "has-photo" : ""}`}>
-                            {photo ? <img src={photo} alt="" loading="lazy" /> : "P"}
+                            {photo ? <img src={photo} alt="" loading="lazy" decoding="async" /> : "P"}
                           </div>
                           <span>{goalkeeper}</span>
                         </div>

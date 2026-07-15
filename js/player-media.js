@@ -1,7 +1,7 @@
 (function exposePlayerMedia(global) {
   "use strict";
 
-  const CACHE_VERSION = 9;
+  const CACHE_VERSION = 10;
   const memory = new Map();
   const networkRequests = new Map();
   const revalidated = new Set();
@@ -68,7 +68,7 @@
     if (cached && !force) {
       publish(leagueId, cached.payload);
       // Render immediately from localStorage, then refresh the small JSON once
-      // in the background. Player images keep their immutable cache URLs.
+      // in the background. BSD serves player images directly; browser caching and lazy loading avoid downloading the full Listone at once.
       void fetchManifest(leagueId, false).catch(() => {});
       return cached.payload;
     }

@@ -28,7 +28,7 @@ test("media keys normalize club aliases without touching fantasy roles", () => {
 });
 
 
-test("legacy Blob photos are visible but remain pending for BSD migration", () => {
+test("direct BSD photos are current while legacy Blob photos remain readable", () => {
   const legacy = {
     status: "resolved",
     provider: "api-football",
@@ -38,12 +38,16 @@ test("legacy Blob photos are visible but remain pending for BSD migration", () =
     storageKey: "player-faces/api-football/1/portrait.png"
   };
   const bsd = {
-    ...legacy,
+    status: "resolved",
     provider: "bsd",
-    storageKey: "player-faces/bsd/455/portrait.png"
+    externalId: "455",
+    photoUrl: "https://sports.bzzoiro.com/img/player/455/",
+    cached: false,
+    storageVerified: false
   };
   assert.equal(isResolvedEntry(legacy), true);
   assert.equal(isCurrentBsdEntry(legacy), false);
+  assert.equal(isResolvedEntry(bsd), true);
   assert.equal(isCurrentBsdEntry(bsd), true);
   assert.deepEqual(summary({ players: { legacy, bsd, missing: { status: "unresolved" } } }), {
     resolved: 2,
@@ -165,12 +169,12 @@ test("a failed refresh preserves the previous verified Blob entry", () => {
   assert.equal(isResolvedEntry(next), true);
 });
 
-test("publish validation rejects provider CDN URLs and accepts verified Blob URLs", () => {
+test("publish validation accepts direct BSD portraits and rejects unrelated provider URLs", () => {
   const base = {
-    version: 7,
+    version: 8,
     leagueId: "fp",
     provider: "bsd",
-    sourceMode: "bsd-team-rosters",
+    sourceMode: "bsd-direct-images",
     refresh: { pending: false },
     players: {}
   };
@@ -181,11 +185,12 @@ test("publish validation rejects provider CDN URLs and accepts verified Blob URL
         key: "bad",
         listoneName: "Bad",
         status: "resolved",
-        photoUrl: "https://sports.bzzoiro.com/img/player/455/",
-        storageVerified: true
+        provider: "api-football",
+        externalId: "455",
+        photoUrl: "https://v3.football.api-sports.io/img/player/455.png"
       }
     }
-  }), /Foto non verificata|URL esterno vietato/);
+  }), /Foto non valida|URL esterno/);
 
   assert.equal(assertPublishableManifest({
     ...base,
@@ -194,8 +199,10 @@ test("publish validation rejects provider CDN URLs and accepts verified Blob URL
         key: "good",
         listoneName: "Good",
         status: "resolved",
-        photoUrl: "https://example.public.blob.vercel-storage.com/player-faces/bsd/455/portrait.png",
-        storageVerified: true
+        provider: "bsd",
+        externalId: "455",
+        photoUrl: "https://sports.bzzoiro.com/img/player/455/",
+        storageVerified: false
       }
     }
   }), true);

@@ -8,10 +8,10 @@ export function PlayerMobileCard({ player, media, crestUrl }: { player: Dashboar
   return (
     <article className="tw-p-3 tw-transition hover:tw-bg-slate-50">
       <div className="tw-flex tw-items-start tw-gap-3">
-        <div className={`lf-player-avatar lf-player-avatar--mobile ${media?.photoUrl ? "has-photo" : ""}`} aria-hidden="true">{media?.photoUrl ? <img src={media.photoUrl} alt="" loading="lazy" /> : initials(player.displayName)}</div>
+        <div className={`lf-player-avatar lf-player-avatar--mobile ${media?.photoUrl ? "has-photo" : ""}`} aria-hidden="true">{media?.photoUrl ? <img src={media.photoUrl} alt="" loading="lazy" decoding="async" /> : initials(player.displayName)}</div>
         <div className="tw-min-w-0 tw-flex-1">
           <div className="tw-mb-1 tw-flex tw-items-center tw-gap-2"><span className={ROLE_BADGE_CLASSES[player.role] ?? ROLE_BADGE_CLASSES.U}>{player.role || "?"}</span><span className={`tw-truncate tw-font-semibold ${player.active ? "tw-text-slate-900" : "tw-italic tw-text-slate-400"}`}>{player.displayName}{!player.active && " *"}</span></div>
-          <div className="lf-player-club-line lf-player-club-line--mobile">{crestUrl && <img src={crestUrl} alt="" loading="lazy" />}<span>{player.realTeam || "—"}</span></div>
+          <div className="lf-player-club-line lf-player-club-line--mobile">{crestUrl && <img src={crestUrl} alt="" loading="lazy" decoding="async" />}<span>{player.realTeam || "—"}</span></div>
           <div className="tw-mt-2 tw-flex tw-flex-wrap tw-items-center tw-gap-x-3 tw-gap-y-1 tw-text-xs">
             <span><span className="tw-text-slate-400">Quot:</span> <strong className="tw-text-slate-900">{player.quotation || "—"}</strong></span>
             <span><span className="tw-text-slate-400">Acq:</span> <strong className="tw-text-[var(--primary)]">{player.purchasePrice || "—"}</strong></span>

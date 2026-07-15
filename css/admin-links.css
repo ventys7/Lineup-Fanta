@@ -52,3 +52,32 @@ button:disabled { opacity: .55; cursor: wait; }
 .team-issue-card { border-color: #f0d7a6; background: #fffaf0; }
 .team-issue-card .unresolved-card__head { align-items: flex-start; flex-direction: column; }
 .team-issue-card .unresolved-card__head span { color: #9a6b1e; }
+
+.media-direct-note {
+  margin: 0 0 14px;
+  color: var(--muted, #8b91a7);
+  font-size: .9rem;
+  line-height: 1.45;
+}
+
+.candidate-list__readonly {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.candidate-list__readonly span,
+.unresolved-card__reason {
+  color: var(--muted, #8b91a7);
+  font-size: .82rem;
+}
+
+.unresolved-card__reason {
+  margin: 8px 0 0;
+}

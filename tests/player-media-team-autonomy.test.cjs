@@ -15,7 +15,7 @@ function jsonResponse(payload, status = 200) {
   });
 }
 
-test("an unknown promoted club is resolved by roster overlap and can be overridden from admin", async (t) => {
+test("an unknown promoted club is resolved automatically without Blob persistence", async (t) => {
   const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "lineup-promoted-team-"));
   t.after(async () => {
     process.chdir(originalCwd);
@@ -84,8 +84,8 @@ test("an unknown promoted club is resolved by roster overlap and can be overridd
   assert.equal(candidates[0].id, "902");
   assert.equal(candidates[0].automatic, 3);
 
-  const linked = await media.linkTeamManual("fp", "Leicester City", "902");
-  assert.equal(linked.id, "902");
-  assert.equal(linked.resolutionSource, "manual");
-  assert.equal(linked.playerIds.length, 3);
+  assert.throws(
+    () => media.linkTeamManual("fp", "Leicester City", "902"),
+    /URL BSD diretti senza scritture Blob/
+  );
 });
