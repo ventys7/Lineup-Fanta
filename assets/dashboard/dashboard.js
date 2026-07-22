@@ -7226,7 +7226,7 @@ function am(e) {
     const w = String(v[i.name] ?? "").trim();
     if (v.map(un).join("|").includes("classifica per fp"))
       break;
-    if (!w)
+    if (!w || w === "undefined" || w.trim() === "")
       continue;
     const d = Pt(v[i.points]), f = Pt(v[i.wins]), m = Pt(v[i.draws]), x = Pt(v[i.losses]), j = Pt(v[i.goalsFor]), N = Pt(v[i.goalsAgainst]), C = Pt(v[i.goalDifference]), _ = Wr(v[i.fantasyPoints]);
     d === null || f === null || m === null || x === null || j === null || N === null || _ === null || o.push({
