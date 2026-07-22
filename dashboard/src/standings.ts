@@ -150,7 +150,7 @@ export function parseStandingsCsv(csvText: string): StandingsData {
     const normalizedWholeRow = row.map(normalizeLabel).join("|");
 
     if (normalizedWholeRow.includes("classifica per fp")) break;
-    if (!name || name === "undefined" || name.trim() === "") continue;
+    if (!name) continue;
 
     const points = parseInteger(row[indexes.points]);
     const wins = parseInteger(row[indexes.wins]);

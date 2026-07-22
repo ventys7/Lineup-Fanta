@@ -9,4 +9,3 @@ node_modules/
 bsd-matching-*/
 bsd-team-selection-*/
 .env*
-.lineup-runtime/

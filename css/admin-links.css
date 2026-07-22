@@ -61,19 +61,24 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .admin-header__title { text-align: center; }
 .admin-header__title p, .admin-section-title p, .admin-card__heading p, .admin-login-intro > p { margin: 0 0 5px; color: var(--accent); font-size: 10px; font-weight: 950; letter-spacing: .15em; }
 .admin-header__title h1 { margin: 0; font-size: clamp(28px, 4vw, 40px); letter-spacing: -.045em; line-height: 1; }
+.admin-header__title > span { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; }
 .admin-backlink { display: inline-flex; width: max-content; justify-self: end; align-items: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.72); color: #52615a; font-size: 11px; font-weight: 850; text-decoration: none; backdrop-filter: blur(12px); }
 .admin-backlink:hover { border-color: var(--accent-line); color: var(--accent); }
 
 .admin-card { min-width: 0; padding: 24px; border: 1px solid rgba(210,221,215,.9); border-radius: 22px; background: var(--surface); box-shadow: 0 18px 45px rgba(31,49,40,.065); backdrop-filter: blur(14px); }
 .admin-card__heading, .admin-section-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
 .admin-card__heading h2, .admin-section-title h2, #leagueSettings h2 { margin: 0; font-size: 19px; letter-spacing: -.025em; }
+.admin-section-title > span { max-width: 360px; color: var(--muted); font-size: 11px; line-height: 1.45; text-align: right; }
 
 .admin-login-layout { display: grid; min-height: 500px; grid-template-columns: minmax(0,1.05fr) minmax(340px,.72fr); align-items: center; gap: clamp(34px,8vw,110px); padding: 42px clamp(0px,4vw,52px); }
 .admin-login-intro { max-width: 530px; }
 .admin-login-intro__icon { display: grid; width: 54px; height: 54px; margin-bottom: 24px; place-items: center; border: 1px solid var(--accent-line); border-radius: 18px; background: var(--accent-soft); color: var(--accent); font-size: 23px; font-weight: 900; }
 .admin-login-intro h2 { max-width: 520px; margin: 0; font-size: clamp(34px,5vw,58px); letter-spacing: -.06em; line-height: .98; }
+.admin-login-intro > span:last-child { display: block; max-width: 510px; margin-top: 20px; color: var(--muted); font-size: 14px; line-height: 1.65; }
 .admin-login { width: 100%; }
 .admin-status-dot { width: 10px; height: 10px; margin-top: 7px; border-radius: 999px; background: #31b473; box-shadow: 0 0 0 5px rgba(49,180,115,.12); }
+.admin-login__note { margin: -2px 0 18px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.admin-login code { padding: 2px 5px; border-radius: 5px; background: #edf2ef; color: #46554e; font-size: 10px; }
 .admin-login form, .admin-league-fields { display: grid; gap: 14px; }
 
 label { display: grid; gap: 7px; color: #53625b; font-size: 11px; font-weight: 850; }
@@ -92,19 +97,22 @@ button:disabled { opacity: .55; cursor: wait; transform: none; }
 .admin-toolbar { position: sticky; top: 12px; z-index: 12; display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 16px; padding: 11px 12px 11px 15px; border: 1px solid rgba(209,220,214,.92); border-radius: 17px; background: rgba(249,251,250,.9); box-shadow: 0 13px 30px rgba(31,49,40,.075); backdrop-filter: blur(18px); }
 .admin-toolbar__status { display: flex; min-width: 0; align-items: center; gap: 10px; }
 .admin-toolbar__status > span { width: 9px; height: 9px; flex: 0 0 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 4px rgba(24,132,81,.11); }
+.admin-toolbar__status div { display: grid; min-width: 0; }
 .admin-toolbar__status strong { font-size: 11px; }
+.admin-toolbar__status small { overflow: hidden; margin-top: 2px; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .admin-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
 .admin-actions button { min-height: 38px; padding-inline: 13px; font-size: 10px; }
 
-.admin-dashboard-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
-.admin-card--settings, .admin-card--codes, .admin-card--wide { grid-column: 1 / -1; }
+.admin-dashboard-grid { display: grid; grid-template-columns: minmax(0,.82fr) minmax(0,1.18fr); gap: 16px; }
+.admin-card--settings { grid-column: 1 / -1; }
+.admin-card--wide { grid-column: 1 / -1; }
 #leagueSettings { position: relative; overflow: hidden; }
 #leagueSettings::after { content: ""; position: absolute; top: -70px; right: -70px; width: 190px; height: 190px; border-radius: 50%; background: var(--accent-soft); opacity: .65; pointer-events: none; }
 #leagueSettings h2 { position: relative; z-index: 1; margin-bottom: 18px; }
 #leagueSettings h2::before { content: "FONTI DELLA LEGA"; display: block; margin-bottom: 5px; color: var(--accent); font-size: 10px; font-weight: 950; letter-spacing: .15em; }
 .admin-league-fields { position: relative; z-index: 1; grid-template-columns: repeat(3,minmax(0,1fr)); }
 
-.code-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 9px; }
+.code-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
 .code-row { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 11px 11px 13px; border: 1px solid #e5ebe8; border-radius: 13px; background: var(--surface-soft); }
 .code-row > div { min-width: 0; }
 .code-row strong { display: block; min-width: 0; overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
@@ -112,8 +120,9 @@ button:disabled { opacity: .55; cursor: wait; transform: none; }
 .code-result { display: block; margin-top: 4px; color: var(--accent); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 950; letter-spacing: .08em; }
 
 .media-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-.media-overview { display: flex; align-items: center; margin-bottom: 2px; }
-.media-status { max-width: 100%; padding: 8px 11px; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong); font-size: 10px; font-weight: 900; line-height: 1.35; overflow-wrap: anywhere; }
+.media-overview { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 18px; padding: 15px 16px; border: 1px solid #e3eae6; border-radius: 15px; background: var(--surface-soft); }
+.media-direct-note { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.media-status { padding: 8px 11px; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong); font-size: 10px; font-weight: 900; white-space: nowrap; }
 .unresolved-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 11px; margin-top: 15px; }
 .team-issues-grid:empty { display: none; }
 .unresolved-card { min-width: 0; padding: 14px; border: 1px solid #e2e9e5; border-radius: 15px; background: #fbfcfc; transition: opacity .16s ease, transform .16s ease, border-color .16s ease; }
@@ -158,84 +167,36 @@ button:disabled { opacity: .55; cursor: wait; transform: none; }
   .admin-header { grid-template-columns: 1fr auto; }
   .admin-header__title { grid-column: 1 / -1; grid-row: 2; text-align: left; }
   .admin-backlink { grid-column: 2; grid-row: 1; }
+  .admin-dashboard-grid { grid-template-columns: 1fr; }
+  .admin-card--settings, .admin-card--wide { grid-column: auto; }
   .admin-league-fields { grid-template-columns: 1fr; }
+  .media-overview { grid-template-columns: 1fr; }
+  .media-status { width: max-content; max-width: 100%; white-space: normal; }
   .unresolved-grid { grid-template-columns: 1fr; }
   .team-issue-card { grid-column: auto; }
 }
 @media (max-width: 760px) {
-  body { background: #f4f6f5; }
-  .admin-backdrop { background: #f4f6f5; }
-  .admin-backdrop::after { display: none; }
-  .admin-shell { width: 100%; padding: 0 0 36px; }
-  .admin-header { gap: 10px; margin: 0; padding: 13px 14px 12px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.96); }
-  .admin-brand { gap: 9px; }
-  .admin-brand__mark { width: 38px; height: 38px; border-radius: 12px; box-shadow: none; font-size: 11px; }
-  .admin-brand__copy { display: grid; }
-  .admin-brand__copy strong { max-width: 130px; font-size: 12px; }
-  .admin-brand__copy small { font-size: 9px; }
-  .admin-backlink { padding: 7px 9px; background: #fff; font-size: 10px; }
-  .admin-header__title { margin-top: 3px; }
-  .admin-header__title p { margin-bottom: 3px; font-size: 8px; }
-  .admin-header__title h1 { font-size: 25px; letter-spacing: -.04em; }
-
-  .admin-login-layout { min-height: auto; grid-template-columns: 1fr; gap: 0; padding: 18px 12px; }
-  .admin-login-intro { display: none; }
-  .admin-login { padding: 16px; border-radius: 16px; box-shadow: none; }
-
-  #adminView { padding: 0 10px; }
-  .admin-toolbar { position: sticky; top: 8px; z-index: 12; align-items: stretch; flex-direction: column; gap: 10px; margin: 10px 0; padding: 10px; border-radius: 14px; box-shadow: 0 8px 22px rgba(31,49,40,.08); }
-  .admin-toolbar__status { min-height: 26px; padding: 0 3px; }
-  .admin-toolbar__status strong { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
-  .admin-actions { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.7fr); gap: 7px; }
-  .admin-actions button { width: 100%; min-height: 40px; }
-
-  .admin-dashboard-grid { gap: 10px; }
-  .admin-card { padding: 14px; border-radius: 15px; box-shadow: none; backdrop-filter: none; }
-  .admin-card__heading, .admin-section-title { align-items: center; margin-bottom: 13px; }
-  .admin-card__heading h2, .admin-section-title h2, #leagueSettings h2 { font-size: 17px; }
-  .admin-section-title p, .admin-card__heading p { margin-bottom: 3px; font-size: 8px; }
-
-  #leagueSettings::after { display: none; }
-  #leagueSettings h2 { margin-bottom: 14px; }
-  #leagueSettings h2::before { margin-bottom: 3px; font-size: 8px; }
-  .admin-league-fields { gap: 11px; }
-  label { gap: 6px; font-size: 10px; }
-  input { min-height: 44px; border-radius: 11px; font-size: 13px; }
-
-  .code-grid { grid-template-columns: 1fr; gap: 7px; }
-  .code-row { gap: 8px; padding: 10px 9px 10px 11px; border-radius: 12px; }
-  .code-row strong { font-size: 11px; }
-  .code-row button { min-height: 34px; padding-inline: 9px; white-space: nowrap; }
-  .code-result { font-size: 10px; overflow-wrap: anywhere; }
-
-  .admin-card--media .admin-section-title { align-items: stretch; flex-direction: column; gap: 10px; }
-  .media-actions { width: 100%; }
+  .admin-shell { width: min(100% - 20px,1180px); padding-top: 16px; }
+  .admin-header { gap: 15px; margin-bottom: 18px; }
+  .admin-brand__copy { display: none; }
+  .admin-backlink { padding: 8px 10px; }
+  .admin-header__title h1 { font-size: 31px; }
+  .admin-header__title > span { font-size: 11px; }
+  .admin-login-layout { min-height: auto; grid-template-columns: 1fr; gap: 28px; padding: 28px 2px; }
+  .admin-login-intro h2 { font-size: 38px; }
+  .admin-login-intro > span:last-child { font-size: 13px; }
+  .admin-card { padding: 17px; border-radius: 18px; }
+  .admin-toolbar { position: static; align-items: stretch; flex-direction: column; padding: 13px; }
+  .admin-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .admin-actions #saveSettings { grid-column: 1 / -1; grid-row: 1; }
+  .admin-actions button { width: 100%; }
+  .admin-section-title, .admin-card__heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .admin-section-title > span { max-width: none; text-align: left; }
+  .code-grid { grid-template-columns: 1fr; }
+  .media-actions { width: 100%; justify-content: stretch; }
   .media-actions button { width: 100%; }
-  .media-overview { margin: 0; }
-  .media-status { display: block; width: 100%; padding: 9px 10px; border-radius: 11px; text-align: center; white-space: normal; }
-
-  .unresolved-grid { gap: 8px; margin-top: 10px; }
-  .unresolved-card { padding: 12px; border-radius: 13px; }
-  .unresolved-card__head { align-items: flex-start; }
-  .unresolved-card__head strong { font-size: 11px; white-space: normal; overflow-wrap: anywhere; }
-  .unresolved-card__head span { max-width: 42%; text-align: right; overflow-wrap: anywhere; }
-  .unresolved-card__reason { font-size: 9px; }
   .unresolved-search, .unresolved-direct { flex-direction: column; }
   .unresolved-search button, .unresolved-direct button { width: 100%; }
-  .candidate-choice { min-height: 58px; gap: 8px; padding: 7px 8px; }
-  .candidate-list__identity { gap: 8px; }
-  .candidate-list img { width: 38px; height: 38px; flex-basis: 38px; }
-  .candidate-choice b, .candidate-choice small { white-space: normal; overflow-wrap: anywhere; }
-  .candidate-choice__use { font-size: 9px; }
-  .candidate-section--scroll .candidate-list { max-height: 270px; }
-
-  .admin-feedback { right: 10px; bottom: 10px; left: 10px; max-width: none; border-radius: 12px; transform: none; }
-}
-@media (max-width: 390px) {
-  .admin-brand__copy { display: none; }
-  .admin-actions { grid-template-columns: 1fr 1fr; }
-  .code-row { align-items: stretch; flex-direction: column; }
-  .code-row button { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }

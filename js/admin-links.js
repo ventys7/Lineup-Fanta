@@ -12,6 +12,7 @@
   const logoCodes = document.getElementById("logoCodes");
   const feedback = document.getElementById("adminFeedback");
   const saveButton = document.getElementById("saveSettings");
+  const migrateNeonButton = document.getElementById("migrateNeon");
   const logoutButton = document.getElementById("logoutButton");
   const mediaRefresh = document.getElementById("mediaRefresh");
   const mediaStatus = document.getElementById("mediaStatus");
@@ -114,7 +115,7 @@
     const summary = manifest?.summary || {};
     const bsd = Number(summary.bsdResolved || 0);
     const unresolved = Number(summary.unresolved || 0);
-    return `BSD dirette ${bsd} · ${unresolved} da controllare`;
+    return `BSD dirette ${bsd} · ${unresolved} da controllare · override su Neon · 0 scritture Blob`;
   }
 
   function markPlayerResolved(entry, resolvedEntry) {
@@ -456,6 +457,23 @@
     finally { saveButton.disabled = false; }
   });
 
+  migrateNeonButton?.addEventListener("click", async () => {
+    migrateNeonButton.disabled = true;
+    message("Migrazione dati legacy dal Blob a Neon…");
+    try {
+      const result = await adminApi({ action: "migrate-neon" });
+      render(result);
+      const migration = result.migration || {};
+      const leagues = migration.leagues || [];
+      const logos = leagues.reduce((total, item) => total + Number(item.logos || 0), 0);
+      const codes = leagues.reduce((total, item) => total + Number(item.logoCodes || 0), 0);
+      const warnings = Array.isArray(migration.warnings) ? migration.warnings.length : 0;
+      if (migration.alreadyMigrated) message("Migrazione Blob → Neon già completata in precedenza.");
+      else if (warnings) message(`Migrazione parziale: ${logos} stemmi e ${codes} codici trasferiti, ${warnings} elementi da ricontrollare.`, true);
+      else message(`Migrazione Neon completata: ${logos} stemmi e ${codes} codici trasferiti.`);
+    } catch (error) { message(error.message, true); }
+    finally { migrateNeonButton.disabled = false; }
+  });
   logoutButton.addEventListener("click", async () => render(await adminApi({ action: "logout" })));
   mediaRefresh.addEventListener("click", syncMediaLoop);
   loadState();

@@ -18,6 +18,7 @@
       <div class="admin-header__title">
         <p>CONTROL ROOM</p>
         <h1>Admin Links</h1>
+        <span>Fonti, accessi e collegamenti media della lega</span>
       </div>
       <a class="admin-backlink" href="/fp/"><span aria-hidden="true">←</span> Torna alla lega</a>
     </header>
@@ -27,12 +28,14 @@
         <span class="admin-login-intro__icon" aria-hidden="true">↗</span>
         <p>AREA RISERVATA</p>
         <h2>Gestisci la lega senza toccare il codice.</h2>
+        <span>Collegamenti CSV, codici stemma e associazioni BSD restano separati tra FP e PD.</span>
       </div>
       <section class="admin-card admin-login">
         <div class="admin-card__heading">
           <div><p>AUTENTICAZIONE</p><h2>Accesso amministratore</h2></div>
           <span class="admin-status-dot" aria-hidden="true"></span>
         </div>
+        <p class="admin-login__note">Usa la password configurata in <code>ADMIN_LINKS_PASSWORD_HASH</code>.</p>
         <form id="loginForm">
           <label>Password amministratore<input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Inserisci la password"></label>
           <button type="submit">Accedi al pannello</button>
@@ -42,8 +45,9 @@
 
     <div id="adminView" hidden>
       <section class="admin-toolbar" aria-label="Azioni amministratore">
-        <div class="admin-toolbar__status"><span></span><strong>FP · Neon attivo</strong></div>
+        <div class="admin-toolbar__status"><span></span><div><strong>FP · Neon attivo</strong><small>Foto giocatori servite direttamente da BSD</small></div></div>
         <div class="admin-actions">
+          <button id="migrateNeon" class="secondary" type="button">Migra Blob → Neon</button>
           <button id="saveSettings" type="button">Salva collegamenti</button>
           <button id="logoutButton" class="secondary secondary--danger" type="button">Esci</button>
         </div>
@@ -55,6 +59,7 @@
         <section class="admin-card admin-card--codes">
           <div class="admin-section-title">
             <div><p>ACCESSO MANAGER</p><h2>Codici stemma</h2></div>
+            <span>Ogni codice autorizza soltanto la propria fantasquadra.</span>
           </div>
           <div id="logoCodes" class="code-grid"></div>
         </section>
@@ -65,6 +70,7 @@
             <div class="media-actions"><button id="mediaRefresh" class="secondary" type="button">Ricalcola collegamenti</button></div>
           </div>
           <div class="media-overview">
+            <p class="media-direct-note">Le facce arrivano direttamente da BSD con lazy loading. Override, configurazioni e codici sono salvati su Neon: nessuna scrittura Blob per le foto.</p>
             <div id="mediaStatus" class="media-status">Caricamento stato…</div>
           </div>
           <div id="unresolvedTeams" class="unresolved-grid team-issues-grid"></div>
