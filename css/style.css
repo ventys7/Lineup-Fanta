@@ -20,7 +20,7 @@ body {
   background: var(--bg);
   color: #111;
   overflow-x: hidden;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ── UTILITY ── */
@@ -447,7 +447,7 @@ button[onclick^="close"] {
   .container       { display: block; }
   .roster-drawer {
     position: fixed; right: 0; top: 62px;
-    height: calc(100vh - 62px);
+    height: calc(100dvh - 62px);
     visibility: hidden; z-index: 250;
     width: 85%; background: var(--card);
     box-shadow: -4px 0 24px rgba(124,58,237,0.12);
